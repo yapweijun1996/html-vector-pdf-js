@@ -8,7 +8,7 @@
     /* Reset and Base Styles */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: Calibri, Arial, sans-serif;
+      font-family: Arial, sans-serif;
       font-size: 9pt;
       color: #333;
       background: #f5f5f5;
@@ -49,18 +49,18 @@
 
     /* Globe3-style table classes */
     .fontblack9a {
-      font-family: Calibri, Arial, sans-serif;
+      font-family: Arial, sans-serif;
       font-size: 9pt;
       color: #333;
       border-collapse: collapse;
     }
     .fontblack13a {
-      font-family: Calibri, Arial, sans-serif;
+      font-family: Arial, sans-serif;
       font-size: 13pt;
       color: #333;
     }
     .fontblack14a {
-      font-family: Calibri, Arial, sans-serif;
+      font-family: Arial, sans-serif;
       font-size: 14pt;
       color: #333;
     }
@@ -133,7 +133,7 @@
       color: white;
       border: none;
       border-radius: 8px;
-      font-family: Calibri, Arial, sans-serif;
+      font-family: Arial, sans-serif;
       font-size: 14px;
       font-weight: bold;
       cursor: pointer;
@@ -366,21 +366,37 @@
 
 <!-- Download PDF function -->
 <script>
+function isDebugOverlayEnabled() {
+  const params = new URLSearchParams(window.location.search);
+  const byQuery = params.get('debugOverlay');
+  if (byQuery === '1' || byQuery === 'true') return true;
+  if (byQuery === '0' || byQuery === 'false') return false;
+
+  // Optional: set in DevTools console: window.GLOBE3_PDF_DEBUG_OVERLAY = true
+  return (window.GLOBE3_PDF_DEBUG_OVERLAY === true);
+}
+
 async function downloadPdf() {
   const btn = document.getElementById('pdf-download-btn');
   btn.disabled = true;
   btn.textContent = 'Generating...';
 
   try {
+    const debugOverlayEnabled = isDebugOverlayEnabled();
+    const margins = { top: 6.35, right: 6.35, bottom: 6.35, left: 6.35 };
+    const pageWidthMm = 210; // A4 portrait width
+    const baseWidthPx = document.querySelector('.pdf-page')?.getBoundingClientRect().width || 750;
+    const pxToMm = (pageWidthMm - margins.left - margins.right) / baseWidthPx;
     await Globe3PdfGenerator.generatePdf('print-form', {
       filename: 'PCI-2601-10002.pdf',
       pageSize: 'a4',
       orientation: 'portrait',
-      margins: { top: 6.35, right: 6.35, bottom: 6.35, left: 6.35 },
-      // Map 750px width to A4 210mm so layout matches the page box
-      render: { pxToMm: 210 / 750 },
+      margins,
+      // Map content width (after margins) to page width to avoid overflow.
+      render: { pxToMm },
       text: { scale: 1 },
-      debug: true
+      debugOverlay: { enabled: debugOverlayEnabled },
+      debug: debugOverlayEnabled
     });
   } catch (err) {
     console.error('PDF generation error:', err);

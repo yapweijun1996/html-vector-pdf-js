@@ -6,6 +6,7 @@
 * Allow to update task.md if need.
 
 # Main Rules
+* Reply me mandarin.
 * Work in small steps. 
 * For each step output exactly: Observe / Evidence / Action / Result / Next.
 * Do not use hardcode logic.

@@ -51,11 +51,16 @@ export interface PdfConfig {
   pagination?: {
     pageBreakBeforeSelectors?: string[];
   };
+  debugOverlay?: {
+    enabled?: boolean;
+    strokeColorRgb?: [number, number, number];
+    lineWidthMm?: number;
+  };
   debug?: boolean;
 }
 
 interface RenderItem {
-  type: 'text' | 'background' | 'border' | 'image';
+  type: 'text' | 'background' | 'border' | 'image' | 'debugRect';
   x: number;
   y: number;
   w: number;
@@ -65,6 +70,12 @@ interface RenderItem {
   imageSrc?: string;
   imageFormat?: string;
   zIndex: number;
+  textAlign?: 'left' | 'center' | 'right';
+  maxWidthMm?: number;
+  lineHeightMm?: number;
+  noWrap?: boolean;
+  cssNoWrap?: boolean;
+  rectsLen?: number;
   borderSides?: { t: number; r: number; b: number; l: number };
   borderColors?: {
     t: [number, number, number];
@@ -103,6 +114,11 @@ const DEFAULT_CONFIG: Required<PdfConfig> = {
   pagination: {
     pageBreakBeforeSelectors: ['.pagebreak_bf_processed', '[data-pdf-page-break-before="true"]']
   },
+  debugOverlay: {
+    enabled: false,
+    strokeColorRgb: [255, 0, 0],
+    lineWidthMm: 0.15
+  },
   debug: false
 };
 
@@ -130,6 +146,89 @@ const isTransparent = (c: string): boolean => {
 };
 
 const px2pt = (px: string | number) => parseFloat(String(px)) * 0.75;
+
+const parsePx = (value: string | null | undefined): number => {
+  if (!value) return 0;
+  const num = parseFloat(value);
+  return Number.isFinite(num) ? num : 0;
+};
+
+const parseLineHeightPx = (lineHeight: string, fontSizePx: number): number => {
+  const lh = (lineHeight || '').trim().toLowerCase();
+  if (!lh || lh === 'normal') return fontSizePx * 1.2;
+  if (lh.endsWith('px')) return parsePx(lh);
+  const num = parseFloat(lh);
+  if (!Number.isFinite(num)) return fontSizePx * 1.2;
+  // unitless line-height multiplier
+  return num * fontSizePx;
+};
+
+const pickTextAlign = (el: Element, computedTextAlign: string): RenderItem['textAlign'] => {
+  const attr = (el.getAttribute('align') || '').toLowerCase();
+  if (attr === 'right' || attr === 'center' || attr === 'left') return attr as RenderItem['textAlign'];
+  const raw = (computedTextAlign || '').toLowerCase();
+  if (raw === 'right' || raw === 'end') return 'right';
+  if (raw === 'center') return 'center';
+  return 'left';
+};
+
+const wrapTextToWidth = (doc: jsPDF, text: string, maxWidthMm: number): string[] => {
+  const cleaned = text.replace(/\s+/g, ' ').trim();
+  if (!cleaned) return [];
+  if (maxWidthMm <= 0) return [cleaned];
+
+  // Break opportunities at spaces and hyphens to mimic browser wrapping for codes like "AAA-BBB-CCC".
+  const tokens = cleaned.split(/(\s+|-)/).filter(t => t.length > 0);
+  const lines: string[] = [];
+  let line = '';
+
+  const pushLine = () => {
+    const out = line.trim();
+    if (out) lines.push(out);
+    line = '';
+  };
+
+  for (const token of tokens) {
+    const candidate = line ? `${line}${token}` : token;
+    const width = doc.getTextWidth(candidate);
+    if (width <= maxWidthMm) {
+      line = candidate;
+      continue;
+    }
+
+    if (!line) {
+      // Hard-break long tokens (rare for this invoice), fallback to char-level.
+      let chunk = '';
+      for (const ch of token) {
+        const next = chunk + ch;
+        if (doc.getTextWidth(next) <= maxWidthMm) {
+          chunk = next;
+        } else {
+          if (chunk) lines.push(chunk);
+          chunk = ch;
+        }
+      }
+      if (chunk) lines.push(chunk);
+      line = '';
+      continue;
+    }
+
+    pushLine();
+    line = token;
+  }
+
+  pushLine();
+  return lines;
+};
+
+const buildTextStyleKey = (style: CSSStyleDeclaration): string => {
+  return [
+    style.fontSize,
+    style.fontWeight,
+    style.fontStyle,
+    style.color
+  ].join('|');
+};
 
 /**
  * Convert SVG to PNG data URL using canvas
@@ -199,7 +298,8 @@ export const generatePdf = async (
         ...(DEFAULT_CONFIG.pagination.pageBreakBeforeSelectors || []),
         ...((config.pagination?.pageBreakBeforeSelectors || []) as string[])
       ]
-    }
+    },
+    debugOverlay: { ...DEFAULT_CONFIG.debugOverlay, ...(config.debugOverlay || {}) }
   };
 
   // Find element
@@ -216,10 +316,43 @@ export const generatePdf = async (
     throw new Error(`Element not found: ${elementOrSelector}`);
   }
 
+  if (cfg.debug) {
+    console.log('[Globe3PDF] debug', {
+      pxToMm,
+      marginsMm: cfg.margins,
+      textScale: cfg.text.scale,
+      pageBreakBeforeSelectors: cfg.pagination.pageBreakBeforeSelectors
+    });
+  }
+
   const rootRect = element.getBoundingClientRect();
   const items: RenderItem[] = [];
   const imagePromises: Promise<void>[] = [];
   const pageBreakBeforeYs: number[] = [];
+  const debugCells: Array<{
+    tag: string;
+    left: number;
+    top: number;
+    width: number;
+    height: number;
+    paddingL: number;
+    paddingR: number;
+    paddingT: number;
+    paddingB: number;
+    contentWidthPx: number;
+  }> = [];
+
+  const layoutIdByElement = new WeakMap<Element, number>();
+  let nextLayoutId = 1;
+  const getLayoutId = (el: Element): number => {
+    const existing = layoutIdByElement.get(el);
+    if (existing) return existing;
+    const id = nextLayoutId++;
+    layoutIdByElement.set(el, id);
+    return id;
+  };
+
+  const aggregatedTextByKey = new Map<string, RenderItem>();
 
   // Create exclusion checker
   const shouldExclude = (el: Element | null): boolean => {
@@ -282,6 +415,46 @@ export const generatePdf = async (
         const y = px2mm(rect.top - rootRect.top);
         const w = px2mm(rect.width);
         const h = px2mm(rect.height);
+
+        if (cfg.debugOverlay.enabled && (el.tagName === 'TD' || el.tagName === 'TH')) {
+          const paddingL = parsePx(style.paddingLeft);
+          const paddingR = parsePx(style.paddingRight);
+          const paddingT = parsePx(style.paddingTop);
+          const paddingB = parsePx(style.paddingBottom);
+
+          const contentLeftPx = rect.left + paddingL;
+          const contentRightPx = rect.right - paddingR;
+          const contentTopPx = rect.top + paddingT;
+          const contentBottomPx = rect.bottom - paddingB;
+
+          const contentX = cfg.margins.left + px2mm(contentLeftPx - rootRect.left);
+          const contentY = px2mm(contentTopPx - rootRect.top);
+          const contentW = px2mm(Math.max(0, contentRightPx - contentLeftPx));
+          const contentH = px2mm(Math.max(0, contentBottomPx - contentTopPx));
+
+          items.push({
+            type: 'debugRect',
+            x: contentX,
+            y: contentY,
+            w: contentW,
+            h: contentH,
+            style,
+            zIndex: 12
+          });
+
+          debugCells.push({
+            tag: el.tagName,
+            left: rect.left,
+            top: rect.top,
+            width: rect.width,
+            height: rect.height,
+            paddingL,
+            paddingR,
+            paddingT,
+            paddingB,
+            contentWidthPx: Math.max(0, contentRightPx - contentLeftPx)
+          });
+        }
 
         // 1. Backgrounds
         if (!isTransparent(style.backgroundColor)) {
@@ -359,31 +532,105 @@ export const generatePdf = async (
           continue;
         }
 
+        const parentEl = txt.parentElement;
+        const fontStyle = window.getComputedStyle(parentEl);
+        const layoutEl = (parentEl.closest('td,th') as HTMLElement | null) || parentEl;
+        const layoutStyle = window.getComputedStyle(layoutEl);
+        const layoutRect = layoutEl.getBoundingClientRect();
+
+        const paddingLeftPx = parsePx(layoutStyle.paddingLeft);
+        const paddingRightPx = parsePx(layoutStyle.paddingRight);
+        const contentLeftPx = layoutRect.left + paddingLeftPx;
+        const contentRightPx = layoutRect.right - paddingRightPx;
+        const contentWidthPx = Math.max(0, contentRightPx - contentLeftPx);
+
+        const textAlign = pickTextAlign(layoutEl, layoutStyle.textAlign || '');
+        const whiteSpace = (layoutStyle.whiteSpace || '').toLowerCase();
+        const cssNoWrap = whiteSpace.includes('nowrap');
+
         const range = document.createRange();
-        range.selectNode(txt);
-        const rect = range.getBoundingClientRect();
-        const parentStyle = window.getComputedStyle(txt.parentElement);
+        range.selectNodeContents(txt);
+        const rects = range.getClientRects();
+        const firstRect = rects.length > 0 ? rects[0] : range.getBoundingClientRect();
+        const rectsLen = rects.length > 0 ? rects.length : (firstRect.width > 0 && firstRect.height > 0 ? 1 : 0);
+        const browserWrapped = rectsLen > 1;
+        const noWrap = cssNoWrap || !browserWrapped;
 
-        if (rect.width > 0 && parentStyle.display !== 'none') {
-          const y = px2mm(rect.top - rootRect.top);
-          const h = px2mm(rect.height);
-          const fontSizeMm = px2mm(parseFloat(parentStyle.fontSize));
+        if (layoutRect.width > 0 && layoutStyle.display !== 'none' && firstRect.width > 0 && firstRect.height > 0) {
+          // Use the actual text fragment position to avoid stacking multiple text nodes at the same y.
+          const y = px2mm(firstRect.top - rootRect.top);
+          const h = px2mm(firstRect.height);
+          const fontSizePx = parseFloat(fontStyle.fontSize);
+          const fontSizeMm = px2mm(fontSizePx);
           const baselineOffset = fontSizeMm * cfg.text.baselineFactor * cfg.text.scale;
+          const lineHeightPx = parseLineHeightPx(layoutStyle.lineHeight, fontSizePx);
+          const lineHeightMm = px2mm(lineHeightPx) * cfg.text.scale;
 
-          items.push({
-            type: 'text',
-            x: cfg.margins.left + px2mm(rect.left - rootRect.left),
-            y: y + baselineOffset,
-            w: px2mm(rect.width),
-            h,
-            style: parentStyle,
-            text: str,
-            zIndex: 20
-          });
+          const xLeftMm = cfg.margins.left + px2mm(contentLeftPx - rootRect.left);
+          const xRightMm = cfg.margins.left + px2mm(contentRightPx - rootRect.left);
+          const xMm = textAlign === 'right' ? xRightMm : textAlign === 'center' ? (xLeftMm + xRightMm) / 2 : xLeftMm;
+
+          const inTableCell = layoutEl.tagName === 'TD' || layoutEl.tagName === 'TH';
+          const canAggregate = inTableCell && buildTextStyleKey(fontStyle) === buildTextStyleKey(window.getComputedStyle(layoutEl));
+
+          if (canAggregate) {
+            const layoutId = getLayoutId(layoutEl);
+            const styleKey = buildTextStyleKey(fontStyle);
+            const yBucketPx = Math.round(firstRect.top / 2) * 2; // tolerate small pixel drift
+            const key = `${layoutId}|${styleKey}|${yBucketPx}|${textAlign}`;
+
+            const existing = aggregatedTextByKey.get(key);
+            if (existing) {
+              existing.text = `${existing.text ?? ''}${str}`;
+              existing.cssNoWrap = (existing.cssNoWrap ?? false) || cssNoWrap;
+              existing.rectsLen = Math.max(existing.rectsLen ?? 0, rectsLen);
+              existing.noWrap = (existing.noWrap ?? true) && noWrap;
+            } else {
+              aggregatedTextByKey.set(key, {
+                type: 'text',
+                x: xMm,
+                y: y + baselineOffset,
+                w: px2mm(layoutRect.width),
+                h,
+                style: fontStyle,
+                text: str,
+                textAlign,
+                maxWidthMm: px2mm(contentWidthPx),
+                lineHeightMm,
+                noWrap,
+                cssNoWrap,
+                rectsLen,
+                zIndex: 20
+              });
+            }
+          } else {
+            items.push({
+              type: 'text',
+              x: xMm,
+              y: y + baselineOffset,
+              w: px2mm(layoutRect.width),
+              h,
+              style: fontStyle,
+              text: str,
+              textAlign,
+              maxWidthMm: px2mm(contentWidthPx),
+              lineHeightMm,
+              noWrap,
+              cssNoWrap,
+              rectsLen,
+              zIndex: 20
+            });
+          }
         }
       }
     }
     node = walker.nextNode();
+  }
+
+  if (aggregatedTextByKey.size > 0) {
+    for (const item of aggregatedTextByKey.values()) {
+      items.push(item);
+    }
   }
 
   // Wait for all image conversions to complete
@@ -402,6 +649,26 @@ export const generatePdf = async (
 
   const pageH = doc.internal.pageSize.getHeight();
   const contentH = pageH - cfg.margins.top - cfg.margins.bottom;
+
+  const debugTextRows: Array<Record<string, unknown>> = [];
+
+  if (cfg.debug && cfg.debugOverlay.enabled) {
+    console.table(
+      debugCells.map((c, idx) => ({
+        idx,
+        tag: c.tag,
+        left: Math.round(c.left),
+        top: Math.round(c.top),
+        width: Math.round(c.width),
+        height: Math.round(c.height),
+        paddingL: c.paddingL,
+        paddingR: c.paddingR,
+        paddingT: c.paddingT,
+        paddingB: c.paddingB,
+        contentWidthPx: Math.round(c.contentWidthPx)
+      }))
+    );
+  }
 
   const uniqueBreaks = Array.from(new Set(pageBreakBeforeYs.filter(y => Number.isFinite(y) && y > 0))).sort((a, b) => a - b);
 
@@ -484,6 +751,14 @@ export const generatePdf = async (
       }
     }
 
+    // Render debug rect (cell content box)
+    else if (item.type === 'debugRect' && cfg.debugOverlay.enabled) {
+      const [r, g, b] = cfg.debugOverlay.strokeColorRgb;
+      doc.setDrawColor(r, g, b);
+      doc.setLineWidth(cfg.debugOverlay.lineWidthMm);
+      doc.rect(item.x, renderY, item.w, item.h, 'D');
+    }
+
     // Render Text
     else if (item.type === 'text' && item.text) {
       doc.setFontSize(px2pt(item.style.fontSize) * cfg.text.scale);
@@ -497,7 +772,29 @@ export const generatePdf = async (
         isBold && isItalic ? 'bolditalic' : isBold ? 'bold' : isItalic ? 'italic' : 'normal'
       );
 
-      doc.text(item.text, item.x, renderY, { baseline: 'alphabetic' });
+      const align = item.textAlign || 'left';
+      const maxWidthMm = item.maxWidthMm ?? 0;
+      const lineHeightMm = item.lineHeightMm ?? px2mm(parseFloat(item.style.fontSize)) * 1.2 * cfg.text.scale;
+      const pdfTextWidthMm = doc.getTextWidth(item.text);
+      const lines = item.noWrap ? [item.text] : wrapTextToWidth(doc, item.text, maxWidthMm);
+      const baseY = renderY;
+
+      if (cfg.debug && cfg.debugOverlay.enabled && maxWidthMm > 0) {
+        debugTextRows.push({
+          text: item.text.length > 60 ? `${item.text.slice(0, 57)}...` : item.text,
+          rectsLen: item.rectsLen ?? null,
+          cssNoWrap: item.cssNoWrap ?? null,
+          noWrapFinal: item.noWrap ?? null,
+          maxWidthMm: Number(maxWidthMm.toFixed(2)),
+          pdfTextWidthMm: Number(pdfTextWidthMm.toFixed(2)),
+          wrappedLines: lines.length,
+          align
+        });
+      }
+
+      for (let i = 0; i < lines.length; i++) {
+        doc.text(lines[i], item.x, baseY + i * lineHeightMm, { baseline: 'alphabetic', align });
+      }
     }
 
     // Render Image
@@ -513,6 +810,10 @@ export const generatePdf = async (
 
   if (cfg.debug) {
     console.log(`[Globe3PDF] Generated ${doc.getNumberOfPages()} page(s)`);
+  }
+
+  if (cfg.debug && cfg.debugOverlay.enabled && debugTextRows.length > 0) {
+    console.table(debugTextRows);
   }
 
   doc.save(cfg.filename);
