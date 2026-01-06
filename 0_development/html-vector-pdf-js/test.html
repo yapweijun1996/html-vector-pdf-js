@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Globe3 PDF Generator - Test Invoice</title>
+  <style>
+    /* Reset and Base Styles */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: Calibri, Arial, sans-serif;
+      font-size: 9pt;
+      color: #333;
+      background: #f5f5f5;
+      padding: 0;
+    }
+
+    /* Print Form Container */
+    #print-form {
+      width: 750px;
+      margin: 20px auto;
+      background: transparent;
+    }
+
+    @media (max-width: 820px) {
+      #print-form {
+        width: 100%;
+        margin: 0;
+      }
+    }
+
+    .pdf-page {
+      width: 750px;
+      /* Keep A4 aspect ratio: 297/210 * 750 ≈ 1060.7px */
+      height: 1061px;
+      margin: 0 auto 20px;
+      background: white;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+
+    /* Force page break markers */
+    .pagebreak_bf_processed {
+      page-break-before: always;
+      break-before: page;
+      height: 0;
+      line-height: 0;
+    }
+
+    /* Globe3-style table classes */
+    .fontblack9a {
+      font-family: Calibri, Arial, sans-serif;
+      font-size: 9pt;
+      color: #333;
+      border-collapse: collapse;
+    }
+    .fontblack13a {
+      font-family: Calibri, Arial, sans-serif;
+      font-size: 13pt;
+      color: #333;
+    }
+    .fontblack14a {
+      font-family: Calibri, Arial, sans-serif;
+      font-size: 14pt;
+      color: #333;
+    }
+
+    /* Border utility classes */
+    .border-all { border: 1px solid black; }
+    .border-top { border-top: 1px solid black; }
+    .border-bottom { border-bottom: 1px solid black; }
+    .border-left { border-left: 1px solid black; }
+    .border-right { border-right: 1px solid black; }
+
+    /* Table cell padding */
+    td { padding: 2px 5px; }
+
+    /* Header section */
+    .company-header { margin-bottom: 10px; }
+    .company-name { font-size: 13pt; font-weight: bold; }
+
+    /* Document title */
+    .doc-title {
+      text-align: center;
+      font-size: 14pt;
+      font-weight: bold;
+      margin: 15px 0;
+    }
+
+    /* Row header (column titles) */
+    .row-header td {
+      background: #f0f0f0;
+      font-weight: bold;
+      text-align: center;
+      padding: 5px;
+      border: 1px solid black;
+    }
+
+    /* Row items */
+    .row-item td {
+      border-left: 1px solid black;
+      border-right: 1px solid black;
+      padding: 3px 5px;
+      vertical-align: top;
+    }
+    .row-item:last-child td {
+      border-bottom: 1px solid black;
+    }
+
+    /* Totals section */
+    .totals-section td {
+      padding: 3px 5px;
+    }
+    .totals-label { text-align: right; font-weight: bold; }
+    .totals-value { text-align: right; }
+
+    /* Footer */
+    .page-footer {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 9pt;
+      color: #666;
+    }
+
+    /* Download button */
+    #pdf-download-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 9999;
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-family: Calibri, Arial, sans-serif;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+      transition: all 0.3s ease;
+    }
+    #pdf-download-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+    #pdf-download-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    @media print {
+      #pdf-download-btn { display: none; }
+      body { background: white; padding: 0; }
+      #print-form { margin: 0; }
+      .pdf-page { box-shadow: none; margin: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Download PDF Button -->
+<button id="pdf-download-btn" onclick="downloadPdf()">Download PDF</button>
+
+<!-- Print Form Content -->
+<div id="print-form">
+  <div class="pdf-page">
+
+  <!-- Company Header -->
+  <table class="fontblack9a company-header" width="100%" cellspacing="0" cellpadding="0">
+    <tr>
+      <td width="70%">
+        <div class="company-name">Wan Tai & Co (Pte) Ltd</div>
+        <div>25 Changi South Ave 2</div>
+        <div>Singapore 486594</div>
+        <div>Tel: 65465900 &nbsp; Fax No.: 65466388</div>
+      </td>
+      <td width="30%" align="right" valign="top">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Crect fill='%23eee' width='80' height='80'/%3E%3Ctext x='40' y='45' text-anchor='middle' fill='%23999' font-size='12'%3ELOGO%3C/text%3E%3C/svg%3E" alt="Company Logo" width="80" height="80">
+      </td>
+    </tr>
+  </table>
+
+  <!-- Document Title -->
+  <div class="doc-title">TAX INVOICE</div>
+
+  <!-- Bill To / Invoice Info -->
+  <table class="fontblack9a" width="100%" cellspacing="0" cellpadding="0">
+    <tr>
+      <td width="50%" valign="top">
+        <table class="fontblack9a" cellspacing="0" cellpadding="0">
+          <tr><td colspan="2"><b>BILL TO:</b></td></tr>
+          <tr><td width="30"></td><td><b>WOH HUP (PRIVATE) LIMITED</b></td></tr>
+          <tr><td></td><td>23 Kranji Way</td></tr>
+          <tr><td></td><td>Singapore 738205</td></tr>
+        </table>
+      </td>
+      <td width="50%" valign="top">
+        <table class="fontblack9a" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="110"><b>INV NO.</b></td>
+            <td width="10"><b>:</b></td>
+            <td>PCI-2601-10002</td>
+          </tr>
+          <tr>
+            <td><b>INV DATE</b></td>
+            <td><b>:</b></td>
+            <td>31 JAN 2026</td>
+          </tr>
+          <tr>
+            <td><b>REFERENCE NO.</b></td>
+            <td><b>:</b></td>
+            <td>PO-2026-0042</td>
+          </tr>
+          <tr>
+            <td><b>PAGE</b></td>
+            <td><b>:</b></td>
+            <td><span id="page-num">1</span> OF <span id="total-pages">1</span></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <br>
+
+  <!-- Row Header -->
+  <table class="fontblack9a" width="720" cellspacing="0" cellpadding="0" style="margin: 0 auto;">
+    <tr class="row-header">
+      <td width="30" align="center">S/N</td>
+      <td width="91" align="center">ITEM</td>
+      <td width="289" align="center">DESCRIPTION</td>
+      <td width="70" align="center">QTY</td>
+      <td width="40" align="center">U/M</td>
+      <td width="100" align="center">UNIT PRICE</td>
+      <td width="100" align="center">AMOUNT</td>
+    </tr>
+  </table>
+
+  <!-- Row Items -->
+  <table class="fontblack9a" width="720" cellspacing="0" cellpadding="0" style="margin: 0 auto;">
+    <tr class="row-item">
+      <td width="30" align="center" style="border-left: 1px solid black;">1</td>
+      <td width="91">STL-PLATE-001</td>
+      <td width="289">Steel Plate 10mm x 1200mm x 2400mm Grade S275JR</td>
+      <td width="70" align="right">50.00</td>
+      <td width="40" align="center">PCS</td>
+      <td width="100" align="right">285.00</td>
+      <td width="100" align="right" style="border-right: 1px solid black;">14,250.00</td>
+    </tr>
+    <tr class="row-item">
+      <td width="30" align="center" style="border-left: 1px solid black;">2</td>
+      <td width="91">STL-BEAM-002</td>
+      <td width="289">Universal Beam 200x100x5.5x8 Grade S355JR</td>
+      <td width="70" align="right">25.00</td>
+      <td width="40" align="center">PCS</td>
+      <td width="100" align="right">420.00</td>
+      <td width="100" align="right" style="border-right: 1px solid black;">10,500.00</td>
+    </tr>
+    <tr class="row-item">
+      <td width="30" align="center" style="border-left: 1px solid black;">3</td>
+      <td width="91">STL-ANGLE-003</td>
+      <td width="289">Equal Angle 75x75x6 Grade S275JR</td>
+      <td width="70" align="right">100.00</td>
+      <td width="40" align="center">PCS</td>
+      <td width="100" align="right">45.50</td>
+      <td width="100" align="right" style="border-right: 1px solid black;">4,550.00</td>
+    </tr>
+    <tr class="row-item">
+      <td width="30" align="center" style="border-left: 1px solid black;">4</td>
+      <td width="91">STL-PIPE-004</td>
+      <td width="289">Steel Pipe 50mm OD x 3mm WT Schedule 40</td>
+      <td width="70" align="right">200.00</td>
+      <td width="40" align="center">MTR</td>
+      <td width="100" align="right">18.75</td>
+      <td width="100" align="right" style="border-right: 1px solid black;">3,750.00</td>
+    </tr>
+    <tr class="row-item">
+      <td width="30" align="center" style="border-left: 1px solid black; border-bottom: 1px solid black;">5</td>
+      <td width="91" style="border-bottom: 1px solid black;">BOLT-HEX-005</td>
+      <td width="289" style="border-bottom: 1px solid black;">Hex Bolt M16 x 50mm Grade 8.8 with Nut & Washer</td>
+      <td width="70" align="right" style="border-bottom: 1px solid black;">500.00</td>
+      <td width="40" align="center" style="border-bottom: 1px solid black;">SET</td>
+      <td width="100" align="right" style="border-bottom: 1px solid black;">2.80</td>
+      <td width="100" align="right" style="border-right: 1px solid black; border-bottom: 1px solid black;">1,400.00</td>
+    </tr>
+  </table>
+
+  <br>
+
+  <!-- Totals Section -->
+  <table class="fontblack9a" width="720" cellspacing="0" cellpadding="0" style="margin: 0 auto;">
+    <tr class="totals-section">
+      <td width="520"></td>
+      <td width="100" class="totals-label">SUB TOTAL:</td>
+      <td width="100" class="totals-value">34,450.00</td>
+    </tr>
+    <tr class="totals-section">
+      <td></td>
+      <td class="totals-label">GST (9%):</td>
+      <td class="totals-value">3,100.50</td>
+    </tr>
+    <tr class="totals-section">
+      <td></td>
+      <td class="totals-label" style="border-top: 1px solid black;"><b>TOTAL SGD:</b></td>
+      <td class="totals-value" style="border-top: 1px solid black;"><b>37,550.50</b></td>
+    </tr>
+  </table>
+
+  <br><br>
+
+  <!-- Terms -->
+  <table class="fontblack9a" width="720" cellspacing="0" cellpadding="0" style="margin: 0 auto;">
+    <tr>
+      <td>
+        <b>Terms & Conditions:</b><br>
+        1. Payment is due within 30 days from invoice date.<br>
+        2. Please make payment to: Wan Tai & Co (Pte) Ltd, DBS Bank A/C: 001-123456-7<br>
+        3. Goods remain the property of Wan Tai & Co until payment is received in full.
+      </td>
+    </tr>
+  </table>
+
+  <!-- Page Footer -->
+  <div class="page-footer">
+    <span id="footer-page-num">1</span> of <span id="footer-total-pages">1</span>
+  </div>
+
+  </div>
+
+  <div class="pagebreak_bf_processed" style="font-size:0pt;">&nbsp;</div>
+
+  <div class="pdf-page">
+    <div class="doc-title" style="margin-top: 40px;">PAGE 2 (TEST)</div>
+    <table class="fontblack9a" width="720" cellspacing="0" cellpadding="0" style="margin: 0 auto;">
+      <tr class="row-header">
+        <td width="30" align="center">S/N</td>
+        <td width="91" align="center">ITEM</td>
+        <td width="289" align="center">DESCRIPTION</td>
+        <td width="70" align="center">QTY</td>
+        <td width="40" align="center">U/M</td>
+        <td width="100" align="center">UNIT PRICE</td>
+        <td width="100" align="center">AMOUNT</td>
+      </tr>
+      <tr class="row-item">
+        <td width="30" align="center" style="border-left: 1px solid black; border-bottom: 1px solid black;">1</td>
+        <td width="91" style="border-bottom: 1px solid black;">TEST-ITEM-2</td>
+        <td width="289" style="border-bottom: 1px solid black;">Second page content to validate forced page break.</td>
+        <td width="70" align="right" style="border-bottom: 1px solid black;">1.00</td>
+        <td width="40" align="center" style="border-bottom: 1px solid black;">PCS</td>
+        <td width="100" align="right" style="border-bottom: 1px solid black;">0.00</td>
+        <td width="100" align="right" style="border-right: 1px solid black; border-bottom: 1px solid black;">0.00</td>
+      </tr>
+    </table>
+
+    <div class="page-footer" style="margin-top: 40px;">
+      2 of 2
+    </div>
+  </div>
+</div>
+
+<!-- Production build (single JS) -->
+<script src="./dist/globe3-pdf.js"></script>
+
+<!-- Download PDF function -->
+<script>
+async function downloadPdf() {
+  const btn = document.getElementById('pdf-download-btn');
+  btn.disabled = true;
+  btn.textContent = 'Generating...';
+
+  try {
+    await Globe3PdfGenerator.generatePdf('print-form', {
+      filename: 'PCI-2601-10002.pdf',
+      pageSize: 'a4',
+      orientation: 'portrait',
+      margins: { top: 6.35, right: 6.35, bottom: 6.35, left: 6.35 },
+      // Map 750px width to A4 210mm so layout matches the page box
+      render: { pxToMm: 210 / 750 },
+      text: { scale: 1 },
+      debug: true
+    });
+  } catch (err) {
+    console.error('PDF generation error:', err);
+    alert('Error generating PDF: ' + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Download PDF';
+  }
+}
+</script>
+
+</body>
+</html>
