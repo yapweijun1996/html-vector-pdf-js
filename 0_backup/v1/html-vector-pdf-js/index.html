@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Globe3 PDF Converter</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+      body {
+        font-family: 'Inter', 'Noto Sans SC', sans-serif;
+      }
+      /* Simulate paper view */
+      .print-preview {
+        background: white;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        min-height: 297mm; /* A4 height */
+        width: 210mm; /* A4 width */
+        margin: 0 auto;
+        padding: 10mm; /* Default visual padding */
+        box-sizing: border-box;
+      }
+      
+      /* Globe3 Table Styles Simulation */
+      .globe3-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 1rem;
+        font-size: 12px;
+      }
+      .globe3-table th {
+        background-color: #f3f4f6;
+        border: 1px solid #d1d5db;
+        padding: 4px 8px;
+        text-align: left;
+        font-weight: bold;
+      }
+      .globe3-table td {
+        border: 1px solid #d1d5db;
+        padding: 4px 8px;
+      }
+      .globe3-header {
+        width: 100%;
+        margin-bottom: 20px;
+      }
+      .text-right { text-align: right; }
+      .font-bold { font-weight: bold; }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
+    "jspdf": "https://esm.sh/jspdf@^4.0.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.34.0"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body class="bg-slate-100 text-slate-800 h-screen overflow-hidden">
+    <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
