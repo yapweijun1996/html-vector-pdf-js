@@ -1,62 +1,81 @@
 import path from 'path';
 import fs from 'fs/promises';
-import { defineConfig, loadEnv } from 'vite';
-import react from '@vitejs/plugin-react';
+import { defineConfig, Plugin } from 'vite';
 
-export default defineConfig(({ mode }) => {
-    const env = loadEnv(mode, '.', '');
-    return {
-      server: {
-        port: 3000,
-        host: '0.0.0.0',
+export default defineConfig(() => {
+  return {
+    server: {
+      port: 3000,
+      host: '0.0.0.0',
+    },
+    plugins: [copyAssetsToDist()],
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, '.'),
+      }
+    },
+    build: {
+      outDir: 'dist',
+      lib: {
+        entry: path.resolve(__dirname, 'services/pdfGenerator.ts'),
+        name: 'html_to_vector_pdf',
+        fileName: () => 'html_to_vector_pdf.js',
+        formats: ['umd'] as any
       },
-      plugins: [react(), copyTestHtmlToDist()],
-      define: {
-        'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),
-        'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY)
-      },
-      resolve: {
-        alias: {
-          '@': path.resolve(__dirname, '.'),
-        }
-      },
-      build: {
-        outDir: 'dist',
-        lib: {
-          entry: path.resolve(__dirname, 'services/pdfGenerator.ts'),
-          name: 'Globe3PdfGenerator',
-          fileName: () => 'globe3-pdf.js',
-          formats: ['umd']
-        },
-        rollupOptions: {
-          output: {
-            exports: 'named',
-            inlineDynamicImports: true
-          }
+      rollupOptions: {
+        output: {
+          exports: 'named' as const,
+          inlineDynamicImports: true
         }
       }
-    };
+    }
+  };
 });
 
-function copyTestHtmlToDist() {
+function rewriteDistScriptPath(html: string): string {
+  const directPath = html.replaceAll('./dist/html_to_vector_pdf.js', './html_to_vector_pdf.js');
+  return directPath.replace(
+    /<script\s+src=(["'])\.\/html_to_vector_pdf\.js\1\s*><\/script>/g,
+    '<script src="./html_to_vector_pdf.js"></script>'
+  );
+}
+
+function copyAssetsToDist(): Plugin {
   return {
-    name: 'copy-test-html-to-dist',
+    name: 'copy-assets-to-dist',
     apply: 'build',
     async closeBundle() {
       const distDir = path.resolve(__dirname, 'dist');
-      const srcPath = path.resolve(__dirname, 'test.html');
-      const outPath = path.resolve(distDir, 'test.html');
 
       try {
-        const html = await fs.readFile(srcPath, 'utf8');
-        const rewritten = html.replace(
-          '<script src="./dist/globe3-pdf.js"></script>',
-          '<script src="./globe3-pdf.js"></script>'
-        );
+        const entries = await fs.readdir(__dirname, { withFileTypes: true });
+        const filesToCopy = entries
+          .filter((entry) =>
+            entry.isFile() &&
+            (entry.name.toLowerCase().endsWith('.html') ||
+              entry.name.toLowerCase() === 'readme.md' ||
+              entry.name.toLowerCase() === 'readme_zh.md')
+          )
+          .map((entry) => entry.name);
+
         await fs.mkdir(distDir, { recursive: true });
-        await fs.writeFile(outPath, rewritten, 'utf8');
+
+        await Promise.all(
+          filesToCopy.map(async (fileName) => {
+            const srcPath = path.resolve(__dirname, fileName);
+            const outPath = path.resolve(distDir, fileName);
+
+            if (fileName.toLowerCase().endsWith('.html')) {
+              const html = await fs.readFile(srcPath, 'utf8');
+              const rewritten = rewriteDistScriptPath(html);
+              await fs.writeFile(outPath, rewritten, 'utf8');
+            } else {
+              await fs.copyFile(srcPath, outPath);
+            }
+          })
+        );
       } catch (err) {
-        console.warn('[copy-test-html-to-dist] Skipped:', err);
+        console.warn('[copy-assets-to-dist] Skipped:', err);
       }
     }
   };

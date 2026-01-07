@@ -1,5 +1,0 @@
-{
-  "name": "Globe3 PDF Converter",
-  "description": "A specialized tool to convert Globe3 HTML print forms into true vector PDFs using jsPDF, preserving layout and allowing text selection.",
-  "requestFramePermissions": []
-}

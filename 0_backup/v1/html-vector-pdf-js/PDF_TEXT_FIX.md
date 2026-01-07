@@ -67,7 +67,7 @@ const canAggregate = inTableCell &&
 
 After the fix:
 - ✅ Build completed successfully
-- ✅ The `dist/globe3-pdf.js` file was regenerated (788.77 kB)
+- ✅ The `dist/html_to_vector_pdf.js` file was regenerated (single-file output)
 - ✅ Text with mixed styles should now render correctly in PDF output
 
 ## Files Modified
