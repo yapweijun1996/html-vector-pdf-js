@@ -104,7 +104,21 @@ Include the generated script in your HTML file.
 <script src="./dist/html_to_vector_pdf.js"></script>
 ```
 
-### 2. Basic Export
+### 2. One-Click Init (Button Inject/Bind)
+The library also exposes a small product API for one-click export:
+
+```html
+<script>
+  HtmlToVectorPDF.init({
+    selector: '.html_to_vector_pdf',
+    button: { mode: 'inject' }, // or: { mode: 'bind', targetSelector: '#download-btn' }
+    onProgress: (stage, detail) => console.log(stage, detail),
+    onError: (err) => console.error(err.code, err.message, err.meta)
+  });
+</script>
+```
+
+### 3. Basic Export
 Call `html_to_vector_pdf.generatePdf(target, config)`.
 
 `target` can be:
@@ -133,14 +147,14 @@ If a selector matches multiple nodes, they are exported in DOM order and appende
 </script>
 ```
 
-### 3. Forced Page Breaks
+### 4. Forced Page Breaks
 Add a `data-pdf-page-break-before="true"` attribute to force a new page before an element.
 
 ```html
 <div data-pdf-page-break-before="true"></div>
 ```
 
-### 4. Consistent Scaling (Recommended)
+### 5. Consistent Scaling (Recommended)
 If your printable area uses a fixed pixel width (example: `.pdf-page { width: 750px; }`), you can map that width to the PDF page width to reduce overflow/wrapping differences:
 
 ```js
@@ -163,6 +177,11 @@ The `generatePdf` function accepts a configuration object with the following opt
 | `orientation` | `"portrait" \| "landscape"` | `"portrait"` | Page orientation. |
 | `margins` | `{ top, right, bottom, left }` | `{ top:10, right:10, bottom:10, left:10 }` | Margins in millimeters. |
 | `excludeSelectors` | `string[]` | (built-in list) | Elements matching these selectors are skipped. |
+| `callbacks.onProgress` | `(stage, detail) => void` | (none) | Progress hook (parsing/rendering/saving). |
+| `callbacks.onError` | `(error) => void` | (none) | Error hook with deterministic error codes. |
+| `performance.yieldEveryNodes` | `number` | `250` | Async yield cadence to reduce UI freezes. |
+| `performance.yieldEveryMs` | `number` | `16` | Minimum time between yields. |
+| `errors.failOnAssetError` | `boolean` | `false` | Throw on image/svg failures (default keeps going). |
 | `text.scale` | `number` | `1` | Global scaling factor for text size. |
 | `render.pxToMm` | `number` | (auto) | Override px→mm conversion for consistent scaling. |
 | `pagination.pageBreakBeforeSelectors` | `string[]` | `[".pagebreak_bf_processed","[data-pdf-page-break-before=\"true\"]"]` | CSS selectors that force a new page before an element. |
