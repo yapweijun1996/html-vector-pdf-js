@@ -15,6 +15,7 @@
     "jspdf": "^4.0.0"
   },
   "devDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "^4.55.1",
     "@types/node": "^22.14.0",
     "typescript": "~5.8.2",
     "vite": "^6.2.0"

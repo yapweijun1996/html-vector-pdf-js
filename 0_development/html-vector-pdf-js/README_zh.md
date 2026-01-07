@@ -104,7 +104,21 @@ graph TB
 <script src="./dist/html_to_vector_pdf.js"></script>
 ```
 
-### 2. 基础导出
+### 2. 一键初始化（注入/绑定按钮）
+库也提供了一个更偏产品形态的一键导出 API：
+
+```html
+<script>
+  HtmlToVectorPDF.init({
+    selector: '.html_to_vector_pdf',
+    button: { mode: 'inject' }, // 或：{ mode: 'bind', targetSelector: '#download-btn' }
+    onProgress: (stage, detail) => console.log(stage, detail),
+    onError: (err) => console.error(err.code, err.message, err.meta)
+  });
+</script>
+```
+
+### 3. 基础导出
 调用 `html_to_vector_pdf.generatePdf(target, config)`。
 
 `target` 可以是：
@@ -133,14 +147,14 @@ graph TB
 </script>
 ```
 
-### 3. 强制分页
+### 4. 强制分页
 添加 `data-pdf-page-break-before="true"` 属性以在元素之前强制新页面。
 
 ```html
 <div data-pdf-page-break-before="true"></div>
 ```
 
-### 4. 一致的缩放（推荐）
+### 5. 一致的缩放（推荐）
 如果您的可打印区域使用固定像素宽度（例如：`.pdf-page { width: 750px; }`），您可以将该宽度映射到 PDF 页面宽度以减少溢出/换行差异：
 
 ```js
@@ -163,6 +177,11 @@ await html_to_vector_pdf.generatePdf('.html_to_vector_pdf', { margins, render: {
 | `orientation` | `"portrait" \| "landscape"` | `"portrait"` | 页面方向。 |
 | `margins` | `{ top, right, bottom, left }` | `{ top:10, right:10, bottom:10, left:10 }` | 边距（毫米）。 |
 | `excludeSelectors` | `string[]` | (内置列表) | 匹配这些选择器的元素将被跳过。 |
+| `callbacks.onProgress` | `(stage, detail) => void` | (无) | 进度回呼（解析/渲染/保存）。 |
+| `callbacks.onError` | `(error) => void` | (无) | 错误回呼（带确定性的错误码）。 |
+| `performance.yieldEveryNodes` | `number` | `250` | 异步让出节奏，降低 UI 卡顿。 |
+| `performance.yieldEveryMs` | `number` | `16` | 两次 yield 的最小间隔。 |
+| `errors.failOnAssetError` | `boolean` | `false` | 图片/SVG 失败时是否直接抛错（默认继续）。 |
 | `text.scale` | `number` | `1` | 文本大小的全局缩放因子。 |
 | `render.pxToMm` | `number` | (自动) | 覆盖 px→mm 转换以实现跨布局的一致缩放。 |
 | `pagination.pageBreakBeforeSelectors` | `string[]` | `[".pagebreak_bf_processed","[data-pdf-page-break-before=\"true\"]"]` | 在元素之前强制新页面的 CSS 选择器。 |

@@ -4,6 +4,8 @@ import { parseColor } from './colors';
 import { px2pt } from './pdfUnits';
 import { RenderItem } from './renderItems';
 import { wrapTextToWidth } from './textLayout';
+import { createYieldController } from './asyncYield';
+import { HtmlToVectorPdfError } from './errors';
 
 type PdfFontFamily = 'helvetica' | 'times' | 'courier';
 
@@ -34,11 +36,11 @@ const applyTextStyle = (doc: jsPDF, style: CSSStyleDeclaration, textScale: numbe
   doc.setTextColor(r, g, b);
 };
 
-export const renderToPdf = (
+export const renderToPdf = async (
   allElementItems: Array<{ items: RenderItem[]; pageBreakBeforeYs: number[] }>,
   cfg: Required<PdfConfig>,
   px2mm: (px: number) => number
-): jsPDF => {
+): Promise<jsPDF> => {
   const doc = new jsPDF({
     orientation: cfg.orientation,
     unit: 'mm',
@@ -47,11 +49,17 @@ export const renderToPdf = (
 
   const pageH = doc.internal.pageSize.getHeight();
   const contentH = pageH - cfg.margins.top - cfg.margins.bottom;
+  const maybeYield = createYieldController({
+    yieldEveryNodes: cfg.performance.yieldEveryNodes,
+    yieldEveryMs: cfg.performance.yieldEveryMs,
+    strategy: cfg.performance.yieldStrategy
+  });
 
   const debugTextRows: Array<Record<string, unknown>> = [];
   let currentStartPage = 1;
 
   for (let elemIdx = 0; elemIdx < allElementItems.length; elemIdx++) {
+    cfg.callbacks.onProgress?.('render:element:start', { elementIndex: elemIdx, elementCount: allElementItems.length });
     const { items, pageBreakBeforeYs } = allElementItems[elemIdx];
 
     if (elemIdx > 0) {
@@ -114,10 +122,10 @@ export const renderToPdf = (
       }
     }
 
-    items
-      .slice()
-      .sort((a, b) => a.zIndex - b.zIndex)
-      .forEach((item) => {
+    const sorted = items.slice().sort((a, b) => a.zIndex - b.zIndex);
+    for (let itemIdx = 0; itemIdx < sorted.length; itemIdx++) {
+      await maybeYield(itemIdx + 1);
+      const item = sorted[itemIdx];
         const forcedBreakCount = uniqueBreaks.length ? countBreaksAtOrBefore(item.y) : 0;
         const forcedOffset = forcedBreakCount > 0 ? uniqueBreaks[forcedBreakCount - 1] : 0;
         const relativeY = item.y - forcedOffset;
@@ -135,7 +143,7 @@ export const renderToPdf = (
           const [r, g, b] = parseColor(item.style.backgroundColor);
           doc.setFillColor(r, g, b);
           doc.rect(item.x, renderY, item.w, item.h, 'F');
-          return;
+          continue;
         }
 
         if (item.type === 'border' && item.borderSides && item.borderColors) {
@@ -180,7 +188,7 @@ export const renderToPdf = (
               doc.line(item.x + item.w, renderY, item.x + item.w, renderY + item.h);
             }
           }
-          return;
+          continue;
         }
 
         if (item.type === 'debugRect' && cfg.debugOverlay.enabled) {
@@ -188,7 +196,7 @@ export const renderToPdf = (
           doc.setDrawColor(r, g, b);
           doc.setLineWidth(cfg.debugOverlay.lineWidthMm);
           doc.rect(item.x, renderY, item.w, item.h, 'D');
-          return;
+          continue;
         }
 
         if (item.type === 'text' && item.text) {
@@ -218,7 +226,7 @@ export const renderToPdf = (
           for (let i = 0; i < lines.length; i++) {
             doc.text(lines[i], x, baseY + i * lineHeightMm, { baseline: 'alphabetic', align });
           }
-          return;
+          continue;
         }
 
         if (item.type === 'image' && item.imageSrc) {
@@ -226,12 +234,21 @@ export const renderToPdf = (
             const format = item.imageFormat || 'PNG';
             doc.addImage(item.imageSrc, format, item.x, renderY, item.w, item.h);
           } catch (e) {
+            const err = new HtmlToVectorPdfError(
+              'ASSET_LOAD_FAILED',
+              'Failed to add image to PDF',
+              { imageSrc: item.imageSrc },
+              e
+            );
+            cfg.callbacks.onError?.(err);
+            if (cfg.errors.failOnAssetError) throw err;
             if (cfg.debug) console.warn('[html_to_vector_pdf] Failed to add image:', e);
           }
         }
-      });
+      }
 
     currentStartPage = doc.getNumberOfPages() + 1;
+    cfg.callbacks.onProgress?.('render:element:done', { elementIndex: elemIdx, elementCount: allElementItems.length });
   }
 
   if (cfg.debug) {

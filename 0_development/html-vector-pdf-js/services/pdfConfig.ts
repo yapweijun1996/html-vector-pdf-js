@@ -1,14 +1,29 @@
+import type { HtmlToVectorPdfError } from './errors';
+
 export interface PdfConfig {
   filename?: string;
   pageSize?: 'a4' | 'letter';
   orientation?: 'portrait' | 'landscape';
   margins?: { top: number; right: number; bottom: number; left: number };
   excludeSelectors?: string[];
+  callbacks?: {
+    onProgress?: (stage: string, detail?: Record<string, unknown>) => void;
+    onError?: (error: HtmlToVectorPdfError) => void;
+  };
+  performance?: {
+    yieldEveryNodes?: number;
+    yieldEveryMs?: number;
+    yieldStrategy?: 'raf' | 'timeout';
+  };
+  errors?: {
+    failOnAssetError?: boolean;
+  };
   text?: {
     scale?: number;
   };
   render?: {
     pxToMm?: number;
+    rasterScale?: number;
   };
   pagination?: {
     pageBreakBeforeSelectors?: string[];
@@ -31,6 +46,7 @@ export const DEFAULT_EXCLUDE_SELECTORS = [
   'script',
   'style',
   '#pdf-download-btn',
+  '#html-to-vector-pdf-btn',
   '.build-status'
 ];
 
@@ -40,10 +56,21 @@ export const DEFAULT_CONFIG: Required<PdfConfig> = {
   orientation: 'portrait',
   margins: { top: 10, right: 10, bottom: 10, left: 10 },
   excludeSelectors: DEFAULT_EXCLUDE_SELECTORS,
+  callbacks: {},
+  performance: {
+    yieldEveryNodes: 250,
+    yieldEveryMs: 16,
+    yieldStrategy: 'raf'
+  },
+  errors: {
+    failOnAssetError: false
+  },
   text: {
     scale: 1
   },
-  render: {},
+  render: {
+    rasterScale: 2
+  },
   pagination: {
     pageBreakBeforeSelectors: ['.pagebreak_bf_processed', '[data-pdf-page-break-before="true"]']
   },
@@ -54,4 +81,3 @@ export const DEFAULT_CONFIG: Required<PdfConfig> = {
   },
   debug: false
 };
-

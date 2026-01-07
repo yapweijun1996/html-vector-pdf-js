@@ -1,12 +1,13 @@
-export const svgToDataUrl = (svgSrc: string, width: number, height: number): Promise<string> => {
+export const svgToDataUrl = (svgSrc: string, width: number, height: number, rasterScale: number): Promise<string> => {
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.crossOrigin = 'anonymous';
 
     img.onload = () => {
+      const scale = Number.isFinite(rasterScale) && rasterScale > 0 ? rasterScale : 2;
       const canvas = document.createElement('canvas');
-      canvas.width = width * 2;
-      canvas.height = height * 2;
+      canvas.width = Math.max(1, Math.round(width * scale));
+      canvas.height = Math.max(1, Math.round(height * scale));
       const ctx = canvas.getContext('2d');
       if (!ctx) {
         reject(new Error('Could not get canvas context'));
@@ -26,4 +27,3 @@ export const svgToDataUrl = (svgSrc: string, width: number, height: number): Pro
 export const isSvgImage = (src: string): boolean => {
   return src.startsWith('data:image/svg') || src.endsWith('.svg');
 };
-
