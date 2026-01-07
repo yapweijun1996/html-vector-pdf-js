@@ -77,6 +77,29 @@ export const parseElementNode = (
     });
   }
 
+  if (el.tagName === 'CANVAS') {
+    try {
+      const canvas = el as HTMLCanvasElement;
+      // Use PNG format to preserve transparency
+      const dataUrl = canvas.toDataURL('image/png');
+
+      ctx.items.push({
+        type: 'image',
+        x,
+        y,
+        w,
+        h,
+        style,
+        imageSrc: dataUrl,
+        imageFormat: 'PNG',
+        zIndex: 5
+      });
+    } catch (e) {
+      // Canvas might be tainted (CORS) or 0x0 size
+      if (ctx.cfg.debug) console.warn('[html_to_vector_pdf] Canvas export failed', e);
+    }
+  }
+
   if (el.tagName === 'IMG') {
     const imgEl = el as HTMLImageElement;
     const imgSrc = imgEl.src;

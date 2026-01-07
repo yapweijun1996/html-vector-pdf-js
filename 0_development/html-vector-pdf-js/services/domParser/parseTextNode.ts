@@ -7,6 +7,8 @@ export const parseTextNode = (ctx: DomParseContext, txt: Text, shouldExclude: (e
   const rawText = txt.textContent || '';
   if (!/\S/.test(rawText)) return;
 
+  if (txt.parentElement && txt.parentElement.closest('canvas')) return;
+
   const parentElForWhitespace = txt.parentElement;
   const parentWhiteSpace = parentElForWhitespace ? (window.getComputedStyle(parentElForWhitespace).whiteSpace || '') : '';
   const ws = parentWhiteSpace.toLowerCase();
