@@ -2,14 +2,14 @@
 # Tasks (derived from `prd.md`)
 
 ## P0 — Product API / UX
-- [ ] Add `window.HtmlToVectorPDF.init(options)` + optional button inject/bind flow (keep `Globe3PdfGenerator.generatePdf` as low-level API).
+- [ ] Add `window.HtmlToVectorPDF.init(options)` + optional button inject/bind flow (keep `html_to_vector_pdf.generatePdf` as low-level API).
 - [ ] Add deterministic error codes + `onError` callback (missing element, zero-size, dependency/image failure, generation failure).
 - [ ] Add progress hook `onProgress(stage, detail)` and async yields to reduce UI freezes on long documents.
 
 ## P1 — Generic library hardcoding cleanup
-- [ ] Replace Globe3-specific `DEFAULT_EXCLUDE_SELECTORS` with:
+- [ ] Replace project-specific `DEFAULT_EXCLUDE_SELECTORS` with:
   - [ ] empty-by-default library defaults, and
-  - [ ] optional `preset: "globe3"` preset (or external preset file).
+  - [ ] optional `preset` presets (or external preset file).
 
 ## P1 — Maintainability refactor
 - [ ] Split `services/pdfGenerator.ts` (>300 LOC) into small modules:

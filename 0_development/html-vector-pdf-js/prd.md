@@ -114,8 +114,8 @@ We must implement a **two-tier render strategy**:
 The single JS file must expose a minimal API.
 
 ### 8.1 Global API (example shape)
-- `window.HtmlToVectorPDF.init(options)`
-- `window.HtmlToVectorPDF.export(optionsOverride)`
+- `window.html_to_vector_pdf.init(options)`
+- `window.html_to_vector_pdf.export(optionsOverride)`
 
 ### 8.2 Options (minimum)
 - `selector` (default: `.html_to_vector_pdf`)

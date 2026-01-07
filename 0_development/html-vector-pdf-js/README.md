@@ -2,9 +2,11 @@
 <img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
 </div>
 
-# Globe3 PDF Converter (Vector Engine)
+# HTML → Vector PDF (Vector Engine)
 
 A powerful, client-side library for generating vector-based PDFs from HTML content. Unlike traditional screenshot-based converters, this engine renders text as true text (selectable & searchable) and shapes as vectors, ensuring high-quality output at any zoom level.
+
+[中文文档](./README_zh.md)
 
 ## 🚀 Features
 
@@ -17,7 +19,85 @@ A powerful, client-side library for generating vector-based PDFs from HTML conte
   - Background colors.
   - Image rendering (including automatic SVG-to-PNG conversion).
 - **Pagination Control**: Automatic page breaks with support for manual break triggers.
-- **Configurable**: extensive options for margins, page size, and format.
+- **Configurable**: Extensive options for margins, page size, and format.
+
+## 📊 Architecture Flow
+
+### Overall Processing Pipeline
+
+```mermaid
+graph TB
+    A[User calls generatePdf] --> B[Parse target element]
+    B --> C{Single or Multiple?}
+    C -->|Single| D[Process HTML Element]
+    C -->|Multiple| E[Iterate all matches]
+    E --> D
+    D --> F[DOM Tree Traversal]
+    F --> G[Extract Render Items]
+    G --> H[Sort by zIndex]
+    H --> I[Pagination Calculation]
+    I --> J[Render to PDF]
+    J --> K[Download PDF File]
+    
+    style A fill:#667eea
+    style K fill:#10b981
+```
+
+### Core Rendering Engine
+
+```mermaid
+graph LR
+    A[HTML Element] --> B[DOM Walker]
+    B --> C{Node Type}
+    C -->|Element| D[Extract Styles]
+    C -->|Text| E[Extract Text Content]
+    
+    D --> F[Background Color]
+    D --> G[Borders]
+    D --> H[Images]
+    E --> I[Text Alignment]
+    E --> J[Text Wrapping]
+    
+    F --> K[RenderItem Array]
+    G --> K
+    H --> L{SVG?}
+    L -->|Yes| M[Convert to PNG]
+    L -->|No| K
+    M --> K
+    I --> K
+    J --> K
+    
+    K --> N[Sort by zIndex]
+    N --> O[Render to jsPDF]
+    
+    style A fill:#f59e0b
+    style O fill:#10b981
+```
+
+### Text Processing Flow
+
+```mermaid
+graph TB
+    A[Text Node] --> B[Get Parent Styles]
+    B --> C[Calculate Layout Container]
+    C --> D{Table Cell?}
+    D -->|Yes| E[Use Cell Content Area]
+    D -->|No| F[Use Element Bounds]
+    
+    E --> G[Calculate Padding]
+    F --> G
+    G --> H[Determine Text Alignment]
+    H --> I{Needs Wrapping?}
+    I -->|Yes| J[Smart Token Wrapping]
+    I -->|No| K[Single Line Render]
+    
+    J --> L[Generate Multi-line Items]
+    K --> L
+    L --> M[Add to Render Queue]
+    
+    style A fill:#667eea
+    style M fill:#10b981
+```
 
 ## 📦 Usage
 
@@ -25,11 +105,11 @@ A powerful, client-side library for generating vector-based PDFs from HTML conte
 Include the generated script in your HTML file.
 
 ```html
-<script src="./dist/globe3-pdf.js"></script>
+<script src="./dist/html_to_vector_pdf.js"></script>
 ```
 
 ### 2. Basic Export
-Call `Globe3PdfGenerator.generatePdf(target, config)`.
+Call `html_to_vector_pdf.generatePdf(target, config)`.
 
 `target` can be:
 - an element id (e.g. `"my-report"`)
@@ -48,7 +128,7 @@ If a selector matches multiple nodes, they are exported in DOM order and appende
 
 <script>
   function downloadReport() {
-    Globe3PdfGenerator.generatePdf('.html_to_vector_pdf', {
+    html_to_vector_pdf.generatePdf('.html_to_vector_pdf', {
       filename: 'report.pdf',
       pageSize: 'a4',
       margins: { top: 10, right: 10, bottom: 10, left: 10 }
@@ -73,7 +153,7 @@ const pageWidthMm = 210; // A4 portrait width
 const baseWidthPx = document.querySelector('.pdf-page')?.getBoundingClientRect().width || 750;
 const pxToMm = (pageWidthMm - margins.left - margins.right) / baseWidthPx;
 
-await Globe3PdfGenerator.generatePdf('.html_to_vector_pdf', { margins, render: { pxToMm } });
+await html_to_vector_pdf.generatePdf('.html_to_vector_pdf', { margins, render: { pxToMm } });
 ```
 
 ## ⚙️ Configuration
@@ -86,54 +166,107 @@ The `generatePdf` function accepts a configuration object with the following opt
 | `pageSize` | `"a4" \| "letter"` | `"a4"` | Page size standard. |
 | `orientation` | `"portrait" \| "landscape"` | `"portrait"` | Page orientation. |
 | `margins` | `{ top, right, bottom, left }` | `{ top:10, right:10, bottom:10, left:10 }` | Margins in millimeters. |
-| `excludeSelectors` | `string[]` | (built-in list) | Elements matching these selectors are skipped (scripts/styles/iframes + Globe3-specific defaults). |
+| `excludeSelectors` | `string[]` | (built-in list) | Elements matching these selectors are skipped. |
 | `text.scale` | `number` | `1` | Global scaling factor for text size. |
-| `text.baselineFactor` | `number` | `0.78` | Baseline alignment tweak for better text positioning. |
-| `render.pxToMm` | `number` | (auto) | Override px→mm conversion for consistent scaling across layouts. |
+| `render.pxToMm` | `number` | (auto) | Override px→mm conversion for consistent scaling. |
 | `pagination.pageBreakBeforeSelectors` | `string[]` | `[".pagebreak_bf_processed","[data-pdf-page-break-before=\"true\"]"]` | CSS selectors that force a new page before an element. |
 | `debugOverlay.enabled` | `boolean` | `false` | Draws debug rectangles (table cell content boxes). |
 | `debug` | `boolean` | `false` | Enable console logging for layout debugging. |
 
+## 🔧 Technical Implementation
+
+### Pixel to Millimeter Conversion
+The engine uses dynamic calibration to ensure accurate dimension conversion:
+
+```typescript
+// Create a 100mm wide probe element
+const probe = document.createElement('div');
+probe.style.width = '100mm';
+document.body.appendChild(probe);
+
+// Measure actual pixel width
+const widthPx = probe.getBoundingClientRect().width;
+const pxToMm = 100 / widthPx;
+```
+
+### Render Item Priority (zIndex)
+- **0**: Background colors
+- **5**: Images
+- **10**: Borders
+- **12**: Debug rectangles (if enabled)
+- **20**: Text content
+
+### SVG Image Processing
+SVG images are automatically converted to PNG to ensure cross-platform compatibility:
+
+```mermaid
+graph LR
+    A[Detect SVG Image] --> B[Create Canvas]
+    B --> C[Draw SVG to Canvas]
+    C --> D[Convert to PNG DataURL]
+    D --> E[Embed in PDF]
+    
+    style A fill:#f59e0b
+    style E fill:#10b981
+```
+
 ## ⚠️ Notes / Limitations
 
-- **Not a full browser print engine**: complex CSS (filters, transforms, pseudo elements, advanced layout) may not match exactly.
+- **Not a full browser print engine**: Complex CSS (filters, transforms, pseudo elements, advanced layout) may not match exactly.
 - **Cross-origin images**: SVG-to-canvas conversion requires CORS headers; otherwise the browser may block rendering.
-- **Defaults are Globe3-oriented**: `excludeSelectors` includes several project-specific class names; override with `excludeSelectors: []` (or your own list) if you want generic behavior.
+- **Defaults may be project-oriented**: `excludeSelectors` includes a few project-specific class names; override with `excludeSelectors: []` (or your own list) if you want generic behavior.
 
-## 🧭 PRD Status
+## 🔍 Debugging
 
-See `prd.md` for the target "one-click `.html_to_vector_pdf` export" product shape. Current codebase exposes a lower-level `generatePdf(...)` API (no `init()` button-injection wrapper yet).
+The library includes a **Debug Overlay** feature that draws red rectangles around the content boxes of table cells (`TD`/`TH`). This is useful for verifying layout alignment and padding detection.
+
+### 1. Toggle via URL (Recommended)
+You can enable the overlay on any demo page or implementation using the `debugOverlay` query parameter:
+- **Enable**: `?debugOverlay=1` or `?debugOverlay=true`
+- **Disable**: `?debugOverlay=0` or `?debugOverlay=false`
+
+### 2. Toggle via Console
+You can also set a global flag in your browser's DevTools console:
+```javascript
+window.HTML_TO_VECTOR_PDF_DEBUG_OVERLAY = true;
+```
+
+### 3. Programmatic Control
+Pass the `debugOverlay` option directly to `generatePdf`:
+```javascript
+html_to_vector_pdf.generatePdf('.target', {
+  debugOverlay: { 
+    enabled: true,
+    strokeColorRgb: [255, 0, 0], // Red
+    lineWidthMm: 0.15 
+  },
+  debug: true // Enables console logging
+});
+```
 
 ## 🛠️ Development
 
-This project is built with **Vite**, **TypeScript**, and **React** (for the test harness).
+This project is built with **Vite** and **TypeScript**.
 
 ### Prerequisites
-- Node.js (v18+)
+- Node.js (v20+)
 
 ### Installation
 ```bash
 npm install
 ```
 
-### Run Dev Server
-Starts the interactive test environment where you can preview changes live.
-```bash
-npm run dev
-```
-
 ### Build Library
-Builds the standalone `globe3-pdf.js` library to the `dist/` folder.
+Builds the standalone `html_to_vector_pdf.js` library to the `dist/` folder.
 ```bash
 npm run build
 ```
 
 ### Demo Files
-- `test.html`: single `.html_to_vector_pdf` example (loads `./dist/globe3-pdf.js`)
+- `index.html`: single `.html_to_vector_pdf` example (loads `./dist/html_to_vector_pdf.js`)
 - `index_multi.html`: multiple `.html_to_vector_pdf` elements merged into one PDF
-- `test-production.html`: production-like smoke test for the UMD global `Globe3PdfGenerator`
 
-After `npm run build`, HTML demo files are copied into `dist/` with the script path rewritten to `./globe3-pdf.js` so you can open them directly.
+After `npm run build`, HTML demo files are copied into `dist/` with the script path rewritten to `./html_to_vector_pdf.js` so you can open them directly.
 
 ## 📄 License
-Private (Globe3)
+Private

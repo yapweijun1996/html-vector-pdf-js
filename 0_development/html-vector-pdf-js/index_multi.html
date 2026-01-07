@@ -1,12 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Globe3 PDF Generator - Multiple Invoices Demo</title>
+  <title>HTML → Vector PDF - Multiple Invoices Demo</title>
   <style>
     /* Reset and Base Styles */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
       font-family: Arial, sans-serif;
       font-size: 9pt;
@@ -34,12 +40,12 @@
       height: 1061px;
       margin: 0 auto 20px;
       background: white;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
       overflow: hidden;
       padding: 20px;
     }
 
-    /* Globe3-style table classes */
+    /* Table classes */
     .fontblack9a {
       font-family: Arial, sans-serif;
       font-size: 9pt;
@@ -75,8 +81,15 @@
     .totals-section td {
       padding: 3px 5px;
     }
-    .totals-label { text-align: right; font-weight: bold; }
-    .totals-value { text-align: right; }
+
+    .totals-label {
+      text-align: right;
+      font-weight: bold;
+    }
+
+    .totals-value {
+      text-align: right;
+    }
 
     /* Invoice separator */
     .invoice-separator {
@@ -87,13 +100,13 @@
     }
 
     /* Header section */
-    .company-name { font-size: 13pt; font-weight: bold; }
+    .company-name {
+      font-size: 13pt;
+      font-weight: bold;
+    }
 
     /* Download button */
     #pdf-download-btn {
-      position: fixed;
-      top: 20px;
-      right: 20px;
       z-index: 9999;
       padding: 12px 24px;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -107,10 +120,12 @@
       box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
       transition: all 0.3s ease;
     }
+
     #pdf-download-btn:hover {
       transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
     }
+
     #pdf-download-btn:disabled {
       background: #ccc;
       cursor: not-allowed;
@@ -131,286 +146,352 @@
       z-index: 9999;
     }
 
+    /* Top-right controls */
+    .pdf-controls {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 9999;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .pdf-controls #pdf-download-btn {
+      position: static;
+    }
+
+    #pdf-toggle-btn {
+      padding: 12px 16px;
+      background: white;
+      color: #1f2937;
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      border-radius: 8px;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    #pdf-toggle-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+    }
+
     @media print {
-      #pdf-download-btn, .info-badge, .invoice-separator { display: none; }
-      body { background: white; padding: 0; }
-      .html_to_vector_pdf { margin: 0; }
-      .pdf-page { box-shadow: none; margin: 0; page-break-after: always; }
+
+      .pdf-controls,
+      .info-badge,
+      .invoice-separator {
+        display: none;
+      }
+
+      body {
+        background: white;
+        padding: 0;
+      }
+
+      .html_to_vector_pdf {
+        margin: 0;
+      }
+
+      .pdf-page {
+        box-shadow: none;
+        margin: 0;
+        page-break-after: always;
+      }
     }
   </style>
 </head>
+
 <body>
 
-<!-- Info Badge -->
-<div class="info-badge">3 Invoices (Multiple .html_to_vector_pdf elements)</div>
+  <!-- Info Badge -->
+  <div class="info-badge">3 Invoices (Multiple .html_to_vector_pdf elements)</div>
 
-<!-- Download PDF Button -->
-<button id="pdf-download-btn" onclick="downloadPdf()">Download All 3 Invoices as PDF</button>
-
-<!-- ========== INVOICE 1 ========== -->
-<div class="html_to_vector_pdf">
-  <div class="pdf-page">
-    <table class="fontblack9a" width="100%" cellspacing="0" cellpadding="0">
-      <tr>
-        <td width="70%">
-          <div class="company-name">Wan Tai & Co (Pte) Ltd</div>
-          <div>25 Changi South Ave 2, Singapore 486594</div>
-        </td>
-        <td width="30%" align="right" valign="top">
-          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Crect fill='%23667eea' width='60' height='60' rx='8'/%3E%3Ctext x='30' y='38' text-anchor='middle' fill='white' font-size='14' font-weight='bold'%3EWT%3C/text%3E%3C/svg%3E" alt="Logo" width="60" height="60">
-        </td>
-      </tr>
-    </table>
-
-    <div class="doc-title" style="color: #667eea;">TAX INVOICE #1</div>
-
-    <table class="fontblack9a" width="100%" cellspacing="0" cellpadding="0" style="margin-bottom: 15px;">
-      <tr>
-        <td width="50%"><b>BILL TO:</b> ABC Construction Pte Ltd</td>
-        <td width="50%" align="right"><b>INV NO:</b> INV-2026-0001 | <b>DATE:</b> 01 JAN 2026</td>
-      </tr>
-    </table>
-
-    <table class="fontblack9a" width="100%" cellspacing="0" cellpadding="0">
-      <tr class="row-header">
-        <td width="8%">S/N</td>
-        <td width="20%">ITEM</td>
-        <td width="37%">DESCRIPTION</td>
-        <td width="10%">QTY</td>
-        <td width="12%">UNIT PRICE</td>
-        <td width="13%">AMOUNT</td>
-      </tr>
-      <tr class="row-item">
-        <td align="center">1</td>
-        <td>STL-001</td>
-        <td>Steel Plate 10mm x 1200mm</td>
-        <td align="right">50</td>
-        <td align="right">285.00</td>
-        <td align="right">14,250.00</td>
-      </tr>
-      <tr class="row-item">
-        <td align="center">2</td>
-        <td>STL-002</td>
-        <td>Universal Beam 200x100</td>
-        <td align="right">25</td>
-        <td align="right">420.00</td>
-        <td align="right">10,500.00</td>
-      </tr>
-    </table>
-
-    <table class="fontblack9a" width="100%" cellspacing="0" cellpadding="0" style="margin-top: 20px;">
-      <tr class="totals-section">
-        <td width="75%"></td>
-        <td class="totals-label">SUB TOTAL:</td>
-        <td class="totals-value">24,750.00</td>
-      </tr>
-      <tr class="totals-section">
-        <td></td>
-        <td class="totals-label">GST (9%):</td>
-        <td class="totals-value">2,227.50</td>
-      </tr>
-      <tr class="totals-section">
-        <td></td>
-        <td class="totals-label" style="border-top: 2px solid black;"><b>TOTAL SGD:</b></td>
-        <td class="totals-value" style="border-top: 2px solid black;"><b>26,977.50</b></td>
-      </tr>
-    </table>
+  <!-- Top-right controls -->
+  <div class="pdf-controls">
+    <button id="pdf-download-btn" onclick="download_vector_pdf()">Download All 3 Invoices as PDF</button>
+    <button id="pdf-toggle-btn" type="button" data-target="index.html">Single Demo</button>
   </div>
-</div>
 
-<hr class="invoice-separator">
+  <!-- ========== INVOICE 1 ========== -->
+  <div class="html_to_vector_pdf">
+    <div class="pdf-page">
+      <table class="fontblack9a" width="100%" cellspacing="0" cellpadding="0">
+        <tr>
+          <td width="70%">
+            <div class="company-name">EXAMPL CORP PTE LTD</div>
+            <div>123 EXAMPLE STREET, SINGAPORE 123456</div>
+          </td>
+          <td width="30%" align="right" valign="top">
+            <img
+              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Crect fill='%23667eea' width='60' height='60' rx='8'/%3E%3Ctext x='30' y='38' text-anchor='middle' fill='white' font-size='14' font-weight='bold'%3ESG%3C/text%3E%3C/svg%3E"
+              alt="Logo" width="60" height="60">
+          </td>
+        </tr>
+      </table>
 
-<!-- ========== INVOICE 2 ========== -->
-<div class="html_to_vector_pdf">
-  <div class="pdf-page">
-    <table class="fontblack9a" width="100%" cellspacing="0" cellpadding="0">
-      <tr>
-        <td width="70%">
-          <div class="company-name">Wan Tai & Co (Pte) Ltd</div>
-          <div>25 Changi South Ave 2, Singapore 486594</div>
-        </td>
-        <td width="30%" align="right" valign="top">
-          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Crect fill='%23667eea' width='60' height='60' rx='8'/%3E%3Ctext x='30' y='38' text-anchor='middle' fill='white' font-size='14' font-weight='bold'%3EWT%3C/text%3E%3C/svg%3E" alt="Logo" width="60" height="60">
-        </td>
-      </tr>
-    </table>
+      <div class="doc-title" style="color: #667eea;">TAX INVOICE #1</div>
 
-    <div class="doc-title" style="color: #10b981;">TAX INVOICE #2</div>
+      <table class="fontblack9a" width="100%" cellspacing="0" cellpadding="0" style="margin-bottom: 15px;">
+        <tr>
+          <td width="50%"><b>BILL TO:</b> ALPHA BUILDERS PTE LTD</td>
+          <td width="50%" align="right"><b>INV NO:</b> INV-2026-0001 | <b>DATE:</b> 01 JAN 2026</td>
+        </tr>
+      </table>
 
-    <table class="fontblack9a" width="100%" cellspacing="0" cellpadding="0" style="margin-bottom: 15px;">
-      <tr>
-        <td width="50%"><b>BILL TO:</b> XYZ Engineering Pte Ltd</td>
-        <td width="50%" align="right"><b>INV NO:</b> INV-2026-0002 | <b>DATE:</b> 15 JAN 2026</td>
-      </tr>
-    </table>
+      <table class="fontblack9a" width="100%" cellspacing="0" cellpadding="0">
+        <tr class="row-header">
+          <td width="8%">S/N</td>
+          <td width="20%">ITEM</td>
+          <td width="37%">DESCRIPTION</td>
+          <td width="10%">QTY</td>
+          <td width="12%">UNIT PRICE</td>
+          <td width="13%">AMOUNT</td>
+        </tr>
+        <tr class="row-item">
+          <td align="center">1</td>
+          <td>APP-MSTUDIO</td>
+          <td>Mac Studio (M2 Ultra, 64GB RAM, 1TB SSD)</td>
+          <td align="right">1</td>
+          <td align="right">3,999.00</td>
+          <td align="right">3,999.00</td>
+        </tr>
+        <tr class="row-item">
+          <td align="center">2</td>
+          <td>APP-SDISPLAY</td>
+          <td>Studio Display - Nano-texture glass, Tilt-adjustable stand</td>
+          <td align="right">1</td>
+          <td align="right">1,899.00</td>
+          <td align="right">1,899.00</td>
+        </tr>
+      </table>
 
-    <table class="fontblack9a" width="100%" cellspacing="0" cellpadding="0">
-      <tr class="row-header">
-        <td width="8%">S/N</td>
-        <td width="20%">ITEM</td>
-        <td width="37%">DESCRIPTION</td>
-        <td width="10%">QTY</td>
-        <td width="12%">UNIT PRICE</td>
-        <td width="13%">AMOUNT</td>
-      </tr>
-      <tr class="row-item">
-        <td align="center">1</td>
-        <td>PIPE-001</td>
-        <td>Steel Pipe 50mm OD Schedule 40</td>
-        <td align="right">100</td>
-        <td align="right">18.75</td>
-        <td align="right">1,875.00</td>
-      </tr>
-      <tr class="row-item">
-        <td align="center">2</td>
-        <td>BOLT-001</td>
-        <td>Hex Bolt M16 x 50mm Grade 8.8</td>
-        <td align="right">500</td>
-        <td align="right">2.80</td>
-        <td align="right">1,400.00</td>
-      </tr>
-      <tr class="row-item">
-        <td align="center">3</td>
-        <td>ANGLE-001</td>
-        <td>Equal Angle 75x75x6 Grade S275JR</td>
-        <td align="right">80</td>
-        <td align="right">45.50</td>
-        <td align="right">3,640.00</td>
-      </tr>
-    </table>
-
-    <table class="fontblack9a" width="100%" cellspacing="0" cellpadding="0" style="margin-top: 20px;">
-      <tr class="totals-section">
-        <td width="75%"></td>
-        <td class="totals-label">SUB TOTAL:</td>
-        <td class="totals-value">6,915.00</td>
-      </tr>
-      <tr class="totals-section">
-        <td></td>
-        <td class="totals-label">GST (9%):</td>
-        <td class="totals-value">622.35</td>
-      </tr>
-      <tr class="totals-section">
-        <td></td>
-        <td class="totals-label" style="border-top: 2px solid black;"><b>TOTAL SGD:</b></td>
-        <td class="totals-value" style="border-top: 2px solid black;"><b>7,537.35</b></td>
-      </tr>
-    </table>
+      <table class="fontblack9a" width="100%" cellspacing="0" cellpadding="0" style="margin-top: 20px;">
+        <tr class="totals-section">
+          <td width="75%"></td>
+          <td class="totals-label">SUB TOTAL:</td>
+          <td class="totals-value">5,898.00</td>
+        </tr>
+        <tr class="totals-section">
+          <td></td>
+          <td class="totals-label">GST (9%):</td>
+          <td class="totals-value">530.82</td>
+        </tr>
+        <tr class="totals-section">
+          <td></td>
+          <td class="totals-label" style="border-top: 2px solid black;"><b>TOTAL SGD:</b></td>
+          <td class="totals-value" style="border-top: 2px solid black;"><b>6,428.82</b></td>
+        </tr>
+      </table>
+    </div>
   </div>
-</div>
 
-<hr class="invoice-separator">
+  <hr class="invoice-separator">
 
-<!-- ========== INVOICE 3 ========== -->
-<div class="html_to_vector_pdf">
-  <div class="pdf-page">
-    <table class="fontblack9a" width="100%" cellspacing="0" cellpadding="0">
-      <tr>
-        <td width="70%">
-          <div class="company-name">Wan Tai & Co (Pte) Ltd</div>
-          <div>25 Changi South Ave 2, Singapore 486594</div>
-        </td>
-        <td width="30%" align="right" valign="top">
-          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Crect fill='%23667eea' width='60' height='60' rx='8'/%3E%3Ctext x='30' y='38' text-anchor='middle' fill='white' font-size='14' font-weight='bold'%3EWT%3C/text%3E%3C/svg%3E" alt="Logo" width="60" height="60">
-        </td>
-      </tr>
-    </table>
+  <!-- ========== INVOICE 2 ========== -->
+  <div class="html_to_vector_pdf">
+    <div class="pdf-page">
+      <table class="fontblack9a" width="100%" cellspacing="0" cellpadding="0">
+        <tr>
+          <td width="70%">
+            <div class="company-name">EXAMPL CORP PTE LTD</div>
+            <div>123 EXAMPLE STREET, SINGAPORE 123456</div>
+          </td>
+          <td width="30%" align="right" valign="top">
+            <img
+              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Crect fill='%23667eea' width='60' height='60' rx='8'/%3E%3Ctext x='30' y='38' text-anchor='middle' fill='white' font-size='14' font-weight='bold'%3ESG%3C/text%3E%3C/svg%3E"
+              alt="Logo" width="60" height="60">
+          </td>
+        </tr>
+      </table>
 
-    <div class="doc-title" style="color: #f59e0b;">TAX INVOICE #3</div>
+      <div class="doc-title" style="color: #10b981;">TAX INVOICE #2</div>
 
-    <table class="fontblack9a" width="100%" cellspacing="0" cellpadding="0" style="margin-bottom: 15px;">
-      <tr>
-        <td width="50%"><b>BILL TO:</b> DEF Industries Pte Ltd</td>
-        <td width="50%" align="right"><b>INV NO:</b> INV-2026-0003 | <b>DATE:</b> 31 JAN 2026</td>
-      </tr>
-    </table>
+      <table class="fontblack9a" width="100%" cellspacing="0" cellpadding="0" style="margin-bottom: 15px;">
+        <tr>
+          <td width="50%"><b>BILL TO:</b> GAMMA SYSTEMS PTE LTD</td>
+          <td width="50%" align="right"><b>INV NO:</b> INV-2026-0002 | <b>DATE:</b> 15 JAN 2026</td>
+        </tr>
+      </table>
 
-    <table class="fontblack9a" width="100%" cellspacing="0" cellpadding="0">
-      <tr class="row-header">
-        <td width="8%">S/N</td>
-        <td width="20%">ITEM</td>
-        <td width="37%">DESCRIPTION</td>
-        <td width="10%">QTY</td>
-        <td width="12%">UNIT PRICE</td>
-        <td width="13%">AMOUNT</td>
-      </tr>
-      <tr class="row-item">
-        <td align="center">1</td>
-        <td>MESH-001</td>
-        <td>Wire Mesh 4x4 BRC A10</td>
-        <td align="right">200</td>
-        <td align="right">35.00</td>
-        <td align="right">7,000.00</td>
-      </tr>
-    </table>
+      <table class="fontblack9a" width="100%" cellspacing="0" cellpadding="0">
+        <tr class="row-header">
+          <td width="8%">S/N</td>
+          <td width="20%">ITEM</td>
+          <td width="37%">DESCRIPTION</td>
+          <td width="10%">QTY</td>
+          <td width="12%">UNIT PRICE</td>
+          <td width="13%">AMOUNT</td>
+        </tr>
+        <tr class="row-item">
+          <td align="center">1</td>
+          <td>APP-IPH-15P</td>
+          <td>iPhone 15 Pro (128GB, Blue Titanium)</td>
+          <td align="right">1</td>
+          <td align="right">1,449.00</td>
+          <td align="right">1,449.00</td>
+        </tr>
+        <tr class="row-item">
+          <td align="center">2</td>
+          <td>APP-WATCH-U2</td>
+          <td>Apple Watch Ultra 2 (Titanium Case, Indigo Alpine Loop)</td>
+          <td align="right">1</td>
+          <td align="right">1,199.00</td>
+          <td align="right">1,199.00</td>
+        </tr>
+        <tr class="row-item">
+          <td align="center">3</td>
+          <td>APP-AIRPODS-P2</td>
+          <td>AirPods Pro (2nd generation) with MagSafe Case (USB‑C)</td>
+          <td align="right">1</td>
+          <td align="right">362.00</td>
+          <td align="right">362.00</td>
+        </tr>
+      </table>
 
-    <table class="fontblack9a" width="100%" cellspacing="0" cellpadding="0" style="margin-top: 20px;">
-      <tr class="totals-section">
-        <td width="75%"></td>
-        <td class="totals-label">SUB TOTAL:</td>
-        <td class="totals-value">7,000.00</td>
-      </tr>
-      <tr class="totals-section">
-        <td></td>
-        <td class="totals-label">GST (9%):</td>
-        <td class="totals-value">630.00</td>
-      </tr>
-      <tr class="totals-section">
-        <td></td>
-        <td class="totals-label" style="border-top: 2px solid black;"><b>TOTAL SGD:</b></td>
-        <td class="totals-value" style="border-top: 2px solid black;"><b>7,630.00</b></td>
-      </tr>
-    </table>
+      <table class="fontblack9a" width="100%" cellspacing="0" cellpadding="0" style="margin-top: 20px;">
+        <tr class="totals-section">
+          <td width="75%"></td>
+          <td class="totals-label">SUB TOTAL:</td>
+          <td class="totals-value">3,010.00</td>
+        </tr>
+        <tr class="totals-section">
+          <td></td>
+          <td class="totals-label">GST (9%):</td>
+          <td class="totals-value">270.90</td>
+        </tr>
+        <tr class="totals-section">
+          <td></td>
+          <td class="totals-label" style="border-top: 2px solid black;"><b>TOTAL SGD:</b></td>
+          <td class="totals-value" style="border-top: 2px solid black;"><b>3,280.90</b></td>
+        </tr>
+      </table>
+    </div>
   </div>
-</div>
 
-<!-- Production build (single JS) -->
-<script src="./dist/globe3-pdf.js"></script>
+  <hr class="invoice-separator">
 
-<!-- Download PDF function -->
-<script>
-function isDebugOverlayEnabled() {
-  const params = new URLSearchParams(window.location.search);
-  const byQuery = params.get('debugOverlay');
-  if (byQuery === '1' || byQuery === 'true') return true;
-  if (byQuery === '0' || byQuery === 'false') return false;
+  <!-- ========== INVOICE 3 ========== -->
+  <div class="html_to_vector_pdf">
+    <div class="pdf-page">
+      <table class="fontblack9a" width="100%" cellspacing="0" cellpadding="0">
+        <tr>
+          <td width="70%">
+            <div class="company-name">EXAMPL CORP PTE LTD</div>
+            <div>123 EXAMPLE STREET, SINGAPORE 123456</div>
+          </td>
+          <td width="30%" align="right" valign="top">
+            <img
+              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Crect fill='%23667eea' width='60' height='60' rx='8'/%3E%3Ctext x='30' y='38' text-anchor='middle' fill='white' font-size='14' font-weight='bold'%3ESG%3C/text%3E%3C/svg%3E"
+              alt="Logo" width="60" height="60">
+          </td>
+        </tr>
+      </table>
 
-  // Optional: set in DevTools console: window.GLOBE3_PDF_DEBUG_OVERLAY = true
-  return (window.GLOBE3_PDF_DEBUG_OVERLAY === true);
-}
+      <div class="doc-title" style="color: #f59e0b;">TAX INVOICE #3</div>
 
-async function downloadPdf() {
-  const btn = document.getElementById('pdf-download-btn');
-  btn.disabled = true;
-  btn.textContent = 'Generating 3 invoices...';
+      <table class="fontblack9a" width="100%" cellspacing="0" cellpadding="0" style="margin-bottom: 15px;">
+        <tr>
+          <td width="50%"><b>BILL TO:</b> DELTA TECH PTE LTD</td>
+          <td width="50%" align="right"><b>INV NO:</b> INV-2026-0003 | <b>DATE:</b> 31 JAN 2026</td>
+        </tr>
+      </table>
 
-  try {
-    const debugOverlayEnabled = isDebugOverlayEnabled();
-    const margins = { top: 6.35, right: 6.35, bottom: 6.35, left: 6.35 };
-    const pageWidthMm = 210; // A4 portrait width
-    const baseWidthPx = document.querySelector('.pdf-page')?.getBoundingClientRect().width || 750;
-    const pxToMm = (pageWidthMm - margins.left - margins.right) / baseWidthPx;
+      <table class="fontblack9a" width="100%" cellspacing="0" cellpadding="0">
+        <tr class="row-header">
+          <td width="8%">S/N</td>
+          <td width="20%">ITEM</td>
+          <td width="37%">DESCRIPTION</td>
+          <td width="10%">QTY</td>
+          <td width="12%">UNIT PRICE</td>
+          <td width="13%">AMOUNT</td>
+        </tr>
+        <tr class="row-item">
+          <td align="center">1</td>
+          <td>APP-IPAD-AIR</td>
+          <td>iPad Air (M1, Wi-Fi, 64GB, Purple)</td>
+          <td align="right">1</td>
+          <td align="right">879.00</td>
+          <td align="right">879.00</td>
+        </tr>
+      </table>
 
-    // This will now find ALL 3 .html_to_vector_pdf elements and merge them into one PDF
-    await Globe3PdfGenerator.generatePdf('.html_to_vector_pdf', {
-      filename: 'multi-invoices.pdf',
-      pageSize: 'a4',
-      orientation: 'portrait',
-      margins,
-      render: { pxToMm },
-      text: { scale: 1 },
-      debugOverlay: { enabled: debugOverlayEnabled },
-      debug: debugOverlayEnabled
-    });
-  } catch (err) {
-    console.error('PDF generation error:', err);
-    alert('Error generating PDF: ' + err.message);
-  } finally {
-    btn.disabled = false;
-    btn.textContent = 'Download All 3 Invoices as PDF';
-  }
-}
-</script>
+      <table class="fontblack9a" width="100%" cellspacing="0" cellpadding="0" style="margin-top: 20px;">
+        <tr class="totals-section">
+          <td width="75%"></td>
+          <td class="totals-label">SUB TOTAL:</td>
+          <td class="totals-value">879.00</td>
+        </tr>
+        <tr class="totals-section">
+          <td></td>
+          <td class="totals-label">GST (9%):</td>
+          <td class="totals-value">79.11</td>
+        </tr>
+        <tr class="totals-section">
+          <td></td>
+          <td class="totals-label" style="border-top: 2px solid black;"><b>TOTAL SGD:</b></td>
+          <td class="totals-value" style="border-top: 2px solid black;"><b>958.11</b></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Production build (single JS) -->
+  <script src="./dist/html_to_vector_pdf.js"></script>
+
+  <!-- Download PDF function -->
+  <script>
+    function isDebugOverlayEnabled() {
+      const params = new URLSearchParams(window.location.search);
+      const byQuery = params.get('debugOverlay');
+      if (byQuery === '1' || byQuery === 'true') return true;
+      if (byQuery === '0' || byQuery === 'false') return false;
+
+      // Optional: set in DevTools console: window.HTML_TO_VECTOR_PDF_DEBUG_OVERLAY = true
+      return (window.HTML_TO_VECTOR_PDF_DEBUG_OVERLAY === true);
+    }
+
+    async function download_vector_pdf() {
+      try {
+        const debugOverlayEnabled = isDebugOverlayEnabled();
+        const margins = { top: 6.35, right: 6.35, bottom: 6.35, left: 6.35 };
+        const pageWidthMm = 210; // A4 portrait width
+        const baseWidthPx = document.querySelector('.pdf-page')?.getBoundingClientRect().width || 750;
+        const pxToMm = (pageWidthMm - margins.left - margins.right) / baseWidthPx;
+
+        // This will now find ALL 3 .html_to_vector_pdf elements and merge them into one PDF
+        await html_to_vector_pdf.generatePdf('.html_to_vector_pdf', {
+          filename: 'multi-invoices.pdf',
+          pageSize: 'a4',
+          orientation: 'portrait',
+          margins,
+          render: { pxToMm },
+          text: { scale: 1 },
+          debugOverlay: { enabled: debugOverlayEnabled },
+          debug: debugOverlayEnabled
+        });
+      } catch (err) {
+        console.error('PDF generation error:', err);
+        alert('Error generating PDF: ' + err.message);
+      }
+    }
+
+    (function setupDemoToggle() {
+      const toggleBtn = document.getElementById('pdf-toggle-btn');
+      if (!toggleBtn) return;
+      const target = toggleBtn.getAttribute('data-target');
+      if (!target) return;
+
+      toggleBtn.addEventListener('click', () => {
+        window.location.href = target + window.location.search;
+      });
+    })();
+  </script>
 
 </body>
+
 </html>

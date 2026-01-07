@@ -1,5 +1,5 @@
 {
-  "name": "globe3-pdf-converter",
+  "name": "html-to-vector-pdf-js",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -12,14 +12,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "react": "^19.2.3",
-    "lucide-react": "^0.562.0",
-    "jspdf": "^4.0.0",
-    "react-dom": "^19.2.3"
+    "@rollup/rollup-win32-x64-msvc": "^4.55.1",
+    "jspdf": "^4.0.0"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",
-    "@vitejs/plugin-react": "^5.0.0",
     "typescript": "~5.8.2",
     "vite": "^6.2.0"
   }

@@ -1,7 +1,6 @@
 import path from 'path';
 import fs from 'fs/promises';
 import { defineConfig, Plugin } from 'vite';
-import react from '@vitejs/plugin-react';
 
 export default defineConfig(() => {
   return {
@@ -9,7 +8,7 @@ export default defineConfig(() => {
       port: 3000,
       host: '0.0.0.0',
     },
-    plugins: [react(), copyHtmlDemosToDist()],
+    plugins: [copyAssetsToDist()],
     resolve: {
       alias: {
         '@': path.resolve(__dirname, '.'),
@@ -19,9 +18,9 @@ export default defineConfig(() => {
       outDir: 'dist',
       lib: {
         entry: path.resolve(__dirname, 'services/pdfGenerator.ts'),
-        name: 'Globe3PdfGenerator',
-        fileName: () => 'globe3-pdf.js',
-        formats: ['umd']
+        name: 'html_to_vector_pdf',
+        fileName: () => 'html_to_vector_pdf.js',
+        formats: ['umd'] as any
       },
       rollupOptions: {
         output: {
@@ -34,39 +33,49 @@ export default defineConfig(() => {
 });
 
 function rewriteDistScriptPath(html: string): string {
-  const directPath = html.replaceAll('./dist/globe3-pdf.js', './globe3-pdf.js');
+  const directPath = html.replaceAll('./dist/html_to_vector_pdf.js', './html_to_vector_pdf.js');
   return directPath.replace(
-    /<script\s+src=(["'])\.\/globe3-pdf\.js\1\s*><\/script>/g,
-    '<script src="./globe3-pdf.js"></script>'
+    /<script\s+src=(["'])\.\/html_to_vector_pdf\.js\1\s*><\/script>/g,
+    '<script src="./html_to_vector_pdf.js"></script>'
   );
 }
 
-function copyHtmlDemosToDist(): Plugin {
+function copyAssetsToDist(): Plugin {
   return {
-    name: 'copy-html-demos-to-dist',
+    name: 'copy-assets-to-dist',
     apply: 'build',
     async closeBundle() {
       const distDir = path.resolve(__dirname, 'dist');
 
       try {
         const entries = await fs.readdir(__dirname, { withFileTypes: true });
-        const htmlFiles = entries
-          .filter((entry) => entry.isFile() && entry.name.toLowerCase().endsWith('.html'))
+        const filesToCopy = entries
+          .filter((entry) =>
+            entry.isFile() &&
+            (entry.name.toLowerCase().endsWith('.html') ||
+              entry.name.toLowerCase() === 'readme.md' ||
+              entry.name.toLowerCase() === 'readme_zh.md')
+          )
           .map((entry) => entry.name);
 
         await fs.mkdir(distDir, { recursive: true });
 
         await Promise.all(
-          htmlFiles.map(async (fileName) => {
+          filesToCopy.map(async (fileName) => {
             const srcPath = path.resolve(__dirname, fileName);
             const outPath = path.resolve(distDir, fileName);
-            const html = await fs.readFile(srcPath, 'utf8');
-            const rewritten = rewriteDistScriptPath(html);
-            await fs.writeFile(outPath, rewritten, 'utf8');
+
+            if (fileName.toLowerCase().endsWith('.html')) {
+              const html = await fs.readFile(srcPath, 'utf8');
+              const rewritten = rewriteDistScriptPath(html);
+              await fs.writeFile(outPath, rewritten, 'utf8');
+            } else {
+              await fs.copyFile(srcPath, outPath);
+            }
           })
         );
       } catch (err) {
-        console.warn('[copy-html-demos-to-dist] Skipped:', err);
+        console.warn('[copy-assets-to-dist] Skipped:', err);
       }
     }
   };
