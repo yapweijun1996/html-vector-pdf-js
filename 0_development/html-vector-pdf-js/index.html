@@ -203,7 +203,7 @@
       position: static;
     }
 
-    #pdf-toggle-btn {
+    #demo-selector {
       padding: 12px 16px;
       background: white;
       color: #1f2937;
@@ -217,7 +217,7 @@
       transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
-    #pdf-toggle-btn:hover {
+    #demo-selector:hover {
       transform: translateY(-1px);
       box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
     }
@@ -249,7 +249,12 @@
   <!-- Top-right controls -->
   <div class="pdf-controls">
     <button id="pdf-download-btn" onclick="download_vector_pdf()">Download PDF</button>
-    <button id="pdf-toggle-btn" type="button" data-target="index_multi.html">Multi Demo</button>
+    <select id="demo-selector" onchange="switchDemo(this.value)">
+      <option value="index.html" selected>Wrapper: Single Page</option>
+      <option value="index_multi.html">Wrapper: Multi Page</option>
+      <option value="index_html.html">Body: Single Page</option>
+      <option value="index_html_multi.html">Body: Multi Page</option>
+    </select>
   </div>
 
   <!-- Print Form Content -->
@@ -503,16 +508,11 @@
       }
     }
 
-    (function setupDemoToggle() {
-      const toggleBtn = document.getElementById('pdf-toggle-btn');
-      if (!toggleBtn) return;
-      const target = toggleBtn.getAttribute('data-target');
-      if (!target) return;
-
-      toggleBtn.addEventListener('click', () => {
+    function switchDemo(target) {
+      if (target) {
         window.location.href = target + window.location.search;
-      });
-    })();
+      }
+    }
   </script>
 
 </body>

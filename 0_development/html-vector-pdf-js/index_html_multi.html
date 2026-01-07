@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HTML → Vector PDF - Direct Body Conversion</title>
+    <title>HTML → Vector PDF - Multi-Page Body Conversion</title>
     <style>
         /* Reset and Base Styles */
         * {
@@ -21,6 +21,14 @@
             padding: 20px;
             max-width: 750px;
             margin: 0 auto;
+        }
+
+        /* Page break class for multi-page documents */
+        .pagebreak_bf_processed {
+            page-break-before: always;
+            break-before: page;
+            height: 0;
+            line-height: 0;
         }
 
         /* Table classes */
@@ -101,6 +109,14 @@
             text-align: right;
         }
 
+        /* Page footer */
+        .page-footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 9pt;
+            color: #666;
+        }
+
         /* Control buttons */
         .pdf-controls {
             position: fixed;
@@ -177,11 +193,12 @@
         <select id="demo-selector" onchange="switchDemo(this.value)">
             <option value="index.html">Wrapper: Single Page</option>
             <option value="index_multi.html">Wrapper: Multi Page</option>
-            <option value="index_html.html" selected>Body: Single Page</option>
-            <option value="index_html_multi.html">Body: Multi Page</option>
+            <option value="index_html.html">Body: Single Page</option>
+            <option value="index_html_multi.html" selected>Body: Multi Page</option>
         </select>
     </div>
 
+    <!-- PAGE 1 -->
     <!-- Company Header -->
     <table class="fontblack9a company-header" width="100%" cellspacing="0" cellpadding="0">
         <tr>
@@ -228,7 +245,7 @@
                     <tr>
                         <td width="110"><b>INV NO.</b></td>
                         <td width="10"><b>:</b></td>
-                        <td>PCI-2601-10003</td>
+                        <td>PCI-2601-10004</td>
                     </tr>
                     <tr>
                         <td><b>INV DATE</b></td>
@@ -238,7 +255,12 @@
                     <tr>
                         <td><b>REFERENCE NO.</b></td>
                         <td><b>:</b></td>
-                        <td>PO-2026-0043</td>
+                        <td>PO-2026-0044</td>
+                    </tr>
+                    <tr>
+                        <td><b>PAGE</b></td>
+                        <td><b>:</b></td>
+                        <td>1 OF 2</td>
                     </tr>
                 </table>
             </td>
@@ -301,6 +323,51 @@
         </tr>
     </table>
 
+    <!-- Page Footer -->
+    <div class="page-footer">Page 1 of 2</div>
+
+    <!-- PAGE BREAK -->
+    <div class="pagebreak_bf_processed" style="font-size:0pt;">&nbsp;</div>
+
+    <!-- PAGE 2 -->
+    <div class="doc-title">TAX INVOICE (Continued)</div>
+
+    <!-- Row Header (repeated for page 2) -->
+    <table class="fontblack9a" width="720" cellspacing="0" cellpadding="0" style="margin: 0 auto;">
+        <tr class="row-header" style="height: 40px;">
+            <td width="30" align="center">S/N</td>
+            <td width="91" align="center">ITEM</td>
+            <td width="289" align="center">DESCRIPTION</td>
+            <td width="70" align="center">QTY</td>
+            <td width="40" align="center">U/M</td>
+            <td width="100" align="center">UNIT PRICE</td>
+            <td width="100" align="center">AMOUNT</td>
+        </tr>
+    </table>
+
+    <!-- Additional Row Items -->
+    <table class="fontblack9a" width="720" cellspacing="0" cellpadding="0" style="margin: 0 auto;">
+        <tr class="row-item">
+            <td width="30" align="center" style="border-left: 1px solid black;">5</td>
+            <td width="91">APP-ACS-MKB</td>
+            <td width="289">Magic Keyboard for iPad Pro 12.9-inch (White)</td>
+            <td width="70" align="right">2.00</td>
+            <td width="40" align="center">UNIT</td>
+            <td width="100" align="right">449.00</td>
+            <td width="100" align="right" style="border-right: 1px solid black;">898.00</td>
+        </tr>
+        <tr class="row-item">
+            <td width="30" align="center" style="border-left: 1px solid black; border-bottom: 1px solid black;">6</td>
+            <td width="91" style="border-bottom: 1px solid black;">APP-ACS-PEN</td>
+            <td width="289" style="border-bottom: 1px solid black;">Apple Pencil (2nd Generation)</td>
+            <td width="70" align="right" style="border-bottom: 1px solid black;">2.00</td>
+            <td width="40" align="center" style="border-bottom: 1px solid black;">UNIT</td>
+            <td width="100" align="right" style="border-bottom: 1px solid black;">179.00</td>
+            <td width="100" align="right" style="border-right: 1px solid black; border-bottom: 1px solid black;">358.00
+            </td>
+        </tr>
+    </table>
+
     <br>
 
     <!-- Totals Section -->
@@ -308,17 +375,17 @@
         <tr class="totals-section">
             <td width="520"></td>
             <td width="100" class="totals-label">SUB TOTAL:</td>
-            <td width="100" class="totals-value">11,490.00</td>
+            <td width="100" class="totals-value">12,746.00</td>
         </tr>
         <tr class="totals-section">
             <td></td>
             <td class="totals-label">GST (9%):</td>
-            <td class="totals-value">1,034.10</td>
+            <td class="totals-value">1,147.14</td>
         </tr>
         <tr class="totals-section">
             <td></td>
             <td class="totals-label" style="border-top: 1px solid black;"><b>TOTAL SGD:</b></td>
-            <td class="totals-value" style="border-top: 1px solid black;"><b>12,524.10</b></td>
+            <td class="totals-value" style="border-top: 1px solid black;"><b>13,893.14</b></td>
         </tr>
     </table>
 
@@ -335,6 +402,9 @@
             </td>
         </tr>
     </table>
+
+    <!-- Page Footer -->
+    <div class="page-footer">Page 2 of 2</div>
 
     <!-- Production build (single JS) -->
     <script src="./dist/html_to_vector_pdf.js"></script>
@@ -366,7 +436,7 @@
                 if (controls) controls.style.display = 'none';
 
                 await html_to_vector_pdf.generatePdf('body', {
-                    filename: 'PCI-2601-10003.pdf',
+                    filename: 'PCI-2601-10004.pdf',
                     pageSize: 'a4',
                     orientation: 'portrait',
                     margins,
