@@ -5,35 +5,6 @@ import { px2pt } from './pdfUnits';
 import { RenderItem } from './renderItems';
 import { wrapTextToWidth } from './textLayout';
 
-type PdfFontFamily = 'helvetica' | 'times' | 'courier';
-
-const pickPdfFontFamily = (cssFontFamily: string | null | undefined): PdfFontFamily => {
-  const ff = (cssFontFamily || '').toLowerCase();
-  if (
-    ff.includes('courier') ||
-    ff.includes('consolas') ||
-    ff.includes('monaco') ||
-    ff.includes('menlo') ||
-    ff.includes('monospace')
-  ) {
-    return 'courier';
-  }
-  if (ff.includes('times') || ff.includes('georgia') || ff.includes('serif')) return 'times';
-  return 'helvetica';
-};
-
-const applyTextStyle = (doc: jsPDF, style: CSSStyleDeclaration, textScale: number): void => {
-  doc.setFontSize(px2pt(style.fontSize) * textScale);
-
-  const isBold = style.fontWeight === 'bold' || parseInt(style.fontWeight) >= 600;
-  const isItalic = style.fontStyle === 'italic';
-  const variant = isBold && isItalic ? 'bolditalic' : isBold ? 'bold' : isItalic ? 'italic' : 'normal';
-  doc.setFont(pickPdfFontFamily(style.fontFamily), variant);
-
-  const [r, g, b] = parseColor(style.color);
-  doc.setTextColor(r, g, b);
-};
-
 export const renderToPdf = (
   allElementItems: Array<{ items: RenderItem[]; pageBreakBeforeYs: number[] }>,
   cfg: Required<PdfConfig>,
@@ -73,46 +44,6 @@ export const renderToPdf = (
       }
       return lo;
     };
-
-    const inlineTextGroups = new Map<string, RenderItem[]>();
-    for (const item of items) {
-      if (item.type !== 'text' || !item.text || !item.inlineGroupId) continue;
-      const arr = inlineTextGroups.get(item.inlineGroupId);
-      if (arr) arr.push(item);
-      else inlineTextGroups.set(item.inlineGroupId, [item]);
-    }
-
-    for (const groupItems of inlineTextGroups.values()) {
-      groupItems.sort((a, b) => (a.inlineOrder ?? 0) - (b.inlineOrder ?? 0));
-      const first = groupItems[0];
-      const contentLeftMm = first.contentLeftMm ?? first.x;
-      const contentRightMm =
-        first.contentRightMm ?? (first.maxWidthMm ? contentLeftMm + first.maxWidthMm : contentLeftMm);
-      const align = first.textAlign || 'left';
-
-      const widthsMm: number[] = [];
-      let totalWidthMm = 0;
-      for (let i = 0; i < groupItems.length; i++) {
-        const item = groupItems[i];
-        applyTextStyle(doc, item.style, cfg.text.scale);
-        const w = doc.getTextWidth(item.text || '');
-        widthsMm.push(w);
-        totalWidthMm += w;
-      }
-
-      const availableWidthMm = Math.max(0, contentRightMm - contentLeftMm);
-      let startX = contentLeftMm;
-      if (align === 'center') startX = contentLeftMm + (availableWidthMm - totalWidthMm) / 2;
-      else if (align === 'right') startX = contentRightMm - totalWidthMm;
-
-      let cursorX = startX;
-      for (let i = 0; i < groupItems.length; i++) {
-        const item = groupItems[i];
-        item.computedX = cursorX;
-        item.textAlign = 'left';
-        cursorX += widthsMm[i];
-      }
-    }
 
     items
       .slice()
@@ -192,10 +123,15 @@ export const renderToPdf = (
         }
 
         if (item.type === 'text' && item.text) {
-          applyTextStyle(doc, item.style, cfg.text.scale);
+          doc.setFontSize(px2pt(item.style.fontSize) * cfg.text.scale);
+          const [r, g, b] = parseColor(item.style.color);
+          doc.setTextColor(r, g, b);
 
-          const x = item.computedX ?? item.x;
-          const align = item.computedX != null ? 'left' : item.textAlign || 'left';
+          const isBold = item.style.fontWeight === 'bold' || parseInt(item.style.fontWeight) >= 600;
+          const isItalic = item.style.fontStyle === 'italic';
+          doc.setFont('helvetica', isBold && isItalic ? 'bolditalic' : isBold ? 'bold' : isItalic ? 'italic' : 'normal');
+
+          const align = item.textAlign || 'left';
           const maxWidthMm = item.maxWidthMm ?? 0;
           const lineHeightMm = item.lineHeightMm ?? px2mm(parseFloat(item.style.fontSize)) * 1.2 * cfg.text.scale;
           const pdfTextWidthMm = doc.getTextWidth(item.text);
@@ -216,7 +152,7 @@ export const renderToPdf = (
           }
 
           for (let i = 0; i < lines.length; i++) {
-            doc.text(lines[i], x, baseY + i * lineHeightMm, { baseline: 'alphabetic', align });
+            doc.text(lines[i], item.x, baseY + i * lineHeightMm, { baseline: 'alphabetic', align });
           }
           return;
         }
@@ -243,3 +179,4 @@ export const renderToPdf = (
 
   return doc;
 };
+

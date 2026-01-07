@@ -17,11 +17,6 @@ export interface RenderItem {
   noWrap?: boolean;
   cssNoWrap?: boolean;
   rectsLen?: number;
-  inlineGroupId?: string;
-  inlineOrder?: number;
-  contentLeftMm?: number;
-  contentRightMm?: number;
-  computedX?: number;
   borderSides?: { t: number; r: number; b: number; l: number };
   borderColors?: {
     t: [number, number, number];
@@ -30,3 +25,4 @@ export interface RenderItem {
     l: [number, number, number];
   };
 }
+

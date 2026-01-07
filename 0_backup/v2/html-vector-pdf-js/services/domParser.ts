@@ -20,7 +20,6 @@ export const parseElementToItems = async (
 
   const layoutIdByElement = new WeakMap<Element, number>();
   let nextLayoutId = 1;
-  let nextInlineOrder = 1;
   const getLayoutId = (el: Element): number => {
     const existing = layoutIdByElement.get(el);
     if (existing) return existing;
@@ -30,29 +29,6 @@ export const parseElementToItems = async (
   };
 
   const aggregatedTextByKey = new Map<string, RenderItem>();
-  const hasMixedTextStylesByCell = new WeakMap<Element, boolean>();
-  const cellHasMixedTextStyles = (cell: Element): boolean => {
-    const cached = hasMixedTextStylesByCell.get(cell);
-    if (typeof cached === 'boolean') return cached;
-
-    const cellStyleKey = buildTextStyleKey(window.getComputedStyle(cell as HTMLElement));
-    const textWalker = document.createTreeWalker(cell, NodeFilter.SHOW_TEXT);
-    let n = textWalker.nextNode();
-    while (n) {
-      const t = n as Text;
-      if (/\S/.test(t.textContent || '') && t.parentElement) {
-        const key = buildTextStyleKey(window.getComputedStyle(t.parentElement));
-        if (key !== cellStyleKey) {
-          hasMixedTextStylesByCell.set(cell, true);
-          return true;
-        }
-      }
-      n = textWalker.nextNode();
-    }
-
-    hasMixedTextStylesByCell.set(cell, false);
-    return false;
-  };
 
   const shouldExclude = (el: Element | null): boolean => {
     if (!el) return false;
@@ -206,41 +182,11 @@ export const parseElementToItems = async (
         continue;
       }
 
-      const parentElForWhitespace = txt.parentElement;
-      const parentWhiteSpace = parentElForWhitespace ? (window.getComputedStyle(parentElForWhitespace).whiteSpace || '') : '';
-      const ws = parentWhiteSpace.toLowerCase();
-      const preservesBoundaryWhitespace = ws === 'pre' || ws === 'pre-wrap' || ws === 'break-spaces';
-
-      const hasMeaningfulSibling = (direction: 'prev' | 'next'): boolean => {
-        let sib: Node | null = direction === 'prev' ? txt.previousSibling : txt.nextSibling;
-        while (sib) {
-          if (sib.nodeType === Node.ELEMENT_NODE) return true;
-          if (sib.nodeType === Node.TEXT_NODE) {
-            const t = (sib.textContent || '').replace(/\u00a0/g, ' ');
-            if (/\S/.test(t)) return true;
-          }
-          sib = direction === 'prev' ? sib.previousSibling : sib.nextSibling;
-        }
-        return false;
-      };
-
-      const startsWithSpace = /^[\s\u00a0]/.test(rawText);
-      const endsWithSpace = /[\s\u00a0]$/.test(rawText);
-
-      // 重要：保留 NBSP（&nbsp;）作为“有意义的空白”，避免表头用 &nbsp; 做出的视觉对齐在 PDF 中消失。
-      // 同时移除由 HTML 缩排/换行带来的普通空白，避免影响对齐计算。
-      const collapseNonNbspWhitespace = (s: string): string => s.replace(/[ \t\r\n\f\v]+/g, ' ');
-      const trimNonNbspWhitespace = (s: string): string => s.replace(/^[ \t\r\n\f\v]+|[ \t\r\n\f\v]+$/g, '');
-
-      let str = trimNonNbspWhitespace(collapseNonNbspWhitespace(rawText));
-
-      if (!preservesBoundaryWhitespace) {
-        if (startsWithSpace && hasMeaningfulSibling('prev')) str = ` ${str}`;
-        if (endsWithSpace && hasMeaningfulSibling('next')) str = `${str} `;
-      } else {
-        if (startsWithSpace) str = ` ${str}`;
-        if (endsWithSpace) str = `${str} `;
-      }
+      const startsWithSpace = /^\s/.test(rawText);
+      const endsWithSpace = /\s$/.test(rawText);
+      let str = rawText.replace(/\s+/g, ' ').trim();
+      if (startsWithSpace) str = ` ${str}`;
+      if (endsWithSpace) str = `${str} `;
 
       if (str && txt.parentElement) {
         if (shouldExclude(txt.parentElement)) {
@@ -273,15 +219,13 @@ export const parseElementToItems = async (
         const noWrap = cssNoWrap || !browserWrapped;
 
         if (layoutRect.width > 0 && layoutStyle.display !== 'none' && firstRect.width > 0 && firstRect.height > 0) {
-          // 在块的开头定义所有共享变量
-          const fontSizePx = parseFloat(fontStyle.fontSize);
-          const lineHeightPx = parseLineHeightPx(layoutStyle.lineHeight, fontSizePx);
-          const lineHeightMm = px2mm(lineHeightPx) * cfg.text.scale;
-
           const y = px2mm(firstRect.top - rootRect.top);
           const h = px2mm(firstRect.height);
+          const fontSizePx = parseFloat(fontStyle.fontSize);
           const baselineOffsetPx = computeAlphabeticBaselineOffsetPx(fontStyle, firstRect.height);
           const baselineOffset = px2mm(baselineOffsetPx) * cfg.text.scale;
+          const lineHeightPx = parseLineHeightPx(layoutStyle.lineHeight, fontSizePx);
+          const lineHeightMm = px2mm(lineHeightPx) * cfg.text.scale;
 
           const xLeftMm = cfg.margins.left + px2mm(contentLeftPx - rootRect.left);
           const xRightMm = cfg.margins.left + px2mm(contentRightPx - rootRect.left);
@@ -290,18 +234,16 @@ export const parseElementToItems = async (
           const xMmActual = cfg.margins.left + px2mm(firstRect.left - rootRect.left);
 
           const inTableCell = layoutEl.tagName === 'TD' || layoutEl.tagName === 'TH';
-          const yBucketPx = Math.round(firstRect.top / 2) * 2;
-          const hasMixedTextStyles = inTableCell ? cellHasMixedTextStyles(layoutEl) : false;
-
+          const hasMixedStyles = inTableCell && layoutEl.querySelectorAll('b, strong, i, em, span').length > 0;
           const canAggregate =
             inTableCell &&
-            rectsLen === 1 &&
-            !hasMixedTextStyles &&
+            !hasMixedStyles &&
             buildTextStyleKey(fontStyle) === buildTextStyleKey(window.getComputedStyle(layoutEl));
 
           if (canAggregate) {
             const layoutId = getLayoutId(layoutEl);
             const styleKey = buildTextStyleKey(fontStyle);
+            const yBucketPx = Math.round(firstRect.top / 2) * 2;
             const key = `${layoutId}|${styleKey}|${yBucketPx}|${textAlign}`;
 
             const existing = aggregatedTextByKey.get(key);
@@ -329,48 +271,22 @@ export const parseElementToItems = async (
               });
             }
           } else {
-            if (inTableCell) {
-              items.push({
-                type: 'text',
-                x: xMmActual,
-                y: y + baselineOffset,
-                w: px2mm(firstRect.width),
-                h,
-                style: fontStyle,
-                text: str,
-                textAlign: 'left',
-                maxWidthMm: px2mm(contentWidthPx),
-                lineHeightMm,
-                noWrap,
-                cssNoWrap,
-                rectsLen,
-                // Avoid grouping mixed styles - use actual browser positions
-                // inlineGroupId: `cell:${getLayoutId(layoutEl)}|y:${yBucketPx}|align:${textAlign}`,
-                // inlineOrder: nextInlineOrder++,
-                contentLeftMm: xLeftMm,
-                contentRightMm: xRightMm,
-                zIndex: 20
-              });
-            } else {
-              // 无法聚合的情况（块内混合样式、多行文本等）
-              // 使用实际坐标，让 jsPDF 根据 maxWidthMm 自动处理换行
-              items.push({
-                type: 'text',
-                x: xMmActual,
-                y: y + baselineOffset,
-                w: px2mm(firstRect.width),
-                h,
-                style: fontStyle,
-                text: str,
-                textAlign: 'left',
-                maxWidthMm: px2mm(contentWidthPx - (firstRect.left - contentLeftPx)),
-                lineHeightMm,
-                noWrap: !browserWrapped,
-                cssNoWrap,
-                rectsLen,
-                zIndex: 20
-              });
-            }
+            items.push({
+              type: 'text',
+              x: xMmActual,
+              y: y + baselineOffset,
+              w: px2mm(firstRect.width),
+              h,
+              style: fontStyle,
+              text: str,
+              textAlign: 'left',
+              maxWidthMm: px2mm(contentWidthPx - (firstRect.left - contentLeftPx)),
+              lineHeightMm,
+              noWrap,
+              cssNoWrap,
+              rectsLen,
+              zIndex: 20
+            });
           }
         }
       }
@@ -385,3 +301,4 @@ export const parseElementToItems = async (
   await Promise.all(imagePromises);
   return { items, pageBreakBeforeYs };
 };
+

@@ -12,6 +12,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@rollup/rollup-win32-x64-msvc": "^4.55.1",
     "jspdf": "^4.0.0"
   },
   "devDependencies": {
