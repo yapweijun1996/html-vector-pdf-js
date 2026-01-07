@@ -3,74 +3,44 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Globe3 PDF Generator - Test Invoice</title>
+  <title>Globe3 PDF Generator - Production Test</title>
   <style>
     /* Reset and Base Styles */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: Arial, sans-serif;
+      font-family: Calibri, Arial, sans-serif;
       font-size: 9pt;
       color: #333;
       background: #f5f5f5;
-      padding: 0;
+      padding: 20px;
     }
 
     /* Print Form Container */
-    .html_to_vector_pdf {
+    #print-form {
       width: 750px;
-      margin: 20px auto;
-      background: transparent;
-    }
-
-    @media (max-width: 820px) {
-      .html_to_vector_pdf {
-        width: 100%;
-        margin: 0;
-      }
-    }
-
-    .pdf-page {
-      width: 750px;
-      /* Keep A4 aspect ratio: 297/210 * 750 ≈ 1060.7px */
-      height: 1061px;
-      margin: 0 auto 20px;
+      margin: 0 auto;
       background: white;
+      padding: 15px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      overflow: hidden;
-    }
-
-    /* Force page break markers */
-    .pagebreak_bf_processed {
-      page-break-before: always;
-      break-before: page;
-      height: 0;
-      line-height: 0;
     }
 
     /* Globe3-style table classes */
     .fontblack9a {
-      font-family: Arial, sans-serif;
+      font-family: Calibri, Arial, sans-serif;
       font-size: 9pt;
       color: #333;
       border-collapse: collapse;
     }
     .fontblack13a {
-      font-family: Arial, sans-serif;
+      font-family: Calibri, Arial, sans-serif;
       font-size: 13pt;
       color: #333;
     }
     .fontblack14a {
-      font-family: Arial, sans-serif;
+      font-family: Calibri, Arial, sans-serif;
       font-size: 14pt;
       color: #333;
     }
-
-    /* Border utility classes */
-    .border-all { border: 1px solid black; }
-    .border-top { border-top: 1px solid black; }
-    .border-bottom { border-bottom: 1px solid black; }
-    .border-left { border-left: 1px solid black; }
-    .border-right { border-right: 1px solid black; }
 
     /* Table cell padding */
     td { padding: 2px 5px; }
@@ -133,7 +103,7 @@
       color: white;
       border: none;
       border-radius: 8px;
-      font-family: Arial, sans-serif;
+      font-family: Calibri, Arial, sans-serif;
       font-size: 14px;
       font-weight: bold;
       cursor: pointer;
@@ -151,22 +121,35 @@
       box-shadow: none;
     }
 
+    /* Status indicator */
+    .build-status {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      padding: 8px 16px;
+      background: #4CAF50;
+      color: white;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+
     @media print {
-      #pdf-download-btn { display: none; }
+      #pdf-download-btn, .build-status { display: none; }
       body { background: white; padding: 0; }
-      .html_to_vector_pdf { margin: 0; }
-      .pdf-page { box-shadow: none; margin: 0; }
+      #print-form { box-shadow: none; }
     }
   </style>
 </head>
 <body>
 
+<!-- Status indicator -->
+<div class="build-status">Using: dist/globe3-pdf.umd.js (Production Build)</div>
+
 <!-- Download PDF Button -->
 <button id="pdf-download-btn" onclick="downloadPdf()">Download PDF</button>
 
 <!-- Print Form Content -->
-<div class="html_to_vector_pdf">
-  <div class="pdf-page">
+<div id="print-form">
 
   <!-- Company Header -->
   <table class="fontblack9a company-header" width="100%" cellspacing="0" cellpadding="0">
@@ -328,76 +311,32 @@
     <span id="footer-page-num">1</span> of <span id="footer-total-pages">1</span>
   </div>
 
-  </div>
-
-  <div class="pagebreak_bf_processed" style="font-size:0pt;">&nbsp;</div>
-
-  <div class="pdf-page">
-    <div class="doc-title" style="margin-top: 40px;">PAGE 2 (TEST)</div>
-    <table class="fontblack9a" width="720" cellspacing="0" cellpadding="0" style="margin: 0 auto;">
-      <tr class="row-header">
-        <td width="30" align="center">S/N</td>
-        <td width="91" align="center">ITEM</td>
-        <td width="289" align="center">DESCRIPTION</td>
-        <td width="70" align="center">QTY</td>
-        <td width="40" align="center">U/M</td>
-        <td width="100" align="center">UNIT PRICE</td>
-        <td width="100" align="center">AMOUNT</td>
-      </tr>
-      <tr class="row-item">
-        <td width="30" align="center" style="border-left: 1px solid black; border-bottom: 1px solid black;">1</td>
-        <td width="91" style="border-bottom: 1px solid black;">TEST-ITEM-2</td>
-        <td width="289" style="border-bottom: 1px solid black;">Second page content to validate forced page break.</td>
-        <td width="70" align="right" style="border-bottom: 1px solid black;">1.00</td>
-        <td width="40" align="center" style="border-bottom: 1px solid black;">PCS</td>
-        <td width="100" align="right" style="border-bottom: 1px solid black;">0.00</td>
-        <td width="100" align="right" style="border-right: 1px solid black; border-bottom: 1px solid black;">0.00</td>
-      </tr>
-    </table>
-
-    <div class="page-footer" style="margin-top: 40px;">
-      2 of 2
-    </div>
-  </div>
 </div>
 
-<!-- Production build (single JS) -->
-<script src="./dist/globe3-pdf.js"></script>
+<!-- jsPDF Library (CDN) - Required dependency -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-<!-- Download PDF function -->
+<!-- Globe3 PDF Generator (Production Build from dist folder) -->
+<script src="dist/globe3-pdf.umd.js"></script>
+
 <script>
-function isDebugOverlayEnabled() {
-  const params = new URLSearchParams(window.location.search);
-  const byQuery = params.get('debugOverlay');
-  if (byQuery === '1' || byQuery === 'true') return true;
-  if (byQuery === '0' || byQuery === 'false') return false;
-
-  // Optional: set in DevTools console: window.GLOBE3_PDF_DEBUG_OVERLAY = true
-  return (window.GLOBE3_PDF_DEBUG_OVERLAY === true);
-}
-
+// Download PDF function using production build
 async function downloadPdf() {
   const btn = document.getElementById('pdf-download-btn');
   btn.disabled = true;
   btn.textContent = 'Generating...';
 
   try {
-    const debugOverlayEnabled = isDebugOverlayEnabled();
-    const margins = { top: 6.35, right: 6.35, bottom: 6.35, left: 6.35 };
-    const pageWidthMm = 210; // A4 portrait width
-    const baseWidthPx = document.querySelector('.pdf-page')?.getBoundingClientRect().width || 750;
-    const pxToMm = (pageWidthMm - margins.left - margins.right) / baseWidthPx;
-    await Globe3PdfGenerator.generatePdf('.html_to_vector_pdf', {
+    // Use the production build
+    // Globe3PdfGenerator.generatePdf is the named export
+    await Globe3PdfGenerator.generatePdf('print-form', {
       filename: 'PCI-2601-10002.pdf',
       pageSize: 'a4',
       orientation: 'portrait',
-      margins,
-      // Map content width (after margins) to page width to avoid overflow.
-      render: { pxToMm },
-      text: { scale: 1 },
-      debugOverlay: { enabled: debugOverlayEnabled },
-      debug: debugOverlayEnabled
+      margins: { top: 10, right: 10, bottom: 10, left: 10 },
+      debug: true
     });
+    console.log('PDF generated successfully using production build!');
   } catch (err) {
     console.error('PDF generation error:', err);
     alert('Error generating PDF: ' + err.message);
@@ -406,6 +345,18 @@ async function downloadPdf() {
     btn.textContent = 'Download PDF';
   }
 }
+
+// Verify production build is loaded
+document.addEventListener('DOMContentLoaded', () => {
+  if (typeof Globe3PdfGenerator !== 'undefined' && Globe3PdfGenerator.generatePdf) {
+    console.log('Globe3PdfGenerator loaded successfully from production build');
+    console.log('Available exports:', Object.keys(Globe3PdfGenerator));
+  } else {
+    console.error('Globe3PdfGenerator not loaded! Make sure dist/globe3-pdf.umd.js exists.');
+    document.querySelector('.build-status').textContent = 'ERROR: Production build not found!';
+    document.querySelector('.build-status').style.background = '#f44336';
+  }
+});
 </script>
 
 </body>
