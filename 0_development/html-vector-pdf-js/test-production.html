@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Globe3 PDF Generator - Production Test</title>
+  <title>HTML → Vector PDF - Production Test</title>
   <style>
     /* Reset and Base Styles */
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -24,7 +24,7 @@
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
 
-    /* Globe3-style table classes */
+    /* Table classes */
     .fontblack9a {
       font-family: Calibri, Arial, sans-serif;
       font-size: 9pt;
@@ -143,7 +143,7 @@
 <body>
 
 <!-- Status indicator -->
-<div class="build-status">Using: dist/globe3-pdf.umd.js (Production Build)</div>
+<div class="build-status">Using: dist/html_to_vector_pdf.js (Production Build)</div>
 
 <!-- Download PDF Button -->
 <button id="pdf-download-btn" onclick="downloadPdf()">Download PDF</button>
@@ -316,8 +316,8 @@
 <!-- jsPDF Library (CDN) - Required dependency -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-<!-- Globe3 PDF Generator (Production Build from dist folder) -->
-<script src="dist/globe3-pdf.umd.js"></script>
+<!-- HTML → Vector PDF (Production Build from dist folder) -->
+<script src="dist/html_to_vector_pdf.js"></script>
 
 <script>
 // Download PDF function using production build
@@ -328,8 +328,8 @@ async function downloadPdf() {
 
   try {
     // Use the production build
-    // Globe3PdfGenerator.generatePdf is the named export
-    await Globe3PdfGenerator.generatePdf('print-form', {
+    // html_to_vector_pdf.generatePdf is the named export
+    await html_to_vector_pdf.generatePdf('print-form', {
       filename: 'PCI-2601-10002.pdf',
       pageSize: 'a4',
       orientation: 'portrait',
@@ -348,11 +348,11 @@ async function downloadPdf() {
 
 // Verify production build is loaded
 document.addEventListener('DOMContentLoaded', () => {
-  if (typeof Globe3PdfGenerator !== 'undefined' && Globe3PdfGenerator.generatePdf) {
-    console.log('Globe3PdfGenerator loaded successfully from production build');
-    console.log('Available exports:', Object.keys(Globe3PdfGenerator));
+  if (typeof html_to_vector_pdf !== 'undefined' && html_to_vector_pdf.generatePdf) {
+    console.log('html_to_vector_pdf loaded successfully from production build');
+    console.log('Available exports:', Object.keys(html_to_vector_pdf));
   } else {
-    console.error('Globe3PdfGenerator not loaded! Make sure dist/globe3-pdf.umd.js exists.');
+    console.error('html_to_vector_pdf not loaded! Make sure dist/html_to_vector_pdf.js exists.');
     document.querySelector('.build-status').textContent = 'ERROR: Production build not found!';
     document.querySelector('.build-status').style.background = '#f44336';
   }
