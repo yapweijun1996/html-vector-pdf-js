@@ -147,14 +147,23 @@ If a selector matches multiple nodes, they are exported in DOM order and appende
 </script>
 ```
 
-### 4. Forced Page Breaks
+### 4. Margins (Global Override)
+
+The default margins are **10mm**. You can override them in `config` or globally:
+
+```javascript
+// Global override (highest priority)
+window.html_to_vector_pdf_margins = { top: 6.35, bottom: 6.35, left: 6.35, right: 6.35 };
+```
+
+### 5. Forced Page Breaks
 Add a `data-pdf-page-break-before="true"` attribute to force a new page before an element.
 
 ```html
 <div data-pdf-page-break-before="true"></div>
 ```
 
-### 5. Consistent Scaling (Recommended)
+### 6. Consistent Scaling (Recommended)
 If your printable area uses a fixed pixel width (example: `.pdf-page { width: 750px; }`), you can map that width to the PDF page width to reduce overflow/wrapping differences:
 
 ```js

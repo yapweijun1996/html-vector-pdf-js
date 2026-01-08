@@ -16,6 +16,9 @@
   - config/types, px↔mm utils, DOM traversal, text layout, borders/backgrounds, image handling, pagination, renderer.
 - [ ] Add a minimal unit/integration test harness (even one smoke test in headless browser) for `generatePdf` happy path.
 
+## P1 — Rendering improvements (Legacy Support)
+- [ ] Add support for `INPUT` (text/value), `TEXTAREA`, and `SELECT` element values in `domParser` (critical for legacy ERPs).
+
 ## P2 — Rendering improvements (PRD gaps)
 - [ ] Add "keep together" hints (`data-pdf-keep-together="true"`) and avoid splitting table rows when feasible.
 - [ ] Add link preservation for `<a href>` (safe URL allowlist; block `javascript:`).

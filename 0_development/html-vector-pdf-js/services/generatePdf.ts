@@ -19,10 +19,16 @@ export const generatePdf = async (
   const px2mm = (px: number) => px * pxToMm;
 
   // Merge config with defaults
+  const globalMargins = (typeof window !== 'undefined' ? (window as any).html_to_vector_pdf_margins : undefined);
+  
   const cfg: Required<PdfConfig> = {
     ...DEFAULT_CONFIG,
     ...config,
-    margins: { ...DEFAULT_CONFIG.margins, ...config.margins },
+    margins: { 
+      ...DEFAULT_CONFIG.margins, 
+      ...config.margins,
+      ...(globalMargins || {}) 
+    },
     excludeSelectors: [...DEFAULT_EXCLUDE_SELECTORS, ...(config.excludeSelectors || [])],
     callbacks: { ...DEFAULT_CONFIG.callbacks, ...(config.callbacks || {}) },
     performance: { ...DEFAULT_CONFIG.performance, ...(config.performance || {}) },
