@@ -66,6 +66,23 @@ export const parseElementNode = (
       l: parseColor(style.borderLeftColor)
     };
 
+    const borderStyles = {
+      t: style.borderTopStyle || 'solid',
+      r: style.borderRightStyle || 'solid',
+      b: style.borderBottomStyle || 'solid',
+      l: style.borderLeftStyle || 'solid'
+    };
+
+    if (borderStyles.b === 'double' || borderStyles.t === 'double') {
+      console.log('[Border Debug]', {
+        element: el.tagName,
+        borderBottomStyle: borderStyles.b,
+        borderBottomWidth: bb,
+        borderTopStyle: borderStyles.t,
+        borderTopWidth: bt
+      });
+    }
+
     ctx.items.push({
       type: 'border',
       x,
@@ -75,7 +92,8 @@ export const parseElementNode = (
       style,
       zIndex: 10,
       borderSides: { t: bt, r: br, b: bb, l: bl },
-      borderColors
+      borderColors,
+      borderStyles
     });
   }
 
@@ -96,35 +114,46 @@ export const parseElementNode = (
     }
 
     if (valueText && /\S/.test(valueText)) {
+      const tt = (style.textTransform || 'none').toLowerCase();
+      if (tt === 'uppercase') {
+        valueText = valueText.toUpperCase();
+      } else if (tt === 'lowercase') {
+        valueText = valueText.toLowerCase();
+      } else if (tt === 'capitalize') {
+        valueText = valueText.replace(/\b[a-z]/gi, (l) => l.toUpperCase());
+      }
+
       // Calculate text position similar to parseTextNode but using element bounds
       const paddingL = parsePx(style.paddingLeft);
       const paddingR = parsePx(style.paddingRight);
       const paddingT = parsePx(style.paddingTop);
-      
+
       const contentLeftPx = rect.left + paddingL;
       const contentRightPx = rect.right - paddingR;
       const contentWidthPx = Math.max(0, contentRightPx - contentLeftPx);
 
       // Text alignment inside input
       const textAlign = style.textAlign || 'left';
-      
+
       const fontSizePx = parseFloat(style.fontSize);
       const lineHeightPx = parseLineHeightPx(style.lineHeight, fontSizePx);
       const lineHeightMm = ctx.px2mm(lineHeightPx) * ctx.cfg.text.scale;
-      
+
       // Vertical alignment approx (inputs usually center text vertically if single line)
       const contentHeightPx = rect.height - paddingT - parsePx(style.paddingBottom);
       let yOffsetPx = paddingT; // Default top aligned
-      
+
       // Simple heuristic for vertical center in inputs
       if (el.tagName === 'INPUT' && contentHeightPx > fontSizePx) {
-         yOffsetPx += (contentHeightPx - fontSizePx) / 2;
+        yOffsetPx += (contentHeightPx - fontSizePx) / 2;
       }
 
       const baselineOffsetPx = computeAlphabeticBaselineOffsetPx(style, fontSizePx); // approx using font size as height
       const baselineOffset = ctx.px2mm(baselineOffsetPx) * ctx.cfg.text.scale;
 
-      const textX = ctx.cfg.margins.left + ctx.px2mm(contentLeftPx - ctx.rootRect.left);
+      const xLeftMm = ctx.cfg.margins.left + ctx.px2mm(contentLeftPx - ctx.rootRect.left);
+      const xRightMm = ctx.cfg.margins.left + ctx.px2mm(contentRightPx - ctx.rootRect.left);
+      const textX = textAlign === 'right' ? xRightMm : textAlign === 'center' ? (xLeftMm + xRightMm) / 2 : xLeftMm;
       const textY = ctx.px2mm(rect.top + yOffsetPx - ctx.rootRect.top) + baselineOffset;
 
       ctx.items.push({
@@ -138,7 +167,7 @@ export const parseElementNode = (
         textAlign: textAlign as any,
         maxWidthMm: ctx.px2mm(contentWidthPx),
         lineHeightMm,
-        noWrap: el.tagName !== 'TEXTAREA', // Textarea wraps, inputs don't usually
+        noWrap: el.tagName !== 'TEXTAREA',
         zIndex: 20
       });
     }

@@ -3,7 +3,7 @@ import { buildTextStyleKey, parseLineHeightPx, pickTextAlign } from '../textLayo
 import { computeAlphabeticBaselineOffsetPx } from '../textBaseline';
 import { DomParseContext } from './context';
 
-export const parseTextNode = (ctx: DomParseContext, txt: Text, shouldExclude: (el: Element | null) => boolean): void => {
+export const parseTextNode = (ctx: DomParseContext, txt: Text, shouldExclude: (el: Element | null) => boolean, walked: number): void => {
   const rawText = txt.textContent || '';
   if (!/\S/.test(rawText)) return;
 
@@ -17,7 +17,11 @@ export const parseTextNode = (ctx: DomParseContext, txt: Text, shouldExclude: (e
   const hasMeaningfulSibling = (direction: 'prev' | 'next'): boolean => {
     let sib: Node | null = direction === 'prev' ? txt.previousSibling : txt.nextSibling;
     while (sib) {
-      if (sib.nodeType === Node.ELEMENT_NODE) return true;
+      if (sib.nodeType === Node.ELEMENT_NODE) {
+        const tag = (sib as HTMLElement).tagName.toUpperCase();
+        if (tag === 'BR') return false;
+        return true;
+      }
       if (sib.nodeType === Node.TEXT_NODE) {
         const t = (sib.textContent || '').replace(/\u00a0/g, ' ');
         if (/\S/.test(t)) return true;
@@ -54,11 +58,31 @@ export const parseTextNode = (ctx: DomParseContext, txt: Text, shouldExclude: (e
   const layoutStyle = window.getComputedStyle(layoutEl);
   const layoutRect = layoutEl.getBoundingClientRect();
 
-  const paddingLeftPx = parsePx(layoutStyle.paddingLeft);
-  const paddingRightPx = parsePx(layoutStyle.paddingRight);
+  // Check if there's a direct div parent with padding that should be respected
+  const directDivParent = parentEl.closest('div');
+  const useNestedDivPadding = directDivParent && directDivParent !== layoutEl && layoutEl.contains(directDivParent);
+
+  let paddingLeftPx = parsePx(layoutStyle.paddingLeft);
+  let paddingRightPx = parsePx(layoutStyle.paddingRight);
+
+  if (useNestedDivPadding) {
+    const divStyle = window.getComputedStyle(directDivParent);
+    paddingLeftPx += parsePx(divStyle.paddingLeft);
+    paddingRightPx += parsePx(divStyle.paddingRight);
+  }
   const contentLeftPx = layoutRect.left + paddingLeftPx;
   const contentRightPx = layoutRect.right - paddingRightPx;
   const contentWidthPx = Math.max(0, contentRightPx - contentLeftPx);
+
+  const tt = (fontStyle.textTransform || 'none').toLowerCase();
+  if (tt === 'uppercase') {
+    str = str.toUpperCase();
+  } else if (tt === 'lowercase') {
+    str = str.toLowerCase();
+  } else if (tt === 'capitalize') {
+    // Capitalize the first letter of each word, even after punctuation like "("
+    str = str.replace(/\b[a-z]/gi, (l) => l.toUpperCase());
+  }
 
   const textAlign = pickTextAlign(layoutEl, layoutStyle.textAlign || '');
   const whiteSpace = (layoutStyle.whiteSpace || '').toLowerCase();
@@ -83,19 +107,26 @@ export const parseTextNode = (ctx: DomParseContext, txt: Text, shouldExclude: (e
   const baselineOffsetPx = computeAlphabeticBaselineOffsetPx(fontStyle, firstRect.height);
   const baselineOffset = ctx.px2mm(baselineOffsetPx) * ctx.cfg.text.scale;
 
+  const xMmActual = ctx.cfg.margins.left + ctx.px2mm(firstRect.left - ctx.rootRect.left);
   const xLeftMm = ctx.cfg.margins.left + ctx.px2mm(contentLeftPx - ctx.rootRect.left);
   const xRightMm = ctx.cfg.margins.left + ctx.px2mm(contentRightPx - ctx.rootRect.left);
   const xMmCellAligned = textAlign === 'right' ? xRightMm : textAlign === 'center' ? (xLeftMm + xRightMm) / 2 : xLeftMm;
-  const xMmActual = ctx.cfg.margins.left + ctx.px2mm(firstRect.left - ctx.rootRect.left);
-
   const inTableCell = layoutEl.tagName === 'TD' || layoutEl.tagName === 'TH';
   const yBucketPx = Math.round(firstRect.top / 2) * 2;
   const hasMixedTextStyles = inTableCell ? ctx.cellHasMixedTextStyles(layoutEl) : false;
+
+
+  // Check if this cell contains any floating elements (like currency symbols with float:left)
+  // If so, we must NOT aggregate the text, because aggregation would merge "S$" + "8,071,732.60"
+  // into a single right-aligned string, losing the float-left positioning of S$
+  const hasFloatingChildren = inTableCell && layoutEl.querySelector('[style*="float:"]') !== null;
+
 
   const canAggregate =
     inTableCell &&
     rectsLen === 1 &&
     !hasMixedTextStyles &&
+    !hasFloatingChildren &&
     buildTextStyleKey(fontStyle) === buildTextStyleKey(window.getComputedStyle(layoutEl));
 
   if (canAggregate) {
@@ -124,11 +155,27 @@ export const parseTextNode = (ctx: DomParseContext, txt: Text, shouldExclude: (e
         noWrap,
         cssNoWrap,
         rectsLen,
+        alignmentBucket: `${ctx.getLayoutId(layoutEl)}|${yBucketPx}`,
         zIndex: 20
       });
     }
     return;
   }
+
+  const checkIsFloating = (el: HTMLElement | null, limit: HTMLElement): boolean => {
+    let curr: HTMLElement | null = el;
+    while (curr && curr !== limit && curr !== document.body) {
+      const s = window.getComputedStyle(curr);
+      if ((s.float !== 'none' && s.float !== '') || s.position === 'absolute' || s.position === 'fixed') {
+        return true;
+      }
+      curr = curr.parentElement;
+    }
+    return false;
+  };
+
+  const isFloating = checkIsFloating(parentEl, layoutEl);
+  const isFloatLeft = isFloating && window.getComputedStyle(parentEl.closest('[style*="float"]') || parentEl).float === 'left';
 
   if (inTableCell) {
     ctx.items.push({
@@ -139,21 +186,24 @@ export const parseTextNode = (ctx: DomParseContext, txt: Text, shouldExclude: (e
       h,
       style: fontStyle,
       text: str,
-      textAlign: 'left',
+      textAlign: isFloating ? 'left' : textAlign,
       maxWidthMm: ctx.px2mm(contentWidthPx),
       lineHeightMm,
       noWrap,
       cssNoWrap,
       rectsLen,
+
+      inlineGroupId: !isFloating ? `${ctx.getLayoutId(layoutEl)}|${yBucketPx}` : undefined,
+      inlineOrder: !isFloating ? walked : undefined,
+      alignmentBucket: `${ctx.getLayoutId(layoutEl)}|${yBucketPx}`,
+      floatLeft: isFloatLeft,
       contentLeftMm: xLeftMm,
       contentRightMm: xRightMm,
       zIndex: 20
     });
+
     return;
   }
-
-  // 无法聚合的情况（块内混合样式、多行文本等）
-  // 使用实际坐标，让 jsPDF 根据 maxWidthMm 自动处理换行
   ctx.items.push({
     type: 'text',
     x: xMmActual,
@@ -162,13 +212,19 @@ export const parseTextNode = (ctx: DomParseContext, txt: Text, shouldExclude: (e
     h,
     style: fontStyle,
     text: str,
-    textAlign: 'left',
+    textAlign: isFloating ? 'left' : textAlign,
     maxWidthMm: ctx.px2mm(contentWidthPx - (firstRect.left - contentLeftPx)),
     lineHeightMm,
     noWrap: !browserWrapped,
     cssNoWrap,
     rectsLen,
+    inlineGroupId: !isFloating ? `${ctx.getLayoutId(layoutEl)}|${yBucketPx}` : undefined,
+    inlineOrder: !isFloating ? walked : undefined,
+    alignmentBucket: `${ctx.getLayoutId(layoutEl)}|${yBucketPx}`,
+    floatLeft: isFloatLeft,
+    contentLeftMm: xLeftMm,
+    contentRightMm: xRightMm,
     zIndex: 20
   });
-};
 
+};

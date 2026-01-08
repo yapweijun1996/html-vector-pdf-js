@@ -21,12 +21,22 @@ export interface RenderItem {
   inlineOrder?: number;
   contentLeftMm?: number;
   contentRightMm?: number;
+
   computedX?: number;
+  alignmentBucket?: string;
+  floatLeft?: boolean;
   borderSides?: { t: number; r: number; b: number; l: number };
+
   borderColors?: {
     t: [number, number, number];
     r: [number, number, number];
     b: [number, number, number];
     l: [number, number, number];
+  };
+  borderStyles?: {
+    t: string;
+    r: string;
+    b: string;
+    l: string;
   };
 }
