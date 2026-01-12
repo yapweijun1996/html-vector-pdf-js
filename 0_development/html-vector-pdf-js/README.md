@@ -156,6 +156,24 @@ The default margins are **10mm**. You can override them in `config` or globally:
 window.html_to_vector_pdf_margins = { top: 6.35, bottom: 6.35, left: 6.35, right: 6.35 };
 ```
 
+### 4.1 Page Size and Orientation (Global Override)
+
+You can also override the page size and orientation globally:
+
+```javascript
+// Override page size (default: 'a4')
+window.html_to_vector_pdf_page_size = 'letter'; // or 'a4'
+
+// Override orientation (default: 'portrait')
+window.html_to_vector_pdf_orientation = 'landscape'; // or 'portrait'
+```
+
+**Priority order** (highest to lowest):
+1. Global variables (`window.html_to_vector_pdf_*`)
+2. Config parameter passed to `generatePdf()`
+3. Default values
+
+
 ### 5. Forced Page Breaks
 Add a `data-pdf-page-break-before="true"` attribute to force a new page before an element.
 

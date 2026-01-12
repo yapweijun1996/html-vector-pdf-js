@@ -49,11 +49,27 @@ export const parseElementToItems = async (
       if (isPageBreakBefore(el)) {
         const rect = el.getBoundingClientRect();
         if (rect.height >= 0) {
-          const y = px2mm(rect.top - rootRect.top);
-          if (y > 0) pageBreakBeforeYs.push(y);
+          /**** AMENDMENT [start] "Smart Break: Break AFTER for footer containers, BEFORE for others" ****/
+          // Check if this pagebreak element is actually a wrapper for the footer
+          // If so, we want the footer on THIS page, and the break AFTER it.
+          const isFooterWrapper = el.classList.contains('pagebreak_bf_processed') &&
+            el.querySelector('.cls_footer_layer_onscreen') !== null;
+
+          const breakY = isFooterWrapper
+            ? px2mm(rect.bottom - rootRect.top) // Break After Footer
+            : px2mm(rect.top - rootRect.top);   // Standard Break Before
+
+          if (breakY > 0) pageBreakBeforeYs.push(breakY);
+          /**** AMENDMENT [end] "Smart Break: Break AFTER for footer containers, BEFORE for others" ****/
         }
+        /**** AMENDMENT [start] "Allow pagebreak element children (e.g. footer) to be processed" ****/
+        /****
         node = walker.nextNode();
         continue;
+        ****/
+        // Don't skip - let the walker continue into pagebreak element's children
+        // This allows footer content inside pagebreak elements to be rendered before the break
+        /**** AMENDMENT [end] "Allow pagebreak element children (e.g. footer) to be processed" ****/
       }
 
       if (shouldExclude(el)) {

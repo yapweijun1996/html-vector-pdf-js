@@ -19,15 +19,22 @@ export const generatePdf = async (
   const px2mm = (px: number) => px * pxToMm;
 
   // Merge config with defaults
+  // Global overrides (highest priority)
   const globalMargins = (typeof window !== 'undefined' ? (window as any).html_to_vector_pdf_margins : undefined);
-  
+  const globalPageSize = (typeof window !== 'undefined' ? (window as any).html_to_vector_pdf_page_size : undefined);
+  const globalOrientation = (typeof window !== 'undefined' ? (window as any).html_to_vector_pdf_orientation : undefined);
+
   const cfg: Required<PdfConfig> = {
     ...DEFAULT_CONFIG,
     ...config,
-    margins: { 
-      ...DEFAULT_CONFIG.margins, 
+    // Global pageSize override (if provided)
+    ...(globalPageSize ? { pageSize: globalPageSize } : {}),
+    // Global orientation override (if provided)
+    ...(globalOrientation ? { orientation: globalOrientation } : {}),
+    margins: {
+      ...DEFAULT_CONFIG.margins,
       ...config.margins,
-      ...(globalMargins || {}) 
+      ...(globalMargins || {})
     },
     excludeSelectors: [...DEFAULT_EXCLUDE_SELECTORS, ...(config.excludeSelectors || [])],
     callbacks: { ...DEFAULT_CONFIG.callbacks, ...(config.callbacks || {}) },

@@ -139,6 +139,25 @@ graph TB
 <script>
   function downloadReport() {
     html_to_vector_pdf.generatePdf('.html_to_vector_pdf', {
+
+`target` 可以是：
+- 元素 id（例如 `"my-report"`）
+- CSS 选择器（例如 `"#my-report"` / `".html_to_vector_pdf"`）
+- `HTMLElement` 对象
+
+如果选择器匹配多个节点，它们将按 DOM 顺序导出并附加到同一个 PDF 中（参见 `index_multi.html`）。
+
+```html
+<div class="html_to_vector_pdf" id="my-report">
+  <h1>月度报告</h1>
+  <p>此文本在 PDF 中可选择。</p>
+</div>
+
+<button onclick="downloadReport()">下载 PDF</button>
+
+<script>
+  function downloadReport() {
+    html_to_vector_pdf.generatePdf('.html_to_vector_pdf', {
       filename: 'report.pdf',
       pageSize: 'a4',
       margins: { top: 10, right: 10, bottom: 10, left: 10 }
@@ -147,7 +166,33 @@ graph TB
 </script>
 ```
 
-### 4. 强制分页
+### 4. 边距（全局覆盖）
+
+默认边距为 **10mm**。您可以在 `config` 中或全局覆盖它们：
+
+```javascript
+// 全局覆盖（最高优先级）
+window.html_to_vector_pdf_margins = { top: 6.35, bottom: 6.35, left: 6.35, right: 6.35 };
+```
+
+### 4.1 页面尺寸与方向（全局覆盖）
+
+您也可以全局覆盖页面尺寸和方向：
+
+```javascript
+// 覆盖页面尺寸（默认：'a4'）
+window.html_to_vector_pdf_page_size = 'letter'; // 或 'a4'
+
+// 覆盖方向（默认：'portrait'）
+window.html_to_vector_pdf_orientation = 'landscape'; // 或 'portrait'
+```
+
+**优先级顺序**（从高到低）：
+1. 全局变量（`window.html_to_vector_pdf_*`）
+2. 传递给 `generatePdf()` 的配置参数
+3. 默认值
+
+### 5. 强制分页
 添加 `data-pdf-page-break-before="true"` 属性以在元素之前强制新页面。
 
 ```html
