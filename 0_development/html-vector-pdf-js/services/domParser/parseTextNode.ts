@@ -67,7 +67,36 @@ export const parseTextNode = (ctx: DomParseContext, txt: Text, shouldExclude: (e
   const xRightMm = ctx.cfg.margins.left + ctx.px2mm(contentRightPx - ctx.rootRect.left);
   const xMmCellAligned = textAlign === 'right' ? xRightMm : textAlign === 'center' ? (xLeftMm + xRightMm) / 2 : xLeftMm;
   const inTableCell = layoutEl.tagName === 'TD' || layoutEl.tagName === 'TH';
-  const yBucketPx = Math.round(firstRect.top / 2) * 2;
+  /**** AMENDMENT [start] "Force aggregation for text in same TD to fix overlay" ****/
+  // Standard bucket calculation based on top position
+  const rawBucketPx = Math.round(firstRect.top / 2) * 2;
+  let yBucketPx = rawBucketPx;
+
+  if (inTableCell) {
+    const layoutId = ctx.getLayoutId(layoutEl);
+
+    // Check if we have a "forced" bucket for this cell from a previous sibling text node
+    // This handles the document.write case where split text nodes should be on the same line
+    if (ctx.cellLastTextBucket && ctx.cellLastTextBucket.has(layoutId)) {
+      const lastBucket = ctx.cellLastTextBucket.get(layoutId)!;
+      // Only force-merge if the vertical difference is small (e.g. < 5px)
+      // This prevents merging distinct lines, but catches script-induced shifts
+      if (Math.abs(rawBucketPx - lastBucket) < 5) {
+        console.log(`[DEBUG] Forcing bucket: raw=${rawBucketPx}, forced=${lastBucket}, text="${finalStr.substring(0, 30)}..."`);
+        yBucketPx = lastBucket;
+      } else {
+        // It's a new visual line, update the master bucket
+        console.log(`[DEBUG] New line: raw=${rawBucketPx}, last=${lastBucket}, text="${finalStr.substring(0, 30)}..."`);
+        ctx.cellLastTextBucket.set(layoutId, rawBucketPx);
+      }
+    } else {
+      // First text in this cell, initialize
+      console.log(`[DEBUG] First text in cell: bucket=${rawBucketPx}, text="${finalStr.substring(0, 30)}..."`);
+      if (!ctx.cellLastTextBucket) ctx.cellLastTextBucket = new Map();
+      ctx.cellLastTextBucket.set(layoutId, rawBucketPx);
+    }
+  }
+  /**** AMENDMENT [end] "Force aggregation for text in same TD to fix overlay" ****/
 
   // Check if this cell contains any floating elements (like currency symbols with float:left)
   const hasFloatingChildren = inTableCell && layoutEl.querySelector('[style*="float:"]') !== null;
@@ -91,6 +120,7 @@ export const parseTextNode = (ctx: DomParseContext, txt: Text, shouldExclude: (e
 
     const existing = ctx.aggregatedTextByKey.get(key);
     if (existing) {
+      console.log(`[DEBUG] Aggregating text: "${finalStr.substring(0, 30)}..." into existing key=${key}`);
       existing.text = `${existing.text ?? ''}${finalStr}`;
       existing.cssNoWrap = (existing.cssNoWrap ?? false) || cssNoWrap;
       existing.rectsLen = Math.max(existing.rectsLen ?? 0, rectsLen);

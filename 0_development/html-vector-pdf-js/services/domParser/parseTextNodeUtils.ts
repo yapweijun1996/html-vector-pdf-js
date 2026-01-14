@@ -104,7 +104,13 @@ export const canAggregateText = (
     hasLayoutImpact: boolean
 ): boolean => {
     if (!inTableCell) return false;
+    /**** AMENDMENT [start] "Allow multi-rect text aggregation for document.write cases" ****/
+    /****
     if (rectsLen !== 1) return false;
+    ****/
+    // Removed strict rectsLen check - script-injected text may have multiple rects
+    // but should still aggregate if in same cell with same style
+    /**** AMENDMENT [end] "Allow multi-rect text aggregation for document.write cases" ****/
     if (hasFloatingChildren) return false;
     if (hasLayoutImpact) return false;
     if (ctx.cellHasMixedTextStyles(layoutEl)) return false;

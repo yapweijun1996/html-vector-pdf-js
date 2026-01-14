@@ -14,6 +14,9 @@ export interface DomParseContext {
   aggregatedTextByKey: Map<string, RenderItem>;
   getLayoutId: (el: Element) => number;
   cellHasMixedTextStyles: (cell: Element) => boolean;
+  /**** AMENDMENT [start] "Track last bucket per cell" ****/
+  cellLastTextBucket?: Map<number, number>;
+  /**** AMENDMENT [end] "Track last bucket per cell" ****/
 }
 
 export const createLayoutIdGetter = (): ((el: Element) => number) => {

@@ -88,6 +88,75 @@ export const parseElementToItems = async (
   }
 
   // Post-process: Vertical snapping for items in the same alignmentBucket
+  // But first: Merge adjacent layout buckets for items in same layoutEl (e.g. TD)
+  // This fixes cases where text nodes have slight vertical offsets (e.g. from <script> tags) causing them to be split into separate lines
+  /**** AMENDMENT [start] "Merge adjacent layout buckets to fix text overlay issues" ****/
+  const itemsByLayoutId = new Map<string, DomParseContext['items']>();
+  for (const item of items) {
+    if (item.type === 'text' && item.alignmentBucket) {
+      const layoutId = item.alignmentBucket.split('|')[0];
+      if (!itemsByLayoutId.has(layoutId)) itemsByLayoutId.set(layoutId, []);
+      itemsByLayoutId.get(layoutId)!.push(item);
+    }
+  }
+
+  for (const [layoutId, layoutItems] of itemsByLayoutId) {
+    if (layoutItems.length <= 1) continue;
+
+    // Extract unique yBucketPx values
+    const buckets = new Set<number>();
+    for (const item of layoutItems) {
+      const parts = item.alignmentBucket!.split('|');
+      if (parts.length >= 2) {
+        const bucketPx = parseInt(parts[1], 10);
+        if (!isNaN(bucketPx)) buckets.add(bucketPx);
+      }
+    }
+
+    if (buckets.size <= 1) continue;
+
+    const sortedBuckets = Array.from(buckets).sort((a, b) => a - b);
+    const bucketMapping = new Map<number, number>();
+
+    // Determine merges: if diff <= 4px (2 buckets distance), merge to the master bucket
+    let masterBucket = sortedBuckets[0];
+    bucketMapping.set(masterBucket, masterBucket);
+
+    for (let i = 1; i < sortedBuckets.length; i++) {
+      const current = sortedBuckets[i];
+      // Compare with current master bucket. If within tolerance, merge.
+      // 4px is generous enough to catch subpixel/script/font-size shifts, 
+      // but small enough to avoid merging distinct lines (usually >12px)
+      if (current - masterBucket <= 4) {
+        bucketMapping.set(current, masterBucket);
+      } else {
+        masterBucket = current;
+        bucketMapping.set(current, current);
+      }
+    }
+
+    // Apply mapping
+    for (const item of layoutItems) {
+      const parts = item.alignmentBucket!.split('|');
+      if (parts.length < 2) continue;
+
+      const currentBucketPx = parseInt(parts[1], 10);
+      if (isNaN(currentBucketPx)) continue;
+
+      const newBucketPx = bucketMapping.get(currentBucketPx);
+      if (newBucketPx !== undefined && newBucketPx !== currentBucketPx) {
+        const newBucketStr = newBucketPx.toString();
+        // Update both alignmentBucket and inlineGroupId to match the master bucket
+        item.alignmentBucket = `${layoutId}|${newBucketStr}`;
+        if (item.inlineGroupId) {
+          item.inlineGroupId = `${layoutId}|${newBucketStr}`;
+        }
+      }
+    }
+  }
+  /**** AMENDMENT [end] "Merge adjacent layout buckets to fix text overlay issues" ****/
+
+  // Post-process: Vertical snapping for items in the same alignmentBucket（Original）
   // This ensures that floating elements (like currency symbols) align with the main text baseline
   const itemsByBucket = new Map<string, DomParseContext['items']>();
   for (const item of items) {
