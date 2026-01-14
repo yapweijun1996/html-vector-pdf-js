@@ -8,6 +8,7 @@ import { createYieldController } from './asyncYield';
 import { mergeConfig } from './generatePdf.config';
 import { findElements, validateElementSizes } from './generatePdf.elements';
 import { extractTextsFromItems, processFonts } from './generatePdf.fonts';
+import { waitForElementsReady } from './renderReady';
 
 // ============================================================================
 // UI Loader Functions
@@ -98,6 +99,20 @@ export const generatePdf = async (
     validateElementSizes(elements, elementOrSelector);
 
     cfg.callbacks.onProgress?.('select:done', { elementCount: elements.length });
+
+    /**** AMENDMENT [start] "Wait for render ready before parsing DOM" ****/
+    // Wait for fonts, images, and layout to stabilize before parsing
+    // This fixes issues where multi-page PDFs have rendering artifacts on later pages
+    // because resources were not fully loaded on first click
+    cfg.callbacks.onProgress?.('render:wait:start', { elementCount: elements.length });
+    await waitForElementsReady(elements, {
+      timeout: cfg.performance.renderReadyTimeout ?? 10000,
+      debug: cfg.debug,
+      minFrames: 2,
+      settleDelay: 50
+    });
+    cfg.callbacks.onProgress?.('render:wait:done', { elementCount: elements.length });
+    /**** AMENDMENT [end] "Wait for render ready before parsing DOM" ****/
 
     if (cfg.debug) {
       console.log(`[html_to_vector_pdf] Found ${elements.length} element(s) to convert`);

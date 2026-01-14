@@ -14,6 +14,10 @@ export interface PdfConfig {
     yieldEveryNodes?: number;
     yieldEveryMs?: number;
     yieldStrategy?: 'raf' | 'timeout';
+    /**** AMENDMENT [start] "Add renderReadyTimeout config" ****/
+    /** Maximum time to wait for fonts/images/layout before PDF generation (ms). Default: 10000 */
+    renderReadyTimeout?: number;
+    /**** AMENDMENT [end] "Add renderReadyTimeout config" ****/
   };
   errors?: {
     failOnAssetError?: boolean;
@@ -63,7 +67,10 @@ export const DEFAULT_CONFIG: Required<PdfConfig> = {
   performance: {
     yieldEveryNodes: 250,
     yieldEveryMs: 16,
-    yieldStrategy: 'raf'
+    yieldStrategy: 'raf',
+    /**** AMENDMENT [start] "Add renderReadyTimeout default" ****/
+    renderReadyTimeout: 10000
+    /**** AMENDMENT [end] "Add renderReadyTimeout default" ****/
   },
   errors: {
     failOnAssetError: false

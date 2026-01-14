@@ -1,0 +1,25 @@
+{
+  "name": "html-to-vector-pdf-js",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "build:with-fonts": "npm run inject-fonts && vite build && npm run cleanup",
+    "inject-fonts": "node scripts/inject-fonts.js",
+    "cleanup": "node scripts/cleanup-fonts.js",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "jspdf": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.0",
+    "typescript": "~5.8.2",
+    "vite": "^6.2.0"
+  }
+}
