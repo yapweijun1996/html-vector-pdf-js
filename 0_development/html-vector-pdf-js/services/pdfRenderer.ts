@@ -6,6 +6,9 @@ import { RenderItem } from './renderItems';
 import { wrapTextToWidth } from './textLayout';
 import { createYieldController } from './asyncYield';
 import { HtmlToVectorPdfError } from './errors';
+/**** AMENDMENT [start] "Import font detection for CJK support" ****/
+import { detectRequiredFont } from './fontLoader';
+/**** AMENDMENT [end] "Import font detection for CJK support" ****/
 
 type PdfFontFamily = 'helvetica' | 'times' | 'courier';
 
@@ -24,17 +27,41 @@ const pickPdfFontFamily = (cssFontFamily: string | null | undefined): PdfFontFam
   return 'helvetica';
 };
 
-const applyTextStyle = (doc: jsPDF, style: CSSStyleDeclaration, textScale: number): void => {
+/**** AMENDMENT [start] "Support auto font selection for CJK characters" ****/
+const applyTextStyle = (doc: jsPDF, style: CSSStyleDeclaration, textScale: number, text?: string): void => {
   doc.setFontSize(px2pt(style.fontSize) * textScale);
 
-  const isBold = style.fontWeight === 'bold' || parseInt(style.fontWeight) >= 600;
-  const isItalic = style.fontStyle === 'italic';
-  const variant = isBold && isItalic ? 'bolditalic' : isBold ? 'bold' : isItalic ? 'italic' : 'normal';
-  doc.setFont(pickPdfFontFamily(style.fontFamily), variant);
+  // Auto-detect font for non-Latin characters
+  let fontFamily: string;
+  let variant: string;
+
+  if (text) {
+    const detectedFont = detectRequiredFont(text);
+    if (detectedFont) {
+      // Use CJK font if detected
+      fontFamily = detectedFont;
+      variant = 'normal'; // CJK fonts may not have bold/italic variants
+    } else {
+      // Use standard PDF fonts for Latin text
+      const isBold = style.fontWeight === 'bold' || parseInt(style.fontWeight) >= 600;
+      const isItalic = style.fontStyle === 'italic';
+      variant = isBold && isItalic ? 'bolditalic' : isBold ? 'bold' : isItalic ? 'italic' : 'normal';
+      fontFamily = pickPdfFontFamily(style.fontFamily);
+    }
+  } else {
+    // Fallback: no text provided, use standard fonts
+    const isBold = style.fontWeight === 'bold' || parseInt(style.fontWeight) >= 600;
+    const isItalic = style.fontStyle === 'italic';
+    variant = isBold && isItalic ? 'bolditalic' : isBold ? 'bold' : isItalic ? 'italic' : 'normal';
+    fontFamily = pickPdfFontFamily(style.fontFamily);
+  }
+
+  doc.setFont(fontFamily, variant);
 
   const [r, g, b] = parseColor(style.color);
   doc.setTextColor(r, g, b);
 };
+/**** AMENDMENT [end] "Support auto font selection for CJK characters" ****/
 
 export const renderToPdf = async (
   allElementItems: Array<{ items: RenderItem[]; pageBreakBeforeYs: number[] }>,
@@ -46,6 +73,24 @@ export const renderToPdf = async (
     unit: 'mm',
     format: cfg.pageSize
   });
+
+  /**** AMENDMENT [start] "Register loaded CJK fonts to jsPDF" ****/
+  // Register fonts that were loaded from CDN
+  const loadedFonts = (cfg as any).loadedFonts as Array<{ name: string; data: string; format: string }> | undefined;
+  if (loadedFonts && loadedFonts.length > 0) {
+    for (const font of loadedFonts) {
+      try {
+        doc.addFileToVFS(`${font.name}.ttf`, font.data);
+        doc.addFont(`${font.name}.ttf`, font.name, 'normal');
+        if (cfg.debug) {
+          console.log(`[html_to_vector_pdf] Registered font to jsPDF: ${font.name}`);
+        }
+      } catch (err) {
+        console.warn(`[html_to_vector_pdf] Failed to register font ${font.name}:`, err);
+      }
+    }
+  }
+  /**** AMENDMENT [end] "Register loaded CJK fonts to jsPDF" ****/
 
   const pageH = doc.internal.pageSize.getHeight();
   const contentH = pageH - cfg.margins.top - cfg.margins.bottom;
@@ -102,7 +147,7 @@ export const renderToPdf = async (
       let totalWidthMm = 0;
       for (let i = 0; i < groupItems.length; i++) {
         const item = groupItems[i];
-        applyTextStyle(doc, item.style, cfg.text.scale);
+        applyTextStyle(doc, item.style, cfg.text.scale, item.text);
         const w = doc.getTextWidth(item.text || '');
         widthsMm.push(w);
         totalWidthMm += w;
@@ -230,7 +275,7 @@ export const renderToPdf = async (
       }
 
       if (item.type === 'text' && item.text) {
-        applyTextStyle(doc, item.style, cfg.text.scale);
+        applyTextStyle(doc, item.style, cfg.text.scale, item.text);
 
         const x = item.computedX ?? item.x;
         const align = item.computedX != null ? 'left' : item.textAlign || 'left';

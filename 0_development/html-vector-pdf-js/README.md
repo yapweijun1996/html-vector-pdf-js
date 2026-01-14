@@ -299,10 +299,24 @@ npm install
 ```
 
 ### Build Library
-Builds the standalone `html_to_vector_pdf.js` library to the `dist/` folder.
+
+The project provides two build options:
+
+#### 1. Standard Build (Lightweight, ~100KB)
+Builds without embedded fonts. Supports standard Latin fonts only.
 ```bash
 npm run build
 ```
+**Use case**: Development, testing, or when CJK (Chinese/Japanese/Korean) font support is not required.
+
+#### 2. Full Build with Fonts (~2-5MB)
+Builds with embedded CJK fonts (Noto Sans SC/JP/KR).
+```bash
+npm run build:with-fonts
+```
+**Use case**: Production deployment requiring full international character support.
+
+Both commands output to `dist/html_to_vector_pdf.js`.
 
 ### Demo Files
 - `index.html`: single `.html_to_vector_pdf` example (loads `./dist/html_to_vector_pdf.js`)

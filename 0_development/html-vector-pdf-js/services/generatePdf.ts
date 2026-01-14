@@ -5,6 +5,7 @@ import { getPxToMm } from './pdfUnits';
 import { RenderItem } from './renderItems';
 import { HtmlToVectorPdfError, asHtmlToVectorPdfError } from './errors';
 import { createYieldController } from './asyncYield';
+import { detectRequiredFonts, loadFontFromCDN } from './fontLoader';
 
 /**
  * Generate PDF from HTML element
@@ -124,6 +125,50 @@ export const generatePdf = async (
         renderItemCount: parsed.items.length
       });
       await maybeYield(elemIdx + 1);
+    }
+
+    // Scan all text items to detect required fonts
+    cfg.callbacks.onProgress?.('font:detect:start', {});
+    const allTexts: string[] = [];
+    for (const elemItems of allElementItems) {
+      for (const item of elemItems.items) {
+        if (item.type === 'text' && item.text) {
+          allTexts.push(item.text);
+        }
+      }
+    }
+
+    const requiredFonts = detectRequiredFonts(allTexts);
+    if (requiredFonts.size > 0) {
+      cfg.callbacks.onProgress?.('font:load:start', { fonts: Array.from(requiredFonts) });
+      if (cfg.debug) {
+        console.log('[html_to_vector_pdf] Loading fonts from CDN:', Array.from(requiredFonts));
+      }
+
+      // Load all fonts concurrently
+      const fontPromises = Array.from(requiredFonts).map(fontName => loadFontFromCDN(fontName));
+      const loadedFonts = await Promise.allSettled(fontPromises);
+
+      // Collect successfully loaded fonts for passing to renderer
+      const fontsToRegister: Array<{ name: string; data: string; format: string }> = [];
+      for (let i = 0; i < loadedFonts.length; i++) {
+        const result = loadedFonts[i];
+        if (result.status === 'fulfilled') {
+          fontsToRegister.push(result.value);
+          if (cfg.debug) {
+            console.log(`[html_to_vector_pdf] Loaded font: ${result.value.name}`);
+          }
+        } else {
+          const fontName = Array.from(requiredFonts)[i];
+          console.warn(`[html_to_vector_pdf] Failed to load font ${fontName}:`, result.reason);
+          cfg.callbacks.onError?.(result.reason);
+        }
+      }
+
+      cfg.callbacks.onProgress?.('font:load:done', { loadedCount: fontsToRegister.length });
+
+      // Pass loaded fonts to renderer via config
+      (cfg as any).loadedFonts = fontsToRegister;
     }
 
     cfg.callbacks.onProgress?.('render:start', { elementCount: allElementItems.length });

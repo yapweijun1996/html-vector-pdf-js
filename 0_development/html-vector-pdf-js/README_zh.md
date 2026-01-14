@@ -139,25 +139,6 @@ graph TB
 <script>
   function downloadReport() {
     html_to_vector_pdf.generatePdf('.html_to_vector_pdf', {
-
-`target` 可以是：
-- 元素 id（例如 `"my-report"`）
-- CSS 选择器（例如 `"#my-report"` / `".html_to_vector_pdf"`）
-- `HTMLElement` 对象
-
-如果选择器匹配多个节点，它们将按 DOM 顺序导出并附加到同一个 PDF 中（参见 `index_multi.html`）。
-
-```html
-<div class="html_to_vector_pdf" id="my-report">
-  <h1>月度报告</h1>
-  <p>此文本在 PDF 中可选择。</p>
-</div>
-
-<button onclick="downloadReport()">下载 PDF</button>
-
-<script>
-  function downloadReport() {
-    html_to_vector_pdf.generatePdf('.html_to_vector_pdf', {
       filename: 'report.pdf',
       pageSize: 'a4',
       margins: { top: 10, right: 10, bottom: 10, left: 10 }
@@ -199,7 +180,7 @@ window.html_to_vector_pdf_orientation = 'landscape'; // 或 'portrait'
 <div data-pdf-page-break-before="true"></div>
 ```
 
-### 5. 一致的缩放（推荐）
+### 6. 一致的缩放（推荐）
 如果您的可打印区域使用固定像素宽度（例如：`.pdf-page { width: 750px; }`），您可以将该宽度映射到 PDF 页面宽度以减少溢出/换行差异：
 
 ```js
@@ -317,10 +298,24 @@ npm install
 ```
 
 ### 构建库
-将独立的 `html_to_vector_pdf.js` 库构建到 `dist/` 文件夹。
+
+项目提供两种构建选项：
+
+#### 1. 标准构建（轻量级，~100KB）
+不嵌入字体的构建。仅支持标准拉丁字体。
 ```bash
 npm run build
 ```
+**使用场景**：开发、测试，或不需要 CJK（中文/日文/韩文）字体支持时。
+
+#### 2. 完整构建（带字体，~2-5MB）
+嵌入 CJK 字体（Noto Sans SC/JP/KR）的构建。
+```bash
+npm run build:with-fonts
+```
+**使用场景**：生产部署，需要完整的国际字符支持时。
+
+两个命令都会输出到 `dist/html_to_vector_pdf.js`。
 
 ### 演示文件
 - `index.html`: 单个 `.html_to_vector_pdf` 示例（加载 `./dist/html_to_vector_pdf.js`）
