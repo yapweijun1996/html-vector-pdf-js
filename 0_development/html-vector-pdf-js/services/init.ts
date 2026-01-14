@@ -17,6 +17,7 @@ export interface HtmlToVectorPdfInitOptions {
   filename?: string | ((ctx: { now: Date }) => string);
   onProgress?: NonNullable<PdfConfig['callbacks']>['onProgress'];
   onError?: NonNullable<PdfConfig['callbacks']>['onError'];
+  showLoader?: boolean;
 }
 
 type InitState = {
@@ -50,7 +51,8 @@ const DEFAULT_INIT_OPTIONS: Required<HtmlToVectorPdfInitOptions> = {
   generate: {},
   filename: defaultFileName,
   onProgress: undefined,
-  onError: undefined
+  onError: undefined,
+  showLoader: true
 };
 
 let state: InitState | null = null;
@@ -114,6 +116,49 @@ const setButtonBusy = (btn: HTMLElement, busy: boolean, options: Required<HtmlTo
   btn.style.cursor = busy ? 'not-allowed' : 'pointer';
 };
 
+const LOADER_ID = 'html-vector-pdf-loader';
+const showLoader = (label: string = 'Generating PDF...') => {
+  let loader = document.getElementById(LOADER_ID);
+  if (!loader) {
+    loader = document.createElement('div');
+    loader.id = LOADER_ID;
+    loader.style.cssText = `
+      position: fixed; inset: 0; z-index: 2147483648;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(2px);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      color: white; font-family: system-ui, sans-serif; transition: opacity 0.2s;
+    `;
+    loader.innerHTML = `
+      <style>
+        .hv-pdf-spinner {
+          width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.3);
+          border-top-color: white; border-radius: 50%;
+          animation: hv-pdf-spin 1s linear infinite; margin-bottom: 16px;
+        }
+        @keyframes hv-pdf-spin { to { transform: rotate(360deg); } }
+      </style>
+      <div class="hv-pdf-spinner"></div>
+      <div id="${LOADER_ID}-text" style="font-size: 16px; font-weight: 500;">${label}</div>
+    `;
+    document.body.appendChild(loader);
+  } else {
+    const textEl = document.getElementById(`${LOADER_ID}-text`);
+    if (textEl) textEl.textContent = label;
+    loader.style.display = 'flex';
+  }
+};
+
+const hideLoader = () => {
+  const loader = document.getElementById(LOADER_ID);
+  if (loader) {
+    loader.style.opacity = '0';
+    setTimeout(() => {
+      loader.remove();
+    }, 200);
+  }
+};
+
 export const exportPdf = async (override?: Partial<HtmlToVectorPdfInitOptions>): Promise<void> => {
   if (!state) throw new Error('HtmlToVectorPDF is not initialized. Call init(options) first.');
   const merged: Required<HtmlToVectorPdfInitOptions> = {
@@ -158,10 +203,15 @@ export const init = (options: HtmlToVectorPdfInitOptions = {}): void => {
     void (async () => {
       const btn = state?.buttonEl || (state?.boundEl as HTMLElement | null);
       if (btn) setButtonBusy(btn, true, merged);
+
+      if (merged.showLoader) showLoader(merged.button.generatingLabel);
+
       try {
         await exportPdf();
       } finally {
         if (btn) setButtonBusy(btn, false, merged);
+
+        if (merged.showLoader) hideLoader();
       }
     })();
   };

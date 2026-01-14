@@ -34,6 +34,9 @@ export interface PdfConfig {
     lineWidthMm?: number;
   };
   debug?: boolean;
+  ui?: {
+    showLoader?: boolean;
+  };
 }
 
 export const DEFAULT_EXCLUDE_SELECTORS = [
@@ -79,5 +82,8 @@ export const DEFAULT_CONFIG: Required<PdfConfig> = {
     strokeColorRgb: [255, 0, 0],
     lineWidthMm: 0.15
   },
-  debug: false
+  debug: false,
+  ui: {
+    showLoader: true
+  }
 };
