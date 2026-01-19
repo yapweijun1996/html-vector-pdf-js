@@ -154,9 +154,11 @@ export const parseTextNode = (ctx: DomParseContext, txt: Text, shouldExclude: (e
   // Otherwise the renderer will recalculate the x position based on group alignment, ignoring our exact coordinates
   const shouldSkipInlineGroup = isFloating || hasLayoutImpact;
 
-  // In table cells, we still want to respect TD/TH text alignment for non-floating text,
-  // even when we must skip inline grouping due to layout impact.
-  const shouldUseCellAlignedX = inTableCell && !isFloating && (textAlign === 'right' || textAlign === 'center');
+  // In table cells, only use TD/TH-aligned anchor X when we will still inline-group the fragments.
+  // If we must skip inline grouping (e.g. block wrappers like <span style="display:block">),
+  // we must render using the browser-measured left edge (xMmActual) and force 'left' alignment,
+  // otherwise mixed-style fragments can overlap when each fragment is centered independently.
+  const shouldUseCellAlignedX = inTableCell && !shouldSkipInlineGroup && (textAlign === 'right' || textAlign === 'center');
 
   // Helper to create the non-aggregated render item
   const createItem = (isFirstItemInWrapped: boolean = false) => ({
