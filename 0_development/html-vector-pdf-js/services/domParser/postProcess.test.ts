@@ -178,10 +178,46 @@ describe('postProcess', () => {
 
       snapItemsInBuckets(items);
 
-      expect(items[0].x).toBe(9.0);
-      expect(items[0].textAlign).toBe('left');
-      expect(items[1].x).toBe(11.0);
-      expect(items[1].textAlign).toBe('left');
+      // Now we group them for safe width-based alignment downstream (inlineTextGroups).
+      expect(items[0].inlineGroupId).toBeTruthy();
+      expect(items[1].inlineGroupId).toBeTruthy();
+      expect(items[0].inlineGroupId).toBe(items[1].inlineGroupId);
+      expect(items[0].inlineOrder).toBe(0);
+      expect(items[1].inlineOrder).toBe(1);
+      expect(items[0].textAlign).toBe('right');
+      expect(items[1].textAlign).toBe('right');
+    });
+
+    it('should not group when candidates have different desired alignments', () => {
+      const items: RenderItem[] = [
+        {
+          type: 'text',
+          alignmentBucket: 'bucket1',
+          textAlign: 'left',
+          cellTextAlign: 'right',
+          contentLeftMm: 0,
+          contentRightMm: 100,
+          x: 10,
+          y: 0,
+          w: 0, h: 0, style: {} as any, zIndex: 0
+        },
+        {
+          type: 'text',
+          alignmentBucket: 'bucket1',
+          textAlign: 'left',
+          cellTextAlign: 'center',
+          contentLeftMm: 0,
+          contentRightMm: 100,
+          x: 20,
+          y: 0,
+          w: 0, h: 0, style: {} as any, zIndex: 0
+        }
+      ];
+
+      snapItemsInBuckets(items);
+
+      expect(items[0].inlineGroupId).toBeUndefined();
+      expect(items[1].inlineGroupId).toBeUndefined();
     });
   });
 });

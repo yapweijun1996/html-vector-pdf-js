@@ -147,6 +147,35 @@ export const snapItemsInBuckets = (items: RenderItem[]): void => {
         it.x = (left + right) / 2;
         it.textAlign = 'center';
       }
+      continue;
+    }
+
+    // If there are multiple text fragments that together should be right/center aligned
+    // (e.g. inline styling splits nodes but we had to skip inline grouping due to block/padding wrappers),
+    // we can safely group them and let the renderer compute widths and place them as a single inline group.
+    if (reanchorCandidates.length > 1) {
+      const desiredAlign = reanchorCandidates[0].cellTextAlign;
+      const contentLeft = reanchorCandidates[0].contentLeftMm!;
+      const contentRight = reanchorCandidates[0].contentRightMm!;
+      const canGroup =
+        (desiredAlign === 'right' || desiredAlign === 'center') &&
+        reanchorCandidates.every(
+          (t) =>
+            t.cellTextAlign === desiredAlign &&
+            t.contentLeftMm === contentLeft &&
+            t.contentRightMm === contentRight
+        );
+
+      if (canGroup) {
+        const groupId = `cellAligned|${bucketItems[0].alignmentBucket}|${desiredAlign}`;
+        const sorted = [...reanchorCandidates].sort((a, b) => a.x - b.x);
+        for (let i = 0; i < sorted.length; i++) {
+          const t = sorted[i];
+          t.inlineGroupId = groupId;
+          t.inlineOrder = i;
+          t.textAlign = desiredAlign;
+        }
+      }
     }
   }
 };
