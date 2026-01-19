@@ -98,6 +98,37 @@ graph TB
 
 ## 📦 Usage
 
+### 0. Quick Start (Hello World)
+Copy this into an HTML file to try it immediately:
+
+```html
+<!DOCTYPE html>
+<html>
+<head><title>PDF Demo</title></head>
+<body>
+  <!-- 1. The content to export -->
+  <div id="content" style="padding: 20px; border: 1px solid #ccc;">
+    <h1>Hello Vector PDF</h1>
+    <p>This text will remain selectable in the PDF.</p>
+  </div>
+
+  <!-- 2. The trigger button -->
+  <button onclick="generate()">Download PDF</button>
+
+  <!-- 3. The library -->
+  <script src="./dist/html_to_vector_pdf.js"></script>
+  <script>
+    function generate() {
+      // 4. The call
+      html_to_vector_pdf.generatePdf('#content', {
+        filename: 'hello.pdf'
+      });
+    }
+  </script>
+</body>
+</html>
+```
+
 ### 1. Include the Script
 Include the generated script in your HTML file.
 
@@ -210,6 +241,22 @@ const pxToMm = (pageWidthMm - margins.left - margins.right) / baseWidthPx;
 await html_to_vector_pdf.generatePdf('.html_to_vector_pdf', { margins, render: { pxToMm } });
 ```
 
+### 7. UI Loader Customization (Advanced)
+
+The library includes a default full-screen loader. You can disable it and implement your own if needed:
+
+```javascript
+html_to_vector_pdf.generatePdf('#report', {
+  ui: { showLoader: false }, // Disable default loader
+  callbacks: {
+    onProgress: (stage) => {
+      if (stage === 'select:start') myCustomLoader.show();
+      if (stage === 'save:done' || stage === 'error') myCustomLoader.hide();
+    }
+  }
+});
+```
+
 ## ⚙️ Configuration
 
 The `generatePdf` function accepts a configuration object with the following options:
@@ -229,6 +276,7 @@ The `generatePdf` function accepts a configuration object with the following opt
 | `text.scale` | `number` | `1` | Global scaling factor for text size. |
 | `render.pxToMm` | `number` | (auto) | Override px→mm conversion for consistent scaling. |
 | `pagination.pageBreakBeforeSelectors` | `string[]` | `[".pagebreak_bf_processed","[data-pdf-page-break-before=\"true\"]"]` | CSS selectors that force a new page before an element. |
+| `ui.showLoader` | `boolean` | `true` | Show/hide the built-in full screen loading overlay. |
 | `debugOverlay.enabled` | `boolean` | `false` | Draws debug rectangles (table cell content boxes). |
 | `debug` | `boolean` | `false` | Enable console logging for layout debugging. |
 
