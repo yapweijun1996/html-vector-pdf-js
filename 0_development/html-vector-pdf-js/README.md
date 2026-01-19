@@ -157,6 +157,22 @@ The default margins are **10mm**. You can override them in `config` or globally:
 window.html_to_vector_pdf_margins = { top: 6.35, bottom: 6.35, left: 6.35, right: 6.35 };
 ```
 
+### 4.2 Target (Global Override)
+
+If you can’t (or don’t want to) change existing code that calls `generatePdf('body', ...)`, you can override the export target globally:
+
+```js
+// Example: only export this area
+window.html_to_vector_pdf_target = '.html_to_vector_pdf_print_area';
+```
+
+To restore default behavior, set it to an empty string or delete it:
+
+```js
+window.html_to_vector_pdf_target = '';
+// or: delete window.html_to_vector_pdf_target;
+```
+
 ### 4.1 Page Size and Orientation (Global Override)
 
 You can also override the page size and orientation globally:

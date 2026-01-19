@@ -157,6 +157,22 @@ graph TB
 window.html_to_vector_pdf_margins = { top: 6.35, bottom: 6.35, left: 6.35, right: 6.35 };
 ```
 
+### 4.2 输出目标（全局覆盖）
+
+如果你不方便改动既有代码（例如现有逻辑固定调用 `generatePdf('body', ...)`），可以用全局变量覆写输出目标：
+
+```js
+// 示例：只输出这个区域
+window.html_to_vector_pdf_target = '.html_to_vector_pdf_print_area';
+```
+
+要恢复默认行为，可设为空字符串或删除该变量：
+
+```js
+window.html_to_vector_pdf_target = '';
+// 或：delete window.html_to_vector_pdf_target;
+```
+
 ### 4.1 页面尺寸与方向（全局覆盖）
 
 您也可以全局覆盖页面尺寸和方向：

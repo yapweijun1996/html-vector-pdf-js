@@ -11,6 +11,11 @@ export interface WindowWithPdfGlobals extends Window {
     html_to_vector_pdf_margins?: Partial<PdfConfig['margins']>;
     html_to_vector_pdf_page_size?: PdfConfig['pageSize'];
     html_to_vector_pdf_orientation?: PdfConfig['orientation'];
+    /**
+     * Override the export target for `generatePdf(target, config)`.
+     * Example: window.html_to_vector_pdf_target = '.html_to_vector_pdf_print_area'
+     */
+    html_to_vector_pdf_target?: string;
 }
 
 /**
