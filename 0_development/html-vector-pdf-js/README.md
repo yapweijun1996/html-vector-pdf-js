@@ -23,20 +23,21 @@ A powerful, client-side library for generating vector-based PDFs from HTML conte
 
 ```mermaid
 graph TB
-    A[User calls generatePdf] --> B[Parse target element]
-    B --> C{Single or Multiple?}
-    C -->|Single| D[Process HTML Element]
-    C -->|Multiple| E[Iterate all matches]
-    E --> D
-    D --> F[DOM Tree Traversal]
-    F --> G[Extract Render Items]
-    G --> H[Sort by zIndex]
-    H --> I[Pagination Calculation]
-    I --> J[Render to PDF]
-    J --> K[Download PDF File]
+    A[User calls generatePdf] --> B[Find & Validate Elements]
+    B --> C[Wait for Render Ready]
+    C --> D{Iterate Elements}
+    D --> E[Parse DOM to RenderItems]
+    E --> F[Performance Yield]
+    F --> D
+    D -->|Done| G[Extract All Text]
+    G --> H[Process & Load Fonts]
+    H --> I[Render to PDF]
+    I --> J[Save File]
     
     style A fill:#667eea
-    style K fill:#10b981
+    style C fill:#f59e0b
+    style H fill:#f59e0b
+    style J fill:#10b981
 ```
 
 ### Core Rendering Engine

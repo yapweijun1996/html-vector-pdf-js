@@ -23,20 +23,21 @@
 
 ```mermaid
 graph TB
-    A[用户调用 generatePdf] --> B[解析目标元素]
-    B --> C{单个还是多个元素?}
-    C -->|单个| D[处理单个 HTML 元素]
-    C -->|多个| E[遍历所有匹配元素]
-    E --> D
-    D --> F[DOM 树遍历]
-    F --> G[提取渲染项]
-    G --> H[按 zIndex 排序]
-    H --> I[分页计算]
-    I --> J[渲染到 PDF]
-    J --> K[下载 PDF 文件]
+    A[用户调用 generatePdf] --> B[查找并验证元素]
+    B --> C[等待渲染就绪]
+    C --> D{遍历元素}
+    D --> E[DOM 解析为渲染项]
+    E --> F[性能让步 (Yield)]
+    F --> D
+    D -->|完成| G[提取所有文本]
+    G --> H[处理并加载字体]
+    H --> I[渲染到 PDF]
+    I --> J[保存文件]
     
     style A fill:#667eea
-    style K fill:#10b981
+    style C fill:#f59e0b
+    style H fill:#f59e0b
+    style J fill:#10b981
 ```
 
 ### 核心渲染引擎
