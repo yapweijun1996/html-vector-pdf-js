@@ -170,6 +170,10 @@ export const parseTextNode = (ctx: DomParseContext, txt: Text, shouldExclude: (e
     style: fontStyle,
     text: finalStr,
     textAlign: shouldUseCellAlignedX ? textAlign : shouldSkipInlineGroup ? 'left' : textAlign,
+    cellTextAlign:
+      inTableCell && shouldSkipInlineGroup && !shouldUseCellAlignedX && (textAlign === 'right' || textAlign === 'center')
+        ? textAlign
+        : undefined,
     maxWidthMm: ctx.px2mm(contentWidthPx - (isFirstItemInWrapped ? firstRect.left - contentLeftPx : 0)),
     lineHeightMm,
     noWrap: !browserWrapped,

@@ -12,6 +12,11 @@ export interface RenderItem {
   imageFormat?: string;
   zIndex: number;
   textAlign?: TextAlign;
+  /**
+   * When table-cell alignment is intentionally downgraded to avoid overlap (e.g. block wrappers),
+   * we keep the original desired alignment here so post-processing can safely re-anchor it.
+   */
+  cellTextAlign?: TextAlign;
   maxWidthMm?: number;
   lineHeightMm?: number;
   noWrap?: boolean;
