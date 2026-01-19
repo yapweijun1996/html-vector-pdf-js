@@ -21,17 +21,19 @@ export const parseTextNode = (ctx: DomParseContext, txt: Text, shouldExclude: (e
   const layoutStyle = window.getComputedStyle(layoutEl);
   const layoutRect = layoutEl.getBoundingClientRect();
 
-  // Check if there's a direct div parent with padding that should be respected
-  const directDivParent = parentEl.closest('div');
-  const useNestedDivPadding = directDivParent && directDivParent !== layoutEl && layoutEl.contains(directDivParent);
+  // `getBoundingClientRect()` measures the border box, so to compute the content box
+  // we must subtract both padding and border (margin is outside the border box).
+  let paddingLeftPx = parsePx(layoutStyle.paddingLeft) + parsePx(layoutStyle.borderLeftWidth);
+  let paddingRightPx = parsePx(layoutStyle.paddingRight) + parsePx(layoutStyle.borderRightWidth);
 
-  let paddingLeftPx = parsePx(layoutStyle.paddingLeft);
-  let paddingRightPx = parsePx(layoutStyle.paddingRight);
-
-  if (useNestedDivPadding) {
-    const divStyle = window.getComputedStyle(directDivParent);
-    paddingLeftPx += parsePx(divStyle.paddingLeft);
-    paddingRightPx += parsePx(divStyle.paddingRight);
+  // Traverse up from parentEl to layoutEl to accumulate padding/borders of intermediate blocks
+  // This replaces the old check which only looked for the closest 'div'
+  let curr: HTMLElement | null = parentEl;
+  while (curr && curr !== layoutEl && layoutEl.contains(curr)) {
+    const s = window.getComputedStyle(curr);
+    paddingLeftPx += parsePx(s.paddingLeft) + parsePx(s.borderLeftWidth);
+    paddingRightPx += parsePx(s.paddingRight) + parsePx(s.borderRightWidth);
+    curr = curr.parentElement;
   }
   const contentLeftPx = layoutRect.left + paddingLeftPx;
   const contentRightPx = layoutRect.right - paddingRightPx;
@@ -67,7 +69,6 @@ export const parseTextNode = (ctx: DomParseContext, txt: Text, shouldExclude: (e
   const xRightMm = ctx.cfg.margins.left + ctx.px2mm(contentRightPx - ctx.rootRect.left);
   const xMmCellAligned = textAlign === 'right' ? xRightMm : textAlign === 'center' ? (xLeftMm + xRightMm) / 2 : xLeftMm;
   const inTableCell = layoutEl.tagName === 'TD' || layoutEl.tagName === 'TH';
-  /**** AMENDMENT [start] "Force aggregation for text in same TD to fix overlay" ****/
   // Standard bucket calculation based on top position
   const rawBucketPx = Math.round(firstRect.top / 2) * 2;
   let yBucketPx = rawBucketPx;
@@ -96,7 +97,6 @@ export const parseTextNode = (ctx: DomParseContext, txt: Text, shouldExclude: (e
       ctx.cellLastTextBucket.set(layoutId, rawBucketPx);
     }
   }
-  /**** AMENDMENT [end] "Force aggregation for text in same TD to fix overlay" ****/
 
   // Check if this cell contains any floating elements (like currency symbols with float:left)
   const hasFloatingChildren = inTableCell && layoutEl.querySelector('[style*="float:"]') !== null;
@@ -154,16 +154,20 @@ export const parseTextNode = (ctx: DomParseContext, txt: Text, shouldExclude: (e
   // Otherwise the renderer will recalculate the x position based on group alignment, ignoring our exact coordinates
   const shouldSkipInlineGroup = isFloating || hasLayoutImpact;
 
+  // In table cells, we still want to respect TD/TH text alignment for non-floating text,
+  // even when we must skip inline grouping due to layout impact.
+  const shouldUseCellAlignedX = inTableCell && !isFloating && (textAlign === 'right' || textAlign === 'center');
+
   // Helper to create the non-aggregated render item
   const createItem = (isFirstItemInWrapped: boolean = false) => ({
     type: 'text' as const,
-    x: xMmActual,
+    x: shouldUseCellAlignedX ? xMmCellAligned : xMmActual,
     y: y + baselineOffset,
     w: ctx.px2mm(firstRect.width),
     h,
     style: fontStyle,
     text: finalStr,
-    textAlign: shouldSkipInlineGroup ? 'left' : textAlign, // Force left if not aggregating to respect xMmActual
+    textAlign: shouldUseCellAlignedX ? textAlign : shouldSkipInlineGroup ? 'left' : textAlign,
     maxWidthMm: ctx.px2mm(contentWidthPx - (isFirstItemInWrapped ? firstRect.left - contentLeftPx : 0)),
     lineHeightMm,
     noWrap: !browserWrapped,
