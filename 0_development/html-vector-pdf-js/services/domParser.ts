@@ -4,6 +4,7 @@ import { ParsedElement, DomParseContext, createCellHasMixedTextStyles, createLay
 import { createIsPageBreakBefore, createShouldExclude } from './domParser/selectors';
 import { parseElementNode } from './domParser/parseElementNode';
 import { parseTextNode } from './domParser/parseTextNode';
+import { mergeAdjacentLayoutBuckets, snapItemsInBuckets } from './domParser/postProcess';
 
 export const parseElementToItems = async (
   element: HTMLElement,
@@ -91,119 +92,12 @@ export const parseElementToItems = async (
   // But first: Merge adjacent layout buckets for items in same layoutEl (e.g. TD)
   // This fixes cases where text nodes have slight vertical offsets (e.g. from <script> tags) causing them to be split into separate lines
   /**** AMENDMENT [start] "Merge adjacent layout buckets to fix text overlay issues" ****/
-  const itemsByLayoutId = new Map<string, DomParseContext['items']>();
-  for (const item of items) {
-    if (item.type === 'text' && item.alignmentBucket) {
-      const layoutId = item.alignmentBucket.split('|')[0];
-      if (!itemsByLayoutId.has(layoutId)) itemsByLayoutId.set(layoutId, []);
-      itemsByLayoutId.get(layoutId)!.push(item);
-    }
-  }
-
-  for (const [layoutId, layoutItems] of itemsByLayoutId) {
-    if (layoutItems.length <= 1) continue;
-
-    // Extract unique yBucketPx values
-    const buckets = new Set<number>();
-    for (const item of layoutItems) {
-      const parts = item.alignmentBucket!.split('|');
-      if (parts.length >= 2) {
-        const bucketPx = parseInt(parts[1], 10);
-        if (!isNaN(bucketPx)) buckets.add(bucketPx);
-      }
-    }
-
-    if (buckets.size <= 1) continue;
-
-    const sortedBuckets = Array.from(buckets).sort((a, b) => a - b);
-    const bucketMapping = new Map<number, number>();
-
-    // Determine merges: if diff <= 4px (2 buckets distance), merge to the master bucket
-    let masterBucket = sortedBuckets[0];
-    bucketMapping.set(masterBucket, masterBucket);
-
-    for (let i = 1; i < sortedBuckets.length; i++) {
-      const current = sortedBuckets[i];
-      // Compare with current master bucket. If within tolerance, merge.
-      // 4px is generous enough to catch subpixel/script/font-size shifts, 
-      // but small enough to avoid merging distinct lines (usually >12px)
-      if (current - masterBucket <= 4) {
-        bucketMapping.set(current, masterBucket);
-      } else {
-        masterBucket = current;
-        bucketMapping.set(current, current);
-      }
-    }
-
-    // Apply mapping
-    for (const item of layoutItems) {
-      const parts = item.alignmentBucket!.split('|');
-      if (parts.length < 2) continue;
-
-      const currentBucketPx = parseInt(parts[1], 10);
-      if (isNaN(currentBucketPx)) continue;
-
-      const newBucketPx = bucketMapping.get(currentBucketPx);
-      if (newBucketPx !== undefined && newBucketPx !== currentBucketPx) {
-        const newBucketStr = newBucketPx.toString();
-        // Update both alignmentBucket and inlineGroupId to match the master bucket
-        item.alignmentBucket = `${layoutId}|${newBucketStr}`;
-        if (item.inlineGroupId) {
-          item.inlineGroupId = `${layoutId}|${newBucketStr}`;
-        }
-      }
-    }
-  }
+  mergeAdjacentLayoutBuckets(items);
   /**** AMENDMENT [end] "Merge adjacent layout buckets to fix text overlay issues" ****/
 
   // Post-process: Vertical snapping for items in the same alignmentBucket（Original）
   // This ensures that floating elements (like currency symbols) align with the main text baseline
-  const itemsByBucket = new Map<string, DomParseContext['items']>();
-  for (const item of items) {
-    if (item.type === 'text' && item.alignmentBucket) {
-      const bucket = itemsByBucket.get(item.alignmentBucket);
-      if (bucket) bucket.push(item);
-      else itemsByBucket.set(item.alignmentBucket, [item]);
-    }
-  }
-
-  for (const bucketItems of itemsByBucket.values()) {
-    if (bucketItems.length === 0) continue;
-
-    // 1. Vertical snapping
-    let anchorY: number | null = null;
-    let fallbackY: number | null = null;
-    let minY = Infinity;
-    let maxY = -Infinity;
-
-    for (const item of bucketItems) {
-      if (item.inlineGroupId) {
-        if (anchorY === null) anchorY = item.y;
-      }
-      if (fallbackY === null) fallbackY = item.y;
-      minY = Math.min(minY, item.y);
-      maxY = Math.max(maxY, item.y);
-    }
-
-    const targetY = anchorY ?? fallbackY;
-    if (targetY !== null && bucketItems.length > 1) {
-      if (maxY - minY < 2.0) {
-        for (const item of bucketItems) {
-          item.y = targetY;
-        }
-      }
-    }
-
-    // 2. Horizontal snap for float-left elements (like S$)
-    // Many ERP layouts use float:left for currency symbols. 
-    // We ensure they actually hit the left padding of the container even if browser rect measurement is slightly off
-    for (const item of bucketItems) {
-      // If it's a floating element and was intended to be on the left
-      if (item.floatLeft && item.contentLeftMm !== undefined) {
-        item.x = item.contentLeftMm;
-      }
-    }
-  }
+  snapItemsInBuckets(items);
 
   await Promise.all(imagePromises);
   return { items, pageBreakBeforeYs };
