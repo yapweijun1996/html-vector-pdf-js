@@ -23,20 +23,21 @@
 
 ```mermaid
 graph TB
-    A[用户调用 generatePdf] --> B[解析目标元素]
-    B --> C{单个还是多个元素?}
-    C -->|单个| D[处理单个 HTML 元素]
-    C -->|多个| E[遍历所有匹配元素]
-    E --> D
-    D --> F[DOM 树遍历]
-    F --> G[提取渲染项]
-    G --> H[按 zIndex 排序]
-    H --> I[分页计算]
-    I --> J[渲染到 PDF]
-    J --> K[下载 PDF 文件]
+    A[用户调用 generatePdf] --> B[查找并验证元素]
+    B --> C[等待渲染就绪]
+    C --> D{遍历元素}
+    D --> E[DOM 解析为渲染项]
+    E --> F[性能让步 (Yield)]
+    F --> D
+    D -->|完成| G[提取所有文本]
+    G --> H[处理并加载字体]
+    H --> I[渲染到 PDF]
+    I --> J[保存文件]
     
     style A fill:#667eea
-    style K fill:#10b981
+    style C fill:#f59e0b
+    style H fill:#f59e0b
+    style J fill:#10b981
 ```
 
 ### 核心渲染引擎
@@ -154,6 +155,22 @@ graph TB
 ```javascript
 // 全局覆盖（最高优先级）
 window.html_to_vector_pdf_margins = { top: 6.35, bottom: 6.35, left: 6.35, right: 6.35 };
+```
+
+### 4.2 输出目标（全局覆盖）
+
+如果你不方便改动既有代码（例如现有逻辑固定调用 `generatePdf('body', ...)`），可以用全局变量覆写输出目标：
+
+```js
+// 示例：只输出这个区域
+window.html_to_vector_pdf_target = '.html_to_vector_pdf_print_area';
+```
+
+要恢复默认行为，可设为空字符串或删除该变量：
+
+```js
+window.html_to_vector_pdf_target = '';
+// 或：delete window.html_to_vector_pdf_target;
 ```
 
 ### 4.1 页面尺寸与方向（全局覆盖）

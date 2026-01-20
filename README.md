@@ -23,20 +23,21 @@ A powerful, client-side library for generating vector-based PDFs from HTML conte
 
 ```mermaid
 graph TB
-    A[User calls generatePdf] --> B[Parse target element]
-    B --> C{Single or Multiple?}
-    C -->|Single| D[Process HTML Element]
-    C -->|Multiple| E[Iterate all matches]
-    E --> D
-    D --> F[DOM Tree Traversal]
-    F --> G[Extract Render Items]
-    G --> H[Sort by zIndex]
-    H --> I[Pagination Calculation]
-    I --> J[Render to PDF]
-    J --> K[Download PDF File]
+    A[User calls generatePdf] --> B[Find & Validate Elements]
+    B --> C[Wait for Render Ready]
+    C --> D{Iterate Elements}
+    D --> E[Parse DOM to RenderItems]
+    E --> F[Performance Yield]
+    F --> D
+    D -->|Done| G[Extract All Text]
+    G --> H[Process & Load Fonts]
+    H --> I[Render to PDF]
+    I --> J[Save File]
     
     style A fill:#667eea
-    style K fill:#10b981
+    style C fill:#f59e0b
+    style H fill:#f59e0b
+    style J fill:#10b981
 ```
 
 ### Core Rendering Engine
@@ -97,6 +98,37 @@ graph TB
 
 ## 📦 Usage
 
+### 0. Quick Start (Hello World)
+Copy this into an HTML file to try it immediately:
+
+```html
+<!DOCTYPE html>
+<html>
+<head><title>PDF Demo</title></head>
+<body>
+  <!-- 1. The content to export -->
+  <div id="content" style="padding: 20px; border: 1px solid #ccc;">
+    <h1>Hello Vector PDF</h1>
+    <p>This text will remain selectable in the PDF.</p>
+  </div>
+
+  <!-- 2. The trigger button -->
+  <button onclick="generate()">Download PDF</button>
+
+  <!-- 3. The library -->
+  <script src="./dist/html_to_vector_pdf.js"></script>
+  <script>
+    function generate() {
+      // 4. The call
+      html_to_vector_pdf.generatePdf('#content', {
+        filename: 'hello.pdf'
+      });
+    }
+  </script>
+</body>
+</html>
+```
+
 ### 1. Include the Script
 Include the generated script in your HTML file.
 
@@ -156,6 +188,22 @@ The default margins are **10mm**. You can override them in `config` or globally:
 window.html_to_vector_pdf_margins = { top: 6.35, bottom: 6.35, left: 6.35, right: 6.35 };
 ```
 
+### 4.2 Target (Global Override)
+
+If you can’t (or don’t want to) change existing code that calls `generatePdf('body', ...)`, you can override the export target globally:
+
+```js
+// Example: only export this area
+window.html_to_vector_pdf_target = '.html_to_vector_pdf_print_area';
+```
+
+To restore default behavior, set it to an empty string or delete it:
+
+```js
+window.html_to_vector_pdf_target = '';
+// or: delete window.html_to_vector_pdf_target;
+```
+
 ### 4.1 Page Size and Orientation (Global Override)
 
 You can also override the page size and orientation globally:
@@ -193,6 +241,22 @@ const pxToMm = (pageWidthMm - margins.left - margins.right) / baseWidthPx;
 await html_to_vector_pdf.generatePdf('.html_to_vector_pdf', { margins, render: { pxToMm } });
 ```
 
+### 7. UI Loader Customization (Advanced)
+
+The library includes a default full-screen loader. You can disable it and implement your own if needed:
+
+```javascript
+html_to_vector_pdf.generatePdf('#report', {
+  ui: { showLoader: false }, // Disable default loader
+  callbacks: {
+    onProgress: (stage) => {
+      if (stage === 'select:start') myCustomLoader.show();
+      if (stage === 'save:done' || stage === 'error') myCustomLoader.hide();
+    }
+  }
+});
+```
+
 ## ⚙️ Configuration
 
 The `generatePdf` function accepts a configuration object with the following options:
@@ -212,6 +276,7 @@ The `generatePdf` function accepts a configuration object with the following opt
 | `text.scale` | `number` | `1` | Global scaling factor for text size. |
 | `render.pxToMm` | `number` | (auto) | Override px→mm conversion for consistent scaling. |
 | `pagination.pageBreakBeforeSelectors` | `string[]` | `[".pagebreak_bf_processed","[data-pdf-page-break-before=\"true\"]"]` | CSS selectors that force a new page before an element. |
+| `ui.showLoader` | `boolean` | `true` | Show/hide the built-in full screen loading overlay. |
 | `debugOverlay.enabled` | `boolean` | `false` | Draws debug rectangles (table cell content boxes). |
 | `debug` | `boolean` | `false` | Enable console logging for layout debugging. |
 
