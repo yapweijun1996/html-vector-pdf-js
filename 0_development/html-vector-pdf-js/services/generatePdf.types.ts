@@ -32,6 +32,7 @@ export interface GlobalOverrides {
  */
 export interface FontData {
     name: string;
+    style: 'normal' | 'bold';
     data: string;
     format: string;
 }

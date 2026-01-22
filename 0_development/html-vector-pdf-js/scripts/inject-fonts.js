@@ -7,7 +7,7 @@
  * The source code should NOT contain the actual base64 data - only a placeholder.
  */
 
-import { readFileSync, writeFileSync } from 'fs';
+import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -16,35 +16,62 @@ const __dirname = dirname(__filename);
 
 const PROJECT_ROOT = join(__dirname, '..');
 const FONT_LOADER_PATH = join(PROJECT_ROOT, 'services', 'fontLoader.ts');
-const FONT_BASE64_PATH = join(PROJECT_ROOT, 'fonts', 'NotoSansSC-Regular.base64.txt');
 
-const PLACEHOLDER = 'EMBEDDED_FONT_DATA_PLACEHOLDER';
+const INJECT_TARGETS = [
+  {
+    constName: 'EMBEDDED_FONT_DATA_NOTOSANSSC_NORMAL',
+    placeholder: 'EMBEDDED_FONT_DATA_NOTOSANSSC_NORMAL_PLACEHOLDER',
+    base64Path: join(PROJECT_ROOT, 'fonts', 'NotoSansSC-Regular.base64.txt')
+  },
+  {
+    constName: 'EMBEDDED_FONT_DATA_NOTOSANSSC_BOLD',
+    placeholder: 'EMBEDDED_FONT_DATA_NOTOSANSSC_BOLD_PLACEHOLDER',
+    base64Path: join(PROJECT_ROOT, 'fonts', 'NotoSansSC-Bold.base64.txt')
+  },
+  {
+    constName: 'EMBEDDED_FONT_DATA_NOTOSANS_NORMAL',
+    placeholder: 'EMBEDDED_FONT_DATA_NOTOSANS_NORMAL_PLACEHOLDER',
+    base64Path: join(PROJECT_ROOT, 'fonts', 'NotoSans-Regular.base64.txt')
+  },
+  {
+    constName: 'EMBEDDED_FONT_DATA_NOTOSANS_BOLD',
+    placeholder: 'EMBEDDED_FONT_DATA_NOTOSANS_BOLD_PLACEHOLDER',
+    base64Path: join(PROJECT_ROOT, 'fonts', 'NotoSans-Bold.base64.txt')
+  }
+];
 
 console.log('🔧 Injecting font data into fontLoader.ts...');
 
 try {
-    // Read the base64 font data
-    console.log('📖 Reading base64 font data...');
-    const base64Data = readFileSync(FONT_BASE64_PATH, 'utf-8').trim();
-    console.log(`✅ Font data loaded: ${(base64Data.length / 1024 / 1024).toFixed(2)} MB`);
-
     // Read the fontLoader.ts file
     console.log('📖 Reading fontLoader.ts...');
     let fontLoaderContent = readFileSync(FONT_LOADER_PATH, 'utf-8');
 
-    // Check if placeholder exists
-    if (!fontLoaderContent.includes(PLACEHOLDER)) {
-        console.error('❌ Error: Placeholder not found in fontLoader.ts');
-        console.error(`   Expected to find: "${PLACEHOLDER}"`);
-        process.exit(1);
+    let injectedCount = 0;
+
+    for (const t of INJECT_TARGETS) {
+        if (!fontLoaderContent.includes(`"${t.placeholder}"`)) {
+            console.warn(`⚠️  Placeholder not found for ${t.constName}: "${t.placeholder}" (skipping)`);
+            continue;
+        }
+
+        if (!existsSync(t.base64Path)) {
+            console.warn(`⚠️  Missing font base64 file: ${t.base64Path} (skipping)`);
+            continue;
+        }
+
+        console.log(`📖 Reading base64 font data: ${t.base64Path}`);
+        const base64Data = readFileSync(t.base64Path, 'utf-8').trim();
+        console.log(`✅ Loaded ${(base64Data.length / 1024 / 1024).toFixed(2)} MB for ${t.constName}`);
+
+        console.log(`🔄 Injecting ${t.constName}...`);
+        fontLoaderContent = fontLoaderContent.replace(`"${t.placeholder}"`, `"${base64Data}"`);
+        injectedCount++;
     }
 
-    // Replace placeholder with actual base64 data
-    console.log('🔄 Injecting font data...');
-    fontLoaderContent = fontLoaderContent.replace(
-        `"${PLACEHOLDER}"`,
-        `"${base64Data}"`
-    );
+    if (injectedCount === 0) {
+        console.warn('⚠️  No font data injected (no matching placeholders or missing base64 files).');
+    }
 
     // Write back to file
     console.log('💾 Writing updated fontLoader.ts...');

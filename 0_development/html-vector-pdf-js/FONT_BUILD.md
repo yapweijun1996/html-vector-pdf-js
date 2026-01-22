@@ -32,6 +32,19 @@ Instead, font data is injected during the build process.
     └── fontLoader.ts                    # 源代码（占位符）
 ```
 
+### 建议追加的字体（用于英文符号/引号与粗体）
+
+为避免 `“ ”`、`•`（以及其他符号）在 PDF 中出现替代字形/间距异常，建议同时准备：
+
+```
+fonts/
+  NotoSans-Regular.base64.txt
+  NotoSans-Bold.base64.txt
+  (optional) NotoSansSC-Bold.base64.txt
+```
+
+> 注：本项目注入脚本会自动检测这些文件是否存在，存在则注入，不存在则跳过。
+
 ## 命令 (Commands)
 
 ```bash

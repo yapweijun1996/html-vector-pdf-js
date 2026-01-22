@@ -17,7 +17,12 @@ const __dirname = dirname(__filename);
 const PROJECT_ROOT = join(__dirname, '..');
 const FONT_LOADER_PATH = join(PROJECT_ROOT, 'services', 'fontLoader.ts');
 
-const PLACEHOLDER = 'EMBEDDED_FONT_DATA_PLACEHOLDER';
+const PLACEHOLDERS = [
+  { constName: 'EMBEDDED_FONT_DATA_NOTOSANSSC_NORMAL', placeholder: 'EMBEDDED_FONT_DATA_NOTOSANSSC_NORMAL_PLACEHOLDER' },
+  { constName: 'EMBEDDED_FONT_DATA_NOTOSANSSC_BOLD', placeholder: 'EMBEDDED_FONT_DATA_NOTOSANSSC_BOLD_PLACEHOLDER' },
+  { constName: 'EMBEDDED_FONT_DATA_NOTOSANS_NORMAL', placeholder: 'EMBEDDED_FONT_DATA_NOTOSANS_NORMAL_PLACEHOLDER' },
+  { constName: 'EMBEDDED_FONT_DATA_NOTOSANS_BOLD', placeholder: 'EMBEDDED_FONT_DATA_NOTOSANS_BOLD_PLACEHOLDER' }
+];
 
 console.log('🧹 Cleaning up fontLoader.ts...');
 
@@ -25,40 +30,29 @@ try {
     // Read the fontLoader.ts file
     let fontLoaderContent = readFileSync(FONT_LOADER_PATH, 'utf-8');
 
-    // Check if it needs cleaning
-    if (fontLoaderContent.includes(`"${PLACEHOLDER}"`)) {
-        console.log('✅ fontLoader.ts is already clean (contains placeholder)');
+    const alreadyClean = PLACEHOLDERS.every(({ placeholder }) => fontLoaderContent.includes(`"${placeholder}"`));
+    if (alreadyClean) {
+        console.log('✅ fontLoader.ts is already clean (contains placeholders)');
         process.exit(0);
     }
 
-    // Find and replace the base64 data with placeholder
-    const regex = /const EMBEDDED_FONT_DATA = "([^"]+)";/;
-    const match = fontLoaderContent.match(regex);
-
-    if (!match) {
-        console.error('❌ Error: Could not find EMBEDDED_FONT_DATA declaration');
-        process.exit(1);
+    let removedChars = 0;
+    for (const { constName, placeholder } of PLACEHOLDERS) {
+        const regex = new RegExp(`const\\s+${constName}\\s*=\\s*\\"([^\\"]+)\\";`);
+        const match = fontLoaderContent.match(regex);
+        if (!match) continue;
+        const current = match[1];
+        if (current.includes('_PLACEHOLDER')) continue;
+        if (current.length < 100) continue;
+        removedChars += current.length;
+        fontLoaderContent = fontLoaderContent.replace(regex, `const ${constName} = "${placeholder}";`);
     }
-
-    const currentData = match[1];
-
-    if (currentData.length < 100) {
-        console.log('⚠️  Warning: Font data seems too small, might already be placeholder');
-        console.log(`   Current value: "${currentData}"`);
-        process.exit(0);
-    }
-
-    // Replace with placeholder
-    fontLoaderContent = fontLoaderContent.replace(
-        regex,
-        `const EMBEDDED_FONT_DATA = "${PLACEHOLDER}";`
-    );
 
     // Write back to file
     writeFileSync(FONT_LOADER_PATH, fontLoaderContent, 'utf-8');
 
     console.log('✅ fontLoader.ts cleaned successfully!');
-    console.log(`📦 Removed ${(currentData.length / 1024 / 1024).toFixed(2)} MB of font data`);
+    console.log(`📦 Removed ~${(removedChars / 1024 / 1024).toFixed(2)} MB of font data`);
     console.log(`📦 New file size: ${(fontLoaderContent.length / 1024).toFixed(2)} KB`);
 
 } catch (error) {

@@ -77,12 +77,31 @@ const FONT_CDN_URLS: Record<string, FontDefinition> = {
     }
 };
 
-// This string will be replaced by the build script/command with the actual Base64 content
-const EMBEDDED_FONT_DATA = "EMBEDDED_FONT_DATA_PLACEHOLDER";
+// These strings will be replaced by the build script/command with the actual Base64 content.
+// Keep them as placeholders in source control.
+const EMBEDDED_FONT_DATA_NOTOSANS_NORMAL = "EMBEDDED_FONT_DATA_NOTOSANS_NORMAL_PLACEHOLDER";
+const EMBEDDED_FONT_DATA_NOTOSANS_BOLD = "EMBEDDED_FONT_DATA_NOTOSANS_BOLD_PLACEHOLDER";
+const EMBEDDED_FONT_DATA_NOTOSANSSC_NORMAL = "EMBEDDED_FONT_DATA_NOTOSANSSC_NORMAL_PLACEHOLDER";
+const EMBEDDED_FONT_DATA_NOTOSANSSC_BOLD = "EMBEDDED_FONT_DATA_NOTOSANSSC_BOLD_PLACEHOLDER";
+
+type FontStyle = 'normal' | 'bold';
+
+const getEmbeddedFontData = (fontName: string, style: FontStyle): string | null => {
+    if (fontName === 'NotoSans') {
+        return style === 'bold' ? EMBEDDED_FONT_DATA_NOTOSANS_BOLD : EMBEDDED_FONT_DATA_NOTOSANS_NORMAL;
+    }
+    if (fontName === 'NotoSansSC') {
+        return style === 'bold' ? EMBEDDED_FONT_DATA_NOTOSANSSC_BOLD : EMBEDDED_FONT_DATA_NOTOSANSSC_NORMAL;
+    }
+    // Not embedded yet (JP/KR). Keep behavior explicit.
+    return null;
+};
+
+const isPlaceholder = (s: string): boolean => s.includes('_PLACEHOLDER');
 /**
  * Load font from embedded base64 data or CDN
  */
-export const loadFont = async (fontName: string): Promise<ArrayBuffer> => {
+export const loadFont = async (fontName: string, style: FontStyle = 'normal'): Promise<ArrayBuffer> => {
     const fontDef = FONT_CDN_URLS[fontName];
 
     if (!fontDef) {
@@ -90,17 +109,17 @@ export const loadFont = async (fontName: string): Promise<ArrayBuffer> => {
     }
 
     if (fontDef.url === 'EMBEDDED') {
-        // Use embedded font data
-        if (EMBEDDED_FONT_DATA === 'EMBEDDED_FONT_DATA_PLACEHOLDER') {
+        const embedded = getEmbeddedFontData(fontName, style);
+        if (!embedded || isPlaceholder(embedded)) {
             throw new HtmlToVectorPdfError(
                 'DEPENDENCY_LOAD_FAILED',
-                'Font data not injected. Please run build script first.',
-                { fontName }
+                'Font data not injected for required font/style. Please run build:with-fonts after adding base64 files.',
+                { fontName, style }
             );
         }
 
         // Convert base64 to ArrayBuffer
-        const binaryString = atob(EMBEDDED_FONT_DATA);
+        const binaryString = atob(embedded);
         const bytes = new Uint8Array(binaryString.length);
         for (let i = 0; i < binaryString.length; i++) {
             bytes[i] = binaryString.charCodeAt(i);
@@ -137,29 +156,36 @@ export const detectRequiredFonts = (texts: string[]): Set<string> => {
  */
 export const loadFontFromCDN = async (fontName: string): Promise<{
     name: string;
+    style: FontStyle;
     data: string;
     format: string;
-}> => {
+}[]> => {
     const fontDef = FONT_CDN_URLS[fontName];
 
     if (!fontDef) {
         throw new HtmlToVectorPdfError('DEPENDENCY_LOAD_FAILED', `Font ${fontName} not found`, { fontName });
     }
 
-    // Load font data
-    const arrayBuffer = await loadFont(fontName);
-
-    // Convert ArrayBuffer to base64
-    const bytes = new Uint8Array(arrayBuffer);
-    let binary = '';
-    for (let i = 0; i < bytes.length; i++) {
-        binary += String.fromCharCode(bytes[i]);
-    }
-    const base64 = btoa(binary);
-
-    return {
-        name: fontDef.name,
-        data: base64,
-        format: fontDef.format
+    const toBase64 = (arrayBuffer: ArrayBuffer): string => {
+        const bytes = new Uint8Array(arrayBuffer);
+        let binary = '';
+        for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+        return btoa(binary);
     };
+
+    const out: Array<{ name: string; style: FontStyle; data: string; format: string }> = [];
+
+    // Always try normal
+    const normalBuf = await loadFont(fontName, 'normal');
+    out.push({ name: fontDef.name, style: 'normal', data: toBase64(normalBuf), format: fontDef.format });
+
+    // Try bold (optional). If missing, keep output functional; bold will fall back to normal.
+    try {
+        const boldBuf = await loadFont(fontName, 'bold');
+        out.push({ name: fontDef.name, style: 'bold', data: toBase64(boldBuf), format: fontDef.format });
+    } catch {
+        // ignore (no bold embedded)
+    }
+
+    return out;
 };

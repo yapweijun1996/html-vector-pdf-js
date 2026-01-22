@@ -2,6 +2,7 @@ import { PdfConfig } from './pdfConfig';
 import { detectRequiredFonts, loadFontFromCDN } from './fontLoader';
 import { RenderItem } from './renderItems';
 import { FontData, FontLoadResult } from './generatePdf.types';
+import { buildInlineRuns } from './textEngine/runBuilder';
 
 // ============================================================================
 // Font Processing Helpers
@@ -15,13 +16,33 @@ import { FontData, FontLoadResult } from './generatePdf.types';
 export const extractTextsFromItems = (
     allElementItems: Array<{ items: RenderItem[] }>
 ): string[] => {
-    return allElementItems.flatMap(elemItems =>
-        elemItems.items
-            .filter((item): item is RenderItem & { type: 'text'; text: string } =>
-                item.type === 'text' && typeof item.text === 'string'
-            )
-            .map(item => item.text)
-    );
+    return allElementItems.flatMap(elemItems => {
+        const texts: string[] = [];
+
+        for (const item of elemItems.items) {
+            if (item.type === 'text' && typeof item.text === 'string') {
+                texts.push(item.text);
+                continue;
+            }
+
+            // PDF-first text engine: `textBlock` expands to many styled tokens at render-time.
+            // We must include its DOM text now so the correct fonts (e.g. symbols like ●) are loaded beforehand.
+            if (item.type === 'textBlock' && item.element) {
+                try {
+                    const runs = buildInlineRuns(item.element);
+                    for (const r of runs) {
+                        if (r.text) texts.push(r.text);
+                    }
+                } catch {
+                    // Best-effort: still include raw textContent if run building fails
+                    const raw = item.element.textContent || '';
+                    if (raw) texts.push(raw);
+                }
+            }
+        }
+
+        return texts;
+    });
 };
 
 /**
@@ -32,7 +53,7 @@ export const extractTextsFromItems = (
  * @returns Array of successfully loaded fonts
  */
 const processFontLoadResults = (
-    loadedResults: PromiseSettledResult<FontData>[],
+    loadedResults: PromiseSettledResult<FontData[]>[],
     requiredFontsArray: string[],
     cfg: Required<PdfConfig>
 ): FontData[] => {
@@ -41,9 +62,11 @@ const processFontLoadResults = (
     for (let i = 0; i < loadedResults.length; i++) {
         const result = loadedResults[i];
         if (result.status === 'fulfilled') {
-            loadedFonts.push(result.value);
-            if (cfg.debug) {
-                console.log(`[html_to_vector_pdf] Loaded font: ${result.value.name}`);
+            for (const f of result.value) {
+                loadedFonts.push(f);
+                if (cfg.debug) {
+                    console.log(`[html_to_vector_pdf] Loaded font: ${f.name} (${f.style})`);
+                }
             }
         } else {
             const fontName = requiredFontsArray[i];

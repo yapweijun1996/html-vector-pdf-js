@@ -23,3 +23,23 @@ flowchart TB
 - [x] Add unit tests for run builder + line breaker (vitest).
 - [ ] Add a debug mode to log line breaks for the failing paragraph (wire to UI/query param).
 - [ ] Validate on `0_test/SQ-10038-ATL_2026_01_22_09_33_28.htm` (T&C paragraph): no overlap, symbols render.
+
+## P0 — Font Assets & Registration（Correctness for symbols/quotes/bold）
+
+> Goal：修正 `“ ”`、`●/•` 在 Vector PDF 變形/亂碼與寬度不一致問題，確保「字型註冊」與「字型度量」一致。
+
+### Design (Mermaid)
+```mermaid
+flowchart TB
+  A[extractTextsFromItems\n(includes textBlock runs)] --> B[detectRequiredFonts]
+  B --> C[loadFontFamily(name)\nnormal/bold if available]
+  C --> D[loadedFonts[] with style]
+  D --> E[registerLoadedFonts\naddFileToVFS + addFont(name, style)]
+  E --> F[applyTextStyle\nsetFont(name, style)]
+  F --> G[getTextWidth + renderText]
+```
+
+- [ ] Support per-font, per-style embedded data (e.g. NotoSans normal/bold, NotoSansSC normal/bold).
+- [ ] Update inject/cleanup scripts to handle multiple font placeholders.
+- [ ] Update font registration to register `normal` and `bold` variants.
+- [ ] Validate: curly quotes `“ ”` render without extra spacing vs print baseline (using NotoSans, not NotoSansSC).

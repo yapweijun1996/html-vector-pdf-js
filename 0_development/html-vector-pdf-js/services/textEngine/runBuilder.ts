@@ -4,7 +4,13 @@ const normalizeTextNode = (raw: string): string => {
   if (!raw) return '';
   const hasLeading = /^[\s\u00a0]/.test(raw);
   const hasTrailing = /[\s\u00a0]$/.test(raw);
-  let s = raw.replace(/\u00a0/g, ' ').replace(/\s+/g, ' ').trim();
+  let s = raw
+    .replace(/\u00a0/g, ' ')
+    // Normalize common "black circle" placeholder to a safer bullet.
+    // This avoids font/style fallback differences between browser and jsPDF for U+25CF in bold runs.
+    .replace(/\u25CF/g, '\u2022')
+    .replace(/\s+/g, ' ')
+    .trim();
   if (!s) return '';
   if (hasLeading) s = ` ${s}`;
   if (hasTrailing) s = `${s} `;
@@ -80,4 +86,3 @@ export const buildInlineRuns = (container: HTMLElement): TextRun[] => {
 
   return runs.filter(r => r.text.length > 0);
 };
-
