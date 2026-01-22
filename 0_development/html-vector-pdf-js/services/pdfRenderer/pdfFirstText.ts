@@ -33,28 +33,11 @@ export const expandPdfFirstTextBlocks = (
     const lines = breakTokensToLines(tokens, item.w, measure);
     const lineHeightMm = item.lineHeightMm ?? item.h;
 
-    const lineWidthMm = (line: (typeof lines)[number]): number => {
-      let w = 0;
-      for (const t of line.tokens) {
-        if (t.kind === 'space') w += measure(' ', t.style);
-        else w += measure(t.text, t.style);
-      }
-      return w;
-    };
-
     for (let lineIdx = 0; lineIdx < lines.length; lineIdx++) {
       const line = lines[lineIdx];
       const baselineY = item.y + lineIdx * lineHeightMm;
 
-      const wLine = lineWidthMm(line);
-      const left = item.contentLeftMm ?? item.x;
-      const right = item.contentRightMm ?? (left + item.w);
-      const align = item.textAlign || 'left';
-
-      let cursorX = left;
-      if (align === 'right') cursorX = right - wLine;
-      else if (align === 'center') cursorX = (left + right - wLine) / 2;
-
+      let cursorX = item.x;
       for (const t of line.tokens) {
         if (t.kind === 'space') {
           cursorX += measure(' ', t.style);

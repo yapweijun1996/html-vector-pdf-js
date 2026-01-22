@@ -9,7 +9,6 @@ export type PdfFontFamily =
     | 'helvetica'
     | 'times'
     | 'courier'
-    | 'NotoSans'
     | 'NotoSansSC'
     | 'NotoSansJP'
     | 'NotoSansTC'

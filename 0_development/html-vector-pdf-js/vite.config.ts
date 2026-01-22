@@ -74,49 +74,6 @@ function copyAssetsToDist(): Plugin {
             }
           })
         );
-
-        // If some build variants only output `html_to_vector_pdf_with_fonts.js`,
-        // generate a small compatibility loader as `html_to_vector_pdf.js` so
-        // existing demos/docs keep working.
-        const expected = path.resolve(distDir, 'html_to_vector_pdf.js');
-        const withFonts = path.resolve(distDir, 'html_to_vector_pdf_with_fonts.js');
-        const expectedExists = await fs
-          .access(expected)
-          .then(() => true)
-          .catch(() => false);
-        const withFontsExists = await fs
-          .access(withFonts)
-          .then(() => true)
-          .catch(() => false);
-
-        if (!expectedExists && withFontsExists) {
-          const loader = `/**
- * Compatibility loader
- *
- * Some builds in this repo output "html_to_vector_pdf_with_fonts.js" only.
- * Demos (and docs) expect "html_to_vector_pdf.js".
- *
- * This file loads the real bundle next to it, based on the current script URL.
- */
-(function () {
-  try {
-    var base = (document.currentScript && document.currentScript.src) ? document.currentScript.src : window.location.href;
-    var src = new URL('./html_to_vector_pdf_with_fonts.js', base).toString();
-
-    var s = document.createElement('script');
-    s.src = src;
-    s.async = false;
-    s.onerror = function () {
-      console.error('[html_to_vector_pdf] Failed to load:', src);
-    };
-    document.head.appendChild(s);
-  } catch (e) {
-    console.error('[html_to_vector_pdf] Loader failed:', e);
-  }
-})();\n`;
-
-          await fs.writeFile(expected, loader, 'utf8');
-        }
       } catch (err) {
         console.warn('[copy-assets-to-dist] Skipped:', err);
       }

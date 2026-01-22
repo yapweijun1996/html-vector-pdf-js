@@ -6,7 +6,7 @@ import { PdfConfig } from '../pdfConfig';
 vi.mock('../backgroundImage', () => ({
   getBackgroundImageUrlFromStyle: (style: any) => {
     const bg = String(style?.backgroundImage || '');
-    const m = bg.match(/url\\(\\s*(['\"]?)(.*?)\\1\\s*\\)/i);
+    const m = bg.match(/url\(\s*(['"]?)(.*?)\1\s*\)/i);
     return m?.[2] ? String(m[2]) : null;
   },
   rasterizeBackgroundImageToPngDataUrl: vi.fn().mockResolvedValue('data:image/png;base64,bg-fake'),

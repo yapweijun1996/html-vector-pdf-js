@@ -45,19 +45,6 @@ fonts/
 
 > 注：本项目注入脚本会自动检测这些文件是否存在，存在则注入，不存在则跳过。
 
-### 一键准备（推荐）
-
-```bash
-npm run fonts:prepare
-```
-
-它会自动下载 `NotoSans-Regular.ttf / NotoSans-Bold.ttf` 到 `fonts/`，并生成**单行**的：
-
-- `fonts/NotoSans-Regular.base64.txt`
-- `fonts/NotoSans-Bold.base64.txt`
-
-> 说明：Base64 必须是“单行”（不能有换行），因为会被注入到 `fontLoader.ts` 的普通字符串字面量中。
-
 ## 命令 (Commands)
 
 ```bash
@@ -86,7 +73,7 @@ node scripts/inject-fonts.js
 
 ```bash
 # Linux/Mac
-node -e "const fs=require('fs');fs.writeFileSync('fonts/NotoSansSC-Regular.base64.txt',fs.readFileSync('fonts/NotoSansSC-Regular.ttf').toString('base64')+'\\n')"
+base64 fonts/NotoSansSC-Regular.ttf > fonts/NotoSansSC-Regular.base64.txt
 
 # Windows (PowerShell)
 [Convert]::ToBase64String([IO.File]::ReadAllBytes("fonts/NotoSansSC-Regular.ttf")) | Out-File -Encoding ASCII fonts/NotoSansSC-Regular.base64.txt

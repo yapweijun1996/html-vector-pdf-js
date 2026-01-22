@@ -55,10 +55,6 @@ export const parseTextNode = (ctx: DomParseContext, txt: Text, shouldExclude: (e
   };
   const layoutEl = findBlockContainer(parentEl);
 
-  // NOTE: `layoutEl` is our alignment/layout container. For a text node whose parent is the container itself
-  // (e.g. direct text children of <td align="right">), we still must treat it as a "block container" case
-  // for center/right alignment; otherwise we'd use browser-left coordinates combined with PDF right-align,
-  // causing multiple fragments to overlap.
   const isBlockContainer = layoutEl !== parentEl;
 
   const layoutStyle = window.getComputedStyle(layoutEl);
@@ -116,24 +112,22 @@ export const parseTextNode = (ctx: DomParseContext, txt: Text, shouldExclude: (e
   const rawBucketPx = Math.round(firstRect.top / 2) * 2;
   let yBucketPx = rawBucketPx;
 
-  // New: Apply fuzzy bucket logic to ALL block containers.
-  // This ensures that bold/normal text in a <p> tag (which might differ by 1-2px in height)
-  // are snapped to the same Y-bucket and thus grouped together in the same line.
-  if (isBlockContainer) {
-    const layoutId = ctx.getLayoutId(layoutEl);
-
-    if (ctx.cellLastTextBucket && ctx.cellLastTextBucket.has(layoutId)) {
-      const lastBucket = ctx.cellLastTextBucket.get(layoutId)!;
-      // Use 5px threshold to catch font-size variations on the same line
-      if (Math.abs(rawBucketPx - lastBucket) < 5) {
-        yBucketPx = lastBucket;
-      } else {
-        ctx.cellLastTextBucket.set(layoutId, rawBucketPx);
-      }
+  // Apply fuzzy bucket logic to ALL text nodes that share the same layout container.
+  // This ensures that mixed-style inline fragments (bold/normal) that sit on the same visual line
+  // are snapped to the same Y-bucket, even when the text node is a direct child of the container
+  // (e.g. a right-aligned <td> with both <b> and plain text).
+  const layoutId = ctx.getLayoutId(layoutEl);
+  if (ctx.cellLastTextBucket && ctx.cellLastTextBucket.has(layoutId)) {
+    const lastBucket = ctx.cellLastTextBucket.get(layoutId)!;
+    // Use 5px threshold to catch font-size variations on the same line
+    if (Math.abs(rawBucketPx - lastBucket) < 5) {
+      yBucketPx = lastBucket;
     } else {
-      if (!ctx.cellLastTextBucket) ctx.cellLastTextBucket = new Map();
       ctx.cellLastTextBucket.set(layoutId, rawBucketPx);
     }
+  } else {
+    if (!ctx.cellLastTextBucket) ctx.cellLastTextBucket = new Map();
+    ctx.cellLastTextBucket.set(layoutId, rawBucketPx);
   }
 
   // Check if this cell contains any floating elements (like currency symbols with float:left)
@@ -192,27 +186,30 @@ export const parseTextNode = (ctx: DomParseContext, txt: Text, shouldExclude: (e
   // Otherwise the renderer will recalculate the x position based on group alignment, ignoring our exact coordinates
   const shouldSkipInlineGroup = isFloating || hasLayoutImpact;
 
-  // New: Assign inlineGroupId for ALL block containers (p, div, td, etc.)
-  // This is the KEY FIX: mixed-style text in <p> tags now gets grouped and positioned correctly
-  // const isBlockContainer = layoutEl !== parentEl; // Redundant - defined at top
-  // For center/right aligned lines, we anchor all fragments to the container's content box and use inline grouping
-  // so the renderer can compute correct per-fragment X positions.
-  const shouldGroupForAlignedLine = !shouldSkipInlineGroup && (textAlign === 'right' || textAlign === 'center');
-  const shouldUseCellAlignedX = shouldGroupForAlignedLine;
+  // Use inline grouping when alignment requires width-based positioning (center/right).
+  // IMPORTANT: This must apply even when the text node is a direct child of the container (parentEl === layoutEl),
+  // otherwise only nested inline elements (e.g. <b>) will be grouped and the line will break into overlapping clusters.
+  const shouldUseInlineGroup = !shouldSkipInlineGroup && (textAlign === 'right' || textAlign === 'center');
 
   // Helper to create the non-aggregated render item
   const createItem = (isFirstItemInWrapped: boolean = false) => ({
     type: 'text' as const,
-    x: shouldUseCellAlignedX ? xMmCellAligned : xMmActual,
+    x: shouldUseInlineGroup ? xMmCellAligned : xMmActual,
     y: y + baselineOffset,
     w: ctx.px2mm(firstRect.width),
     h,
     style: fontStyle,
     text: finalStr,
-    textAlign: shouldUseCellAlignedX ? textAlign : shouldSkipInlineGroup ? 'left' : textAlign,
-    cellTextAlign: shouldSkipInlineGroup && !shouldUseCellAlignedX && (textAlign === 'right' || textAlign === 'center')
-      ? textAlign
-      : undefined,
+    // If we are not using inline grouping, `xMmActual` is the LEFT edge of the fragment,
+    // so we must always force jsPDF align='left' to avoid shifting by its measured width.
+    textAlign: shouldUseInlineGroup ? textAlign : 'left',
+    cellTextAlign:
+      /****
+      inTableCell && shouldSkipInlineGroup && !shouldUseCellAlignedX && (textAlign === 'right' || textAlign === 'center')
+      ****/
+      inTableCell && shouldSkipInlineGroup && !shouldUseInlineGroup && (textAlign === 'right' || textAlign === 'center')
+        ? textAlign
+        : undefined,
     maxWidthMm: ctx.px2mm(contentWidthPx - (isFirstItemInWrapped ? firstRect.left - contentLeftPx : 0)),
     lineHeightMm,
     noWrap: !browserWrapped,
@@ -229,8 +226,12 @@ export const parseTextNode = (ctx: DomParseContext, txt: Text, shouldExclude: (e
     // WHY THIS WORKS: Browser already calculated perfect positions. We just need to use them.
     // WHY WE STILL NEED GROUPING FOR CENTER/RIGHT: Those alignments require knowing total line width
     // to calculate the starting X position, which we can only know after measuring all fragments.
-    inlineGroupId: shouldGroupForAlignedLine ? `${ctx.getLayoutId(layoutEl)}|${yBucketPx}` : undefined,
-    inlineOrder: shouldGroupForAlignedLine ? walked : undefined,
+    inlineGroupId: shouldUseInlineGroup
+      ? `${ctx.getLayoutId(layoutEl)}|${yBucketPx}`
+      : undefined,
+    inlineOrder: shouldUseInlineGroup
+      ? walked
+      : undefined,
     alignmentBucket: `${ctx.getLayoutId(layoutEl)}|${yBucketPx}`,
     floatLeft: isFloatLeft,
     contentLeftMm: xLeftMm,
