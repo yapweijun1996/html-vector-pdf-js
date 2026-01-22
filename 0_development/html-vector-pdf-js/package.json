@@ -8,7 +8,9 @@
   },
   "scripts": {
     "dev": "vite",
+    "prebuild": "npm test -- --run",
     "build": "vite build",
+    "prebuild:with-fonts": "npm test -- --run",
     "build:with-fonts": "npm run inject-fonts && vite build && npm run cleanup",
     "inject-fonts": "node scripts/inject-fonts.js",
     "cleanup": "node scripts/cleanup-fonts.js",
