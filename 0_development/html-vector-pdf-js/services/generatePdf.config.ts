@@ -74,6 +74,7 @@ export const mergeConfig = (config: PdfConfig): Required<PdfConfig> => {
                 ...((config.pagination?.pageBreakBeforeSelectors || []) as string[])
             ]
         },
-        debugOverlay: mergeConfigSection(DEFAULT_CONFIG.debugOverlay, config.debugOverlay)
+        debugOverlay: mergeConfigSection(DEFAULT_CONFIG.debugOverlay, config.debugOverlay),
+        textEngine: mergeConfigSection(DEFAULT_CONFIG.textEngine, config.textEngine)
     };
 };

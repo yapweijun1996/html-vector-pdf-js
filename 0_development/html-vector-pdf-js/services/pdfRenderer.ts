@@ -16,6 +16,7 @@ import { calculatePagination, ensurePageExists } from './pdfRenderer/pagination'
 import { DebugTextRow } from './pdfRenderer/types';
 import { chainLeftAlignedText } from './domParser/postProcess';
 import { applyTextStyle } from './pdfRenderer/fonts';
+import { expandPdfFirstTextBlocks } from './pdfRenderer/pdfFirstText';
 
 /**
  * Main PDF rendering function
@@ -62,17 +63,20 @@ export const renderToPdf = async (
     const uniqueBreaks = normalizePageBreaks(pageBreakBeforeYs);
     const countBreaksAtOrBefore = createBreakCounter(uniqueBreaks);
 
+    // Expand PDF-first text blocks into concrete text items (measured with registered fonts)
+    const expandedItems = expandPdfFirstTextBlocks(doc, items, cfg);
+
     // Process inline text groups (for center/right aligned text)
-    processInlineTextGroups(doc, items, cfg);
+    processInlineTextGroups(doc, expandedItems, cfg);
 
     // Mark items for chaining
-    chainLeftAlignedText(items);
+    chainLeftAlignedText(expandedItems);
 
     // Calculate chained X positions for left-aligned text
     // This eliminates subpixel gaps by making subsequent items start exactly
     // where the previous item ends (based on jsPDF width measurement)
     const chainedGroups = new Map<string, RenderItem[]>();
-    for (const item of items) {
+    for (const item of expandedItems) {
       if (item.chainBucket && item.chainOrder !== undefined) {
         if (!chainedGroups.has(item.chainBucket)) {
           chainedGroups.set(item.chainBucket, []);
@@ -106,7 +110,7 @@ export const renderToPdf = async (
     }
 
     // Render items sorted by z-index
-    const sorted = items.slice().sort((a, b) => a.zIndex - b.zIndex);
+    const sorted = expandedItems.slice().sort((a, b) => a.zIndex - b.zIndex);
     for (let itemIdx = 0; itemIdx < sorted.length; itemIdx++) {
       await maybeYield(itemIdx + 1);
       const item = sorted[itemIdx];

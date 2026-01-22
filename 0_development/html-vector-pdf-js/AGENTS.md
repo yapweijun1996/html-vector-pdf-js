@@ -27,3 +27,9 @@
 # Others Info 
 * When review issues or bug, no need provide code, only breakdown issues or bug only.
 * gemini-2.5-flash, gemini-2.5-pro, gemini-3-flash-preview and gemini-3-flash-preview are latest models from Google Gemini API.
+
+
+# Amendment (task.md)
+
+- Update progress in task.md
+- finish all task in task.md and ask me to test will do.

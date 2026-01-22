@@ -5,6 +5,9 @@ import { createIsPageBreakBefore, createShouldExclude } from './domParser/select
 import { parseElementNode } from './domParser/parseElementNode';
 import { parseTextNode } from './domParser/parseTextNode';
 import { mergeAdjacentLayoutBuckets, snapItemsInBuckets } from './domParser/postProcess';
+import { parsePx } from './pdfUnits';
+import { parseLineHeightPx } from './textLayout';
+import { computeAlphabeticBaselineOffsetPx } from './textBaseline';
 
 export const parseElementToItems = async (
   element: HTMLElement,
@@ -34,7 +37,8 @@ export const parseElementToItems = async (
     items,
     aggregatedTextByKey,
     getLayoutId,
-    cellHasMixedTextStyles
+    cellHasMixedTextStyles,
+    skipTextContainers: (cfg.textEngine?.mode || 'legacy') !== 'legacy' ? new WeakSet<HTMLElement>() : undefined
   };
 
   const walker = document.createTreeWalker(element, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT);
@@ -76,6 +80,67 @@ export const parseElementToItems = async (
       if (shouldExclude(el)) {
         node = walker.nextNode();
         continue;
+      }
+
+      // PDF-first text engine: create a single text block item for supported containers (e.g. <p>)
+      const textEngineMode = cfg.textEngine?.mode || 'legacy';
+      if (textEngineMode !== 'legacy') {
+        const tag = el.tagName.toUpperCase();
+        const enabledTags = cfg.textEngine.enabledTags || ['P'];
+        if (enabledTags.includes(tag as any)) {
+          const style = window.getComputedStyle(el);
+          const rect = el.getBoundingClientRect();
+
+          // In auto mode, only enable PDF-first for "risky" containers (mixed inline styles / special chars / <br>).
+          const autoEnabled =
+            textEngineMode === 'pdfFirst' ||
+            (textEngineMode === 'auto' &&
+              (el.querySelector('strong,b,em,i,span,br') !== null || /[^\x00-\xFF]/.test(el.textContent || '')));
+
+          if (autoEnabled && style.display !== 'none' && style.opacity !== '0' && rect.width > 0 && rect.height > 0) {
+            if (!/\S/.test(el.textContent || '')) {
+              // No meaningful text content; skip.
+              node = walker.nextNode();
+              continue;
+            }
+
+            const paddingLeftPx = parsePx(style.paddingLeft) + parsePx(style.borderLeftWidth);
+            const paddingRightPx = parsePx(style.paddingRight) + parsePx(style.borderRightWidth);
+            const paddingTopPx = parsePx(style.paddingTop) + parsePx(style.borderTopWidth);
+
+            const contentLeftPx = rect.left + paddingLeftPx;
+            const contentRightPx = rect.right - paddingRightPx;
+            const contentWidthPx = Math.max(0, contentRightPx - contentLeftPx);
+
+            const fontSizePx = parseFloat(style.fontSize || '0') || 0;
+            const lineHeightPx = parseLineHeightPx(style.lineHeight, fontSizePx);
+            const lineHeightMm = px2mm(lineHeightPx) * cfg.text.scale;
+            const baselineOffsetPx = computeAlphabeticBaselineOffsetPx(style, lineHeightPx);
+            const baselineOffsetMm = px2mm(baselineOffsetPx) * cfg.text.scale;
+
+            const xMm = cfg.margins.left + px2mm(contentLeftPx - rootRect.left);
+            const yTopMm = px2mm(rect.top + paddingTopPx - rootRect.top);
+            const yBaselineMm = yTopMm + baselineOffsetMm;
+            const wMm = px2mm(contentWidthPx);
+
+            ctx.items.push({
+              type: 'textBlock',
+              x: xMm,
+              y: yBaselineMm,
+              w: wMm,
+              h: lineHeightMm,
+              style,
+              element: el,
+              maxWidthMm: wMm,
+              lineHeightMm,
+              noWrap: true,
+              cssNoWrap: true,
+              zIndex: 20
+            });
+
+            ctx.skipTextContainers?.add(el);
+          }
+        }
       }
       parseElementNode(ctx, el, imagePromises);
     } else if (node.nodeType === Node.TEXT_NODE) {

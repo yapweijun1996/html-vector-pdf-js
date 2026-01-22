@@ -1,25 +1,25 @@
-```md
-# Tasks (derived from `prd.md`)
+## P0 — PDF-first Text Engine（Correctness, replace legacy text flow）
 
-## P0 — Product API / UX
-- [ ] Add `window.HtmlToVectorPDF.init(options)` + optional button inject/bind flow (keep `html_to_vector_pdf.generatePdf` as low-level API).
-- [ ] Add deterministic error codes + `onError` callback (missing element, zero-size, dependency/image failure, generation failure).
-- [ ] Add progress hook `onProgress(stage, detail)` and async yields to reduce UI freezes on long documents.
+> Goal：針對長段落（例如 `0_test/SQ-10038-ATL_2026_01_22_09_33_28.htm` 的 T&C `<p>`，混合 `<strong>` + `●` + curly quotes）做到「不缺字、不重疊、跨樣式可正確換行」。
+> Strategy：不再依賴瀏覽器的 inline 片段座標拼貼；改為把 DOM 解析成 styled runs，使用 PDF 端同一套字型度量做 line breaking，再渲染到 jsPDF。
 
-## P1 — Generic library hardcoding cleanup
-- [ ] Replace project-specific `DEFAULT_EXCLUDE_SELECTORS` with:
-  - [ ] empty-by-default library defaults, and
-  - [ ] optional `preset` presets (or external preset file).
-
-## P1 — Maintainability refactor
-- [ ] Split `services/pdfGenerator.ts` (>300 LOC) into small modules:
-  - config/types, px↔mm utils, DOM traversal, text layout, borders/backgrounds, image handling, pagination, renderer.
-- [ ] Add a minimal unit/integration test harness (even one smoke test in headless browser) for `generatePdf` happy path.
-
-## P1 — Rendering improvements (Legacy Support)
-- [ ] Add support for `INPUT` (text/value), `TEXTAREA`, and `SELECT` element values in `domParser` (critical for legacy ERPs).
-
-## P2 — Rendering improvements (PRD gaps)
-- [ ] Add "keep together" hints (`data-pdf-keep-together="true"`) and avoid splitting table rows when feasible.
-- [ ] Add link preservation for `<a href>` (safe URL allowlist; block `javascript:`).
+### Design (Mermaid)
+```mermaid
+flowchart TB
+  A[DOM Block Container\n(P/DIV/TD...)] --> B[Inline Run Builder\n(text + style runs)]
+  B --> C[Tokenizer\n(space/punct/cjk)]
+  C --> D[Font Resolver\n(consistent metrics)]
+  D --> E[Measurer\n(jsPDF getTextWidth)]
+  E --> F[Line Breaker\n(across runs)]
+  F --> G[Line Layout\n(baseline/lineHeight)]
+  G --> H[RenderItems\n(pre-wrapped, computedX)]
+  H --> I[jsPDF RenderText\n(noWrap=true)]
 ```
+
+- [x] Add `PdfConfig.textEngine` options (mode + feature flags).
+- [x] Implement `services/textEngine/*` (runs → tokens → lines).
+- [x] Integrate in `services/domParser.ts` for `<p>` (feature-flagged, default `auto`).
+- [x] Ensure renderer never re-wraps PDF-first items (`noWrap: true`, `computedX` set) via `textBlock` expansion.
+- [x] Add unit tests for run builder + line breaker (vitest).
+- [ ] Add a debug mode to log line breaks for the failing paragraph (wire to UI/query param).
+- [ ] Validate on `0_test/SQ-10038-ATL_2026_01_22_09_33_28.htm` (T&C paragraph): no overlap, symbols render.

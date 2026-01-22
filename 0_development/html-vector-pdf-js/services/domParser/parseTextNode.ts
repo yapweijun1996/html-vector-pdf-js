@@ -15,6 +15,15 @@ export const parseTextNode = (ctx: DomParseContext, txt: Text, shouldExclude: (e
   if (!str) return;
   if (!txt.parentElement || shouldExclude(txt.parentElement)) return;
 
+  // PDF-first text engine: skip text nodes inside containers handled as `textBlock`
+  if ((ctx.cfg.textEngine?.mode || 'legacy') !== 'legacy' && ctx.skipTextContainers) {
+    let p: HTMLElement | null = txt.parentElement;
+    while (p && p !== document.body) {
+      if (ctx.skipTextContainers.has(p)) return;
+      p = p.parentElement;
+    }
+  }
+
   const parentEl = txt.parentElement;
   const fontStyle = window.getComputedStyle(parentEl);
 

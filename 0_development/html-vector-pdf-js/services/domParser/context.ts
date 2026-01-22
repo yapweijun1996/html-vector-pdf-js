@@ -17,6 +17,8 @@ export interface DomParseContext {
   /**** AMENDMENT [start] "Track last bucket per cell" ****/
   cellLastTextBucket?: Map<number, number>;
   /**** AMENDMENT [end] "Track last bucket per cell" ****/
+  /** Containers handled by PDF-first text engine; descendant text nodes should be skipped. */
+  skipTextContainers?: WeakSet<HTMLElement>;
 }
 
 export const createLayoutIdGetter = (): ((el: Element) => number) => {

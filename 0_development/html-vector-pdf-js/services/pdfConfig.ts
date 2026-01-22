@@ -41,6 +41,18 @@ export interface PdfConfig {
   ui?: {
     showLoader?: boolean;
   };
+  /**
+   * Text layout engine selection.
+   * - legacy: current DOM-fragment based approach
+   * - pdfFirst: rebuild text lines from styled runs using PDF font metrics (more correct for mixed inline styles)
+   */
+  textEngine?: {
+    mode?: 'legacy' | 'pdfFirst' | 'auto';
+    /** Tags to enable PDF-first text layout (default: ['P']). */
+    enabledTags?: Array<'P' | 'DIV'>;
+    /** Enable debug logging for the PDF-first text engine */
+    debug?: boolean;
+  };
 }
 
 export const DEFAULT_EXCLUDE_SELECTORS = [
@@ -92,5 +104,10 @@ export const DEFAULT_CONFIG: Required<PdfConfig> = {
   debug: false,
   ui: {
     showLoader: true
+  },
+  textEngine: {
+    mode: 'auto',
+    enabledTags: ['P'],
+    debug: false
   }
 };

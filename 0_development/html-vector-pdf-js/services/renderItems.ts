@@ -1,13 +1,15 @@
 export type TextAlign = 'left' | 'center' | 'right';
 
 export interface RenderItem {
-  type: 'text' | 'background' | 'border' | 'image' | 'debugRect';
+  type: 'text' | 'background' | 'border' | 'image' | 'debugRect' | 'textBlock';
   x: number;
   y: number;
   w: number;
   h: number;
   style: CSSStyleDeclaration;
   text?: string;
+  /** For `textBlock` (PDF-first text engine): original DOM element used to build styled runs */
+  element?: HTMLElement;
   imageSrc?: string;
   imageFormat?: string;
   zIndex: number;

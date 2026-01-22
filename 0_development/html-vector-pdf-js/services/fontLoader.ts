@@ -86,14 +86,16 @@ export const loadFont = async (fontName: string): Promise<ArrayBuffer> => {
     const fontDef = FONT_CDN_URLS[fontName];
 
     if (!fontDef) {
-        throw new HtmlToVectorPdfError(`Font ${fontName} not found`);
+        throw new HtmlToVectorPdfError('DEPENDENCY_LOAD_FAILED', `Font ${fontName} not found`, { fontName });
     }
 
     if (fontDef.url === 'EMBEDDED') {
         // Use embedded font data
         if (EMBEDDED_FONT_DATA === 'EMBEDDED_FONT_DATA_PLACEHOLDER') {
             throw new HtmlToVectorPdfError(
-                'Font data not injected. Please run build script first.'
+                'DEPENDENCY_LOAD_FAILED',
+                'Font data not injected. Please run build script first.',
+                { fontName }
             );
         }
 
@@ -107,7 +109,7 @@ export const loadFont = async (fontName: string): Promise<ArrayBuffer> => {
     }
 
     // Fallback to CDN (if needed in future)
-    throw new HtmlToVectorPdfError('CDN loading not implemented');
+    throw new HtmlToVectorPdfError('DEPENDENCY_LOAD_FAILED', 'CDN loading not implemented', { fontName });
 };
 
 /**
@@ -141,7 +143,7 @@ export const loadFontFromCDN = async (fontName: string): Promise<{
     const fontDef = FONT_CDN_URLS[fontName];
 
     if (!fontDef) {
-        throw new HtmlToVectorPdfError(`Font ${fontName} not found`);
+        throw new HtmlToVectorPdfError('DEPENDENCY_LOAD_FAILED', `Font ${fontName} not found`, { fontName });
     }
 
     // Load font data
