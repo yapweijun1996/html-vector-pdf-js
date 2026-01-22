@@ -3,6 +3,16 @@ import { parseElementNode } from './parseElementNode';
 import { DomParseContext } from './context';
 import { PdfConfig } from '../pdfConfig';
 
+vi.mock('../backgroundImage', () => ({
+  getBackgroundImageUrlFromStyle: (style: any) => {
+    const bg = String(style?.backgroundImage || '');
+    const m = bg.match(/url\\(\\s*(['\"]?)(.*?)\\1\\s*\\)/i);
+    return m?.[2] ? String(m[2]) : null;
+  },
+  rasterizeBackgroundImageToPngDataUrl: vi.fn().mockResolvedValue('data:image/png;base64,bg-fake'),
+  backgroundImageRasterizeError: (url: string, cause: unknown) => ({ code: 'ASSET_LOAD_FAILED', meta: { url }, cause })
+}));
+
 describe('parseElementNode', () => {
   let ctx: DomParseContext;
   let element: HTMLElement;
@@ -22,6 +32,10 @@ describe('parseElementNode', () => {
       paddingRight: '0px',
       paddingTop: '0px',
       paddingBottom: '0px',
+      backgroundImage: 'none',
+      backgroundRepeat: 'repeat',
+      backgroundSize: 'auto',
+      backgroundPosition: '0% 0%',
       textAlign: 'left',
       fontSize: '16px',
       lineHeight: 'normal',
@@ -175,6 +189,32 @@ describe('parseElementNode', () => {
     const imgItems = ctx.items.filter(i => i.type === 'image');
     expect(imgItems).toHaveLength(1);
     expect(imgItems[0].imageFormat).toBe('PNG');
+  });
+
+  it('should create image item for CSS background-image', async () => {
+    (window.getComputedStyle as any).mockReturnValue({
+      display: 'block',
+      opacity: '1',
+      backgroundColor: 'rgba(0,0,0,0)',
+      backgroundImage: "url('https://example.com/cover.jpg')",
+      backgroundRepeat: 'no-repeat',
+      backgroundSize: '200px 50px',
+      backgroundPosition: 'center top',
+      borderTopWidth: '0px',
+      borderRightWidth: '0px',
+      borderBottomWidth: '0px',
+      borderLeftWidth: '0px'
+    });
+
+    parseElementNode(ctx, element, imagePromises);
+
+    const imgItems = ctx.items.filter(i => i.type === 'image');
+    expect(imgItems).toHaveLength(1);
+    expect(imgItems[0].zIndex).toBe(1);
+    expect(imagePromises).toHaveLength(1);
+
+    await Promise.all(imagePromises);
+    expect((ctx.items.find(i => i.type === 'image') as any).imageSrc).toMatch(/^data:image\/png;base64/);
   });
 
   it('should add debug overlay for TD/TH when enabled', () => {

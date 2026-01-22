@@ -3,7 +3,9 @@ import { parsePx } from '../pdfUnits';
 import { RenderItem } from '../renderItems';
 import { isSvgImage, svgToDataUrl } from '../svgImage';
 import { HtmlToVectorPdfError } from '../errors';
-import { imageRasterizeError, rasterizeImageElementToPngDataUrl } from '../imageRaster';
+import { imageRasterizeError, rasterizeImageElementToPngDataUrl, rasterizeImageUrlToPngDataUrl } from '../imageRaster';
+import { backgroundImageRasterizeError, getBackgroundImageUrlFromStyle, rasterizeBackgroundImageToPngDataUrl } from '../backgroundImage';
+import { resolveAssetUrl } from '../assetUrl';
 import { DomParseContext } from './context';
 import { computeAlphabeticBaselineOffsetPx } from '../textBaseline';
 import { parseLineHeightPx } from '../textLayout';
@@ -51,6 +53,47 @@ export const parseElementNode = (
 
   if (!isTransparent(style.backgroundColor)) {
     ctx.items.push({ type: 'background', x, y, w, h, style, zIndex: 0 });
+  }
+
+  // CSS background-image (single url layer): rasterize into a PNG and render as an image item behind content.
+  const bgUrl = getBackgroundImageUrlFromStyle(style);
+  if (bgUrl) {
+    const rasterScale = ctx.cfg.render.backgroundRasterScale ?? ctx.cfg.render.rasterScale;
+    const resolvedBgUrl = resolveAssetUrl(ctx.cfg, bgUrl);
+    const bgItem: RenderItem = {
+      type: 'image',
+      x,
+      y,
+      w,
+      h,
+      style,
+      imageSrc: resolvedBgUrl,
+      imageFormat: 'PNG',
+      zIndex: 1
+    };
+
+    const promise = rasterizeBackgroundImageToPngDataUrl({
+      imageUrl: resolvedBgUrl,
+      targetWidthPx: rect.width,
+      targetHeightPx: rect.height,
+      rasterScale,
+      backgroundRepeat: (style.backgroundRepeat || 'repeat') as any,
+      backgroundSize: (style.backgroundSize || 'auto') as any,
+      backgroundPosition: (style.backgroundPosition || '0% 0%') as any
+    })
+      .then((dataUrl) => {
+        bgItem.imageSrc = dataUrl;
+        bgItem.imageFormat = 'PNG';
+      })
+      .catch((err) => {
+        const e = backgroundImageRasterizeError(resolvedBgUrl, err);
+        ctx.cfg.callbacks.onError?.(e);
+        if (ctx.cfg.errors.failOnAssetError) throw e;
+        if (ctx.cfg.debug) console.warn('[html_to_vector_pdf] Background image rasterize failed:', err);
+      });
+
+    imagePromises.push(promise);
+    ctx.items.push(bgItem);
   }
 
   const bt = parseFloat(style.borderTopWidth);
@@ -200,6 +243,7 @@ export const parseElementNode = (
     const imgEl = el as HTMLImageElement;
     const imgSrc = imgEl.src;
     const rasterScale = ctx.cfg.render.rasterScale;
+    const resolvedImgSrc = resolveAssetUrl(ctx.cfg, imgSrc);
 
     const imgItem: RenderItem = {
       type: 'image',
@@ -208,7 +252,7 @@ export const parseElementNode = (
       w,
       h,
       style,
-      imageSrc: imgSrc,
+      imageSrc: resolvedImgSrc,
       imageFormat: 'PNG',
       zIndex: 5
     };
@@ -238,14 +282,15 @@ export const parseElementNode = (
       return;
     }
 
-    // For non-dataURL <img>, rasterize through canvas into PNG to avoid format mismatch (gif/webp/etc).
-    const promise = rasterizeImageElementToPngDataUrl(imgEl, rect.width, rect.height, rasterScale)
+    // For non-dataURL <img>, rasterize via a fresh Image() load (supports proxy-rewritten URLs).
+    // This also normalizes formats (gif/webp/etc) into PNG.
+    const promise = rasterizeImageUrlToPngDataUrl(resolvedImgSrc, rect.width, rect.height, rasterScale)
       .then((dataUrl) => {
         imgItem.imageSrc = dataUrl;
         imgItem.imageFormat = 'PNG';
       })
       .catch((err) => {
-        const e = imageRasterizeError(imgSrc, err);
+        const e = imageRasterizeError(resolvedImgSrc, err);
         ctx.cfg.callbacks.onError?.(e);
         if (ctx.cfg.errors.failOnAssetError) throw e;
         if (ctx.cfg.debug) console.warn('[html_to_vector_pdf] Image rasterize failed:', err);

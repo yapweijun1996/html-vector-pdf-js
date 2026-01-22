@@ -6,6 +6,17 @@ export interface PdfConfig {
   orientation?: 'portrait' | 'landscape';
   margins?: { top: number; right: number; bottom: number; left: number };
   excludeSelectors?: string[];
+  /**
+   * Asset loading controls (images, background-images).
+   * NOTE: Due to browser security, cross-origin images without CORS cannot be read into canvas.
+   * Use `assets.proxy` or `assets.urlResolver` to rewrite URLs to a same-origin proxy.
+   */
+  assets?: {
+    /** Rewrite all http(s) asset URLs to `${proxy}${encodeURIComponent(originalUrl)}` */
+    proxy?: string;
+    /** Custom URL resolver (highest priority). */
+    urlResolver?: (url: string) => string;
+  };
   callbacks?: {
     onProgress?: (stage: string, detail?: Record<string, unknown>) => void;
     onError?: (error: HtmlToVectorPdfError) => void;
@@ -28,6 +39,11 @@ export interface PdfConfig {
   render?: {
     pxToMm?: number;
     rasterScale?: number;
+    /**
+     * Raster scale specifically for CSS background-image.
+     * Default: 4 (higher to avoid blurry cover images).
+     */
+    backgroundRasterScale?: number;
   };
   pagination?: {
     pageBreakBeforeSelectors?: string[];
@@ -66,6 +82,8 @@ export const DEFAULT_EXCLUDE_SELECTORS = [
   'style',
   '#pdf-download-btn',
   '#html-to-vector-pdf-btn',
+  '#html-vector-pdf-loader-gen',
+  '#html-vector-pdf-loader',
   '.build-status'
 ];
 
@@ -75,6 +93,7 @@ export const DEFAULT_CONFIG: Required<PdfConfig> = {
   orientation: 'portrait',
   margins: { top: 10, right: 10, bottom: 10, left: 10 },
   excludeSelectors: DEFAULT_EXCLUDE_SELECTORS,
+  assets: {},
   callbacks: {},
   performance: {
     yieldEveryNodes: 250,
@@ -91,7 +110,8 @@ export const DEFAULT_CONFIG: Required<PdfConfig> = {
     scale: 1
   },
   render: {
-    rasterScale: 2
+    rasterScale: 2,
+    backgroundRasterScale: 4
   },
   pagination: {
     pageBreakBeforeSelectors: ['.pagebreak_bf_processed', '.pagebreak_bf', '[data-pdf-page-break-before="true"]']
