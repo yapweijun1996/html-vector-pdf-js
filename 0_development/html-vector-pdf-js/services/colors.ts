@@ -6,16 +6,16 @@ export const parseColor = (c: string): [number, number, number] => {
     const b = parseInt(c.slice(5, 7), 16);
     return isNaN(r) ? [0, 0, 0] : [r, g, b];
   }
-  const m = c.match(/\d+/g);
-  if (c.startsWith('rgba') && m && m[3] === '0') return [255, 255, 255];
+  const m = c.match(/[+-]?\d+(\.\d+)?/g);
+  if (c.startsWith('rgba') && m && parseFloat(m[3]) === 0) return [255, 255, 255];
   return m && m.length >= 3 ? [parseInt(m[0]), parseInt(m[1]), parseInt(m[2])] : [0, 0, 0];
 };
 
 export const isTransparent = (c: string): boolean => {
   if (!c || c === 'transparent' || c === 'rgba(0, 0, 0, 0)') return true;
   if (c.startsWith('rgba')) {
-    const m = c.match(/\d+/g);
-    if (m && m[3] === '0') return true;
+    const m = c.match(/[+-]?\d+(\.\d+)?/g);
+    if (m && parseFloat(m[3]) === 0) return true;
   }
   return false;
 };

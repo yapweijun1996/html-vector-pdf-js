@@ -9,6 +9,11 @@
 - [x] 加回歸測試：確保 right-aligned `<td>` 混排會產生單一 inlineGroup
 - [x] 重新 build：更新 `dist/html_to_vector_pdf.js`
 - [ ] 你在瀏覽器實測：`http://localhost:4173/index_multi.html` 下載 PDF 確認不再重疊
+- [x] 建立單元測試：`colors`, `pdfUnits`, `tokenizer`
 
 ## 進度紀錄
+- 2026-01-22：完成 `colors`, `pdfUnits`, `tokenizer` 單元測試
+  - 發現並修復 `colors.ts` 對小數點 alpha 值（如 `rgba(0,0,255,0.5)`）解析錯誤的 Bug
+  - 確認 `tokenizer` 對 CJK 字元不會自動分詞（符合預期 Issue）
 - 2026-01-22：完成修正與測試，等待你實測確認
+- 2026-01-22：重構 `services/domParser/parseElementNode.ts`（拆分背景/邊框/表單/媒體/除錯），`npm test` 與 `npm run build` 皆通過
