@@ -1,0 +1,237 @@
+import { RenderItem } from '../renderItems';
+
+/**
+ * Merges adjacent layout buckets for items in the same layout element (e.g., TD).
+ * This fixes cases where text nodes have slight vertical offsets (e.g., from <script> tags)
+ * causing them to be split into separate lines.
+ */
+export const mergeAdjacentLayoutBuckets = (items: RenderItem[]): void => {
+  const itemsByLayoutId = new Map<string, RenderItem[]>();
+  for (const item of items) {
+    if (item.type === 'text' && item.alignmentBucket) {
+      const layoutId = item.alignmentBucket.split('|')[0];
+      if (!itemsByLayoutId.has(layoutId)) itemsByLayoutId.set(layoutId, []);
+      itemsByLayoutId.get(layoutId)!.push(item);
+    }
+  }
+
+  for (const [layoutId, layoutItems] of itemsByLayoutId) {
+    if (layoutItems.length <= 1) continue;
+
+    // Extract unique yBucketPx values
+    const buckets = new Set<number>();
+    for (const item of layoutItems) {
+      const parts = item.alignmentBucket!.split('|');
+      if (parts.length >= 2) {
+        const bucketPx = parseInt(parts[1], 10);
+        if (!isNaN(bucketPx)) buckets.add(bucketPx);
+      }
+    }
+
+    if (buckets.size <= 1) continue;
+
+    const sortedBuckets = Array.from(buckets).sort((a, b) => a - b);
+    const bucketMapping = new Map<number, number>();
+
+    // Determine merges: if diff <= 4px (2 buckets distance), merge to the master bucket
+    let masterBucket = sortedBuckets[0];
+    bucketMapping.set(masterBucket, masterBucket);
+
+    for (let i = 1; i < sortedBuckets.length; i++) {
+      const current = sortedBuckets[i];
+      // Compare with current master bucket. If within tolerance, merge.
+      // 4px is generous enough to catch subpixel/script/font-size shifts, 
+      // but small enough to avoid merging distinct lines (usually >12px)
+      if (current - masterBucket <= 4) {
+        bucketMapping.set(current, masterBucket);
+      } else {
+        masterBucket = current;
+        bucketMapping.set(current, current);
+      }
+    }
+
+    // Apply mapping
+    for (const item of layoutItems) {
+      const parts = item.alignmentBucket!.split('|');
+      if (parts.length < 2) continue;
+
+      const currentBucketPx = parseInt(parts[1], 10);
+      if (isNaN(currentBucketPx)) continue;
+
+      const newBucketPx = bucketMapping.get(currentBucketPx);
+      if (newBucketPx !== undefined && newBucketPx !== currentBucketPx) {
+        const newBucketStr = newBucketPx.toString();
+        // Update both alignmentBucket and inlineGroupId to match the master bucket
+        item.alignmentBucket = `${layoutId}|${newBucketStr}`;
+        if (item.inlineGroupId) {
+          item.inlineGroupId = `${layoutId}|${newBucketStr}`;
+        }
+      }
+    }
+  }
+};
+
+/**
+ * Performs vertical snapping for items in the same alignmentBucket.
+ * This ensures that floating elements (like currency symbols) align with the main text baseline.
+ */
+export const snapItemsInBuckets = (items: RenderItem[]): void => {
+  const itemsByBucket = new Map<string, RenderItem[]>();
+  for (const item of items) {
+    if (item.type === 'text' && item.alignmentBucket) {
+      const bucket = itemsByBucket.get(item.alignmentBucket);
+      if (bucket) bucket.push(item);
+      else itemsByBucket.set(item.alignmentBucket, [item]);
+    }
+  }
+
+  for (const bucketItems of itemsByBucket.values()) {
+    if (bucketItems.length === 0) continue;
+
+    // 1. Vertical snapping
+    let anchorY: number | null = null;
+    let fallbackY: number | null = null;
+    let minY = Infinity;
+    let maxY = -Infinity;
+
+    for (const item of bucketItems) {
+      if (item.inlineGroupId) {
+        if (anchorY === null) anchorY = item.y;
+      }
+      if (fallbackY === null) fallbackY = item.y;
+      minY = Math.min(minY, item.y);
+      maxY = Math.max(maxY, item.y);
+    }
+
+    const targetY = anchorY ?? fallbackY;
+    if (targetY !== null && bucketItems.length > 1) {
+      if (maxY - minY < 2.0) {
+        for (const item of bucketItems) {
+          item.y = targetY;
+        }
+      }
+    }
+
+    // 2. Horizontal snap for float-left elements (like S$)
+    // Many ERP layouts use float:left for currency symbols. 
+    // We ensure they actually hit the left padding of the container even if browser rect measurement is slightly off
+    for (const item of bucketItems) {
+      // If it's a floating element and was intended to be on the left
+      if (item.floatLeft && item.contentLeftMm !== undefined) {
+        item.x = item.contentLeftMm;
+      }
+    }
+
+    // 3. Safe re-anchor for table-cell right/center alignment when we had to skip inline grouping.
+    // Some ERP HTML patterns wrap cell text in block/padded spans, which makes the parser downgrade alignment to 'left'
+    // to avoid overlap. That keeps the browser-measured left edge, but in PDF it can drift due to font metrics.
+    // If there's exactly one non-floating text item in the bucket that wanted right/center, we can anchor it safely.
+    const reanchorCandidates = bucketItems.filter(
+      (it) =>
+        it.type === 'text' &&
+        !it.inlineGroupId &&
+        !it.floatLeft &&
+        (it.cellTextAlign === 'right' || it.cellTextAlign === 'center') &&
+        it.contentLeftMm !== undefined &&
+        it.contentRightMm !== undefined
+    );
+
+    if (reanchorCandidates.length === 1) {
+      const it = reanchorCandidates[0];
+      const left = it.contentLeftMm!;
+      const right = it.contentRightMm!;
+      if (it.cellTextAlign === 'right') {
+        it.x = right;
+        it.textAlign = 'right';
+      } else if (it.cellTextAlign === 'center') {
+        it.x = (left + right) / 2;
+        it.textAlign = 'center';
+      }
+      continue;
+    }
+
+    // If there are multiple text fragments that together should be right/center aligned
+    // (e.g. inline styling splits nodes but we had to skip inline grouping due to block/padding wrappers),
+    // we can safely group them and let the renderer compute widths and place them as a single inline group.
+    if (reanchorCandidates.length > 1) {
+      const desiredAlign = reanchorCandidates[0].cellTextAlign;
+      const contentLeft = reanchorCandidates[0].contentLeftMm!;
+      const contentRight = reanchorCandidates[0].contentRightMm!;
+      const canGroup =
+        (desiredAlign === 'right' || desiredAlign === 'center') &&
+        reanchorCandidates.every(
+          (t) =>
+            t.cellTextAlign === desiredAlign &&
+            t.contentLeftMm === contentLeft &&
+            t.contentRightMm === contentRight
+        );
+
+      if (canGroup) {
+        const groupId = `cellAligned|${bucketItems[0].alignmentBucket}|${desiredAlign}`;
+        const sorted = [...reanchorCandidates].sort((a, b) => a.x - b.x);
+        for (let i = 0; i < sorted.length; i++) {
+          const t = sorted[i];
+          t.inlineGroupId = groupId;
+          t.inlineOrder = i;
+          t.textAlign = desiredAlign;
+        }
+      }
+    }
+  }
+};
+
+/**
+ * Chains left-aligned text items horizontally using relative positioning.
+ * 
+ * WHY THIS IS NEEDED:
+ * Even when using browser coordinates (xMmActual), subpixel rendering causes
+ * tiny gaps between adjacent text nodes. For example:
+ *   - "These Terms (" ends at 123.7px
+ *   - "T&C" starts at 123.9px (0.2px gap!)
+ * 
+ * This gap accumulates across many fragments, causing visible spacing differences
+ * compared to window.print.
+ * 
+ * SOLUTION:
+ * For left-aligned text in the same bucket:
+ * 1. Sort items by their original X position (left to right)
+ * 2. First item keeps its browser coordinate (accurate anchor)
+ * 3. Subsequent items: X = previous item's X + previous item's measured width
+ * 
+ * This eliminates gaps while preserving the first item's exact position.
+ */
+export const chainLeftAlignedText = (items: RenderItem[]): void => {
+  const itemsByBucket = new Map<string, RenderItem[]>();
+
+  // Group text items by alignmentBucket
+  for (const item of items) {
+    if (
+      item.type === 'text' &&
+      item.alignmentBucket &&
+      item.text &&
+      // Only process left-aligned items without inlineGroupId (those use different logic)
+      !item.inlineGroupId &&
+      (item.textAlign === 'left' || !item.textAlign)
+    ) {
+      const bucket = item.alignmentBucket;
+      if (!itemsByBucket.has(bucket)) {
+        itemsByBucket.set(bucket, []);
+      }
+      itemsByBucket.get(bucket)!.push(item);
+    }
+  }
+
+  // Process each bucket
+  for (const bucketItems of itemsByBucket.values()) {
+    if (bucketItems.length <= 1) continue;
+
+    // Sort by original X position (left to right order)
+    const sorted = bucketItems.sort((a, b) => a.x - b.x);
+
+    // Mark items for chaining - the renderer will use this
+    for (let i = 0; i < sorted.length; i++) {
+      sorted[i].chainOrder = i;
+      sorted[i].chainBucket = sorted[0].alignmentBucket;
+    }
+  }
+};
