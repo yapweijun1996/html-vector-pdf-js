@@ -30,6 +30,12 @@ export interface RenderItem {
   computedX?: number;
   alignmentBucket?: string;
   floatLeft?: boolean;
+
+  /** Used to chain left-aligned text items horizontally to eliminate subpixel gaps */
+  chainOrder?: number;
+  /** Bucket identifier for chained text items */
+  chainBucket?: string;
+
   borderSides?: { t: number; r: number; b: number; l: number };
 
   borderColors?: {

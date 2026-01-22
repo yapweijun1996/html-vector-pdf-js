@@ -14,6 +14,8 @@ import { renderImage } from './pdfRenderer/image';
 import { renderDebugRect, logDebugInfo } from './pdfRenderer/debug';
 import { calculatePagination, ensurePageExists } from './pdfRenderer/pagination';
 import { DebugTextRow } from './pdfRenderer/types';
+import { chainLeftAlignedText } from './domParser/postProcess';
+import { applyTextStyle } from './pdfRenderer/fonts';
 
 /**
  * Main PDF rendering function
@@ -60,8 +62,48 @@ export const renderToPdf = async (
     const uniqueBreaks = normalizePageBreaks(pageBreakBeforeYs);
     const countBreaksAtOrBefore = createBreakCounter(uniqueBreaks);
 
-    // Process inline text groups
+    // Process inline text groups (for center/right aligned text)
     processInlineTextGroups(doc, items, cfg);
+
+    // Mark items for chaining
+    chainLeftAlignedText(items);
+
+    // Calculate chained X positions for left-aligned text
+    // This eliminates subpixel gaps by making subsequent items start exactly
+    // where the previous item ends (based on jsPDF width measurement)
+    const chainedGroups = new Map<string, RenderItem[]>();
+    for (const item of items) {
+      if (item.chainBucket && item.chainOrder !== undefined) {
+        if (!chainedGroups.has(item.chainBucket)) {
+          chainedGroups.set(item.chainBucket, []);
+        }
+        chainedGroups.get(item.chainBucket)!.push(item);
+      }
+    }
+
+    for (const groupItems of chainedGroups.values()) {
+      // Sort by chain order
+      groupItems.sort((a, b) => (a.chainOrder ?? 0) - (b.chainOrder ?? 0));
+
+      let cursorX = groupItems[0].x; // First item uses browser coordinate
+      for (let i = 0; i < groupItems.length; i++) {
+        const item = groupItems[i];
+
+        // Apply font to get accurate width measurement
+        applyTextStyle(doc, item.style, cfg.text.scale, item.text);
+        const textWidth = doc.getTextWidth(item.text || '');
+
+        if (i === 0) {
+          // First item keeps browser coordinate - it's the anchor
+          item.computedX = item.x;
+        } else {
+          // Subsequent items start where previous ended
+          item.computedX = cursorX;
+        }
+
+        cursorX += textWidth;
+      }
+    }
 
     // Render items sorted by z-index
     const sorted = items.slice().sort((a, b) => a.zIndex - b.zIndex);

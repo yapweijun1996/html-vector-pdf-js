@@ -179,3 +179,59 @@ export const snapItemsInBuckets = (items: RenderItem[]): void => {
     }
   }
 };
+
+/**
+ * Chains left-aligned text items horizontally using relative positioning.
+ * 
+ * WHY THIS IS NEEDED:
+ * Even when using browser coordinates (xMmActual), subpixel rendering causes
+ * tiny gaps between adjacent text nodes. For example:
+ *   - "These Terms (" ends at 123.7px
+ *   - "T&C" starts at 123.9px (0.2px gap!)
+ * 
+ * This gap accumulates across many fragments, causing visible spacing differences
+ * compared to window.print.
+ * 
+ * SOLUTION:
+ * For left-aligned text in the same bucket:
+ * 1. Sort items by their original X position (left to right)
+ * 2. First item keeps its browser coordinate (accurate anchor)
+ * 3. Subsequent items: X = previous item's X + previous item's measured width
+ * 
+ * This eliminates gaps while preserving the first item's exact position.
+ */
+export const chainLeftAlignedText = (items: RenderItem[]): void => {
+  const itemsByBucket = new Map<string, RenderItem[]>();
+
+  // Group text items by alignmentBucket
+  for (const item of items) {
+    if (
+      item.type === 'text' &&
+      item.alignmentBucket &&
+      item.text &&
+      // Only process left-aligned items without inlineGroupId (those use different logic)
+      !item.inlineGroupId &&
+      (item.textAlign === 'left' || !item.textAlign)
+    ) {
+      const bucket = item.alignmentBucket;
+      if (!itemsByBucket.has(bucket)) {
+        itemsByBucket.set(bucket, []);
+      }
+      itemsByBucket.get(bucket)!.push(item);
+    }
+  }
+
+  // Process each bucket
+  for (const bucketItems of itemsByBucket.values()) {
+    if (bucketItems.length <= 1) continue;
+
+    // Sort by original X position (left to right order)
+    const sorted = bucketItems.sort((a, b) => a.x - b.x);
+
+    // Mark items for chaining - the renderer will use this
+    for (let i = 0; i < sorted.length; i++) {
+      sorted[i].chainOrder = i;
+      sorted[i].chainBucket = sorted[0].alignmentBucket;
+    }
+  }
+};

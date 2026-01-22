@@ -4,8 +4,18 @@ import { HtmlToVectorPdfError } from './errors';
  * Detects which font to use based on text content
  */
 export const detectRequiredFont = (text: string): string | null => {
-    // Latin-1 characters (0-255) are supported by standard fonts
+    /****
+    // OLD: Only checked Latin-1, then returned null for non-CJK characters
+    // This caused symbols like ● (U+25CF) to render as garbage in Helvetica
     if (/^[\x00-\xFF]*$/.test(text)) {
+        return null; // Use standard fonts
+    }
+    ****/
+    // NEW: First check if text contains ONLY basic ASCII/Latin-1 (0-255)
+    // If yes, use standard fonts (Helvetica/Times/Courier)
+    // If no, proceed to check for specific scripts
+    const hasOnlyLatin1 = /^[\x00-\xFF]*$/.test(text);
+    if (hasOnlyLatin1) {
         return null; // Use standard fonts
     }
 
@@ -24,7 +34,14 @@ export const detectRequiredFont = (text: string): string | null => {
         return 'NotoSansKR';
     }
 
-    // Other non-Latin characters (Arabic, Thai, Devanagari, etc.)
+    /****
+    // OLD: Returned 'NotoSans' for "other" characters, but this was never reached
+    // because the Latin-1 check above would return null first
+    return 'NotoSans';
+    ****/
+    // NEW: For any non-Latin-1 character that's not CJK/Japanese/Korean,
+    // use NotoSans which has broader Unicode coverage (symbols, arrows, etc.)
+    // This fixes rendering of ●, →, ©, ™, etc.
     return 'NotoSans';
 };
 

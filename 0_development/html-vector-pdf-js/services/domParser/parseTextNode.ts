@@ -17,7 +17,37 @@ export const parseTextNode = (ctx: DomParseContext, txt: Text, shouldExclude: (e
 
   const parentEl = txt.parentElement;
   const fontStyle = window.getComputedStyle(parentEl);
-  const layoutEl = (parentEl.closest('td,th') as HTMLElement | null) || parentEl;
+
+  // New: Find nearest block-level container (p, div, td, th, li, etc.)
+  // This enables inline grouping for mixed-style text in ALL block contexts, not just tables
+  const findBlockContainer = (el: HTMLElement): HTMLElement => {
+    let curr: HTMLElement | null = el;
+    while (curr && curr !== document.body) {
+      const display = window.getComputedStyle(curr).display;
+      const tag = curr.tagName.toUpperCase();
+      // Block-level elements that should serve as layout containers
+      if (
+        display === 'block' ||
+        display === 'table-cell' ||
+        tag === 'TD' ||
+        tag === 'TH' ||
+        tag === 'P' ||
+        tag === 'DIV' ||
+        tag === 'LI' ||
+        tag === 'BLOCKQUOTE' ||
+        tag === 'ARTICLE' ||
+        tag === 'SECTION'
+      ) {
+        return curr;
+      }
+      curr = curr.parentElement;
+    }
+    return el; // Fallback to original element
+  };
+  const layoutEl = findBlockContainer(parentEl);
+
+  const isBlockContainer = layoutEl !== parentEl;
+
   const layoutStyle = window.getComputedStyle(layoutEl);
   const layoutRect = layoutEl.getBoundingClientRect();
 
@@ -73,26 +103,21 @@ export const parseTextNode = (ctx: DomParseContext, txt: Text, shouldExclude: (e
   const rawBucketPx = Math.round(firstRect.top / 2) * 2;
   let yBucketPx = rawBucketPx;
 
-  if (inTableCell) {
+  // New: Apply fuzzy bucket logic to ALL block containers.
+  // This ensures that bold/normal text in a <p> tag (which might differ by 1-2px in height)
+  // are snapped to the same Y-bucket and thus grouped together in the same line.
+  if (isBlockContainer) {
     const layoutId = ctx.getLayoutId(layoutEl);
 
-    // Check if we have a "forced" bucket for this cell from a previous sibling text node
-    // This handles the document.write case where split text nodes should be on the same line
     if (ctx.cellLastTextBucket && ctx.cellLastTextBucket.has(layoutId)) {
       const lastBucket = ctx.cellLastTextBucket.get(layoutId)!;
-      // Only force-merge if the vertical difference is small (e.g. < 5px)
-      // This prevents merging distinct lines, but catches script-induced shifts
+      // Use 5px threshold to catch font-size variations on the same line
       if (Math.abs(rawBucketPx - lastBucket) < 5) {
-        console.log(`[DEBUG] Forcing bucket: raw=${rawBucketPx}, forced=${lastBucket}, text="${finalStr.substring(0, 30)}..."`);
         yBucketPx = lastBucket;
       } else {
-        // It's a new visual line, update the master bucket
-        console.log(`[DEBUG] New line: raw=${rawBucketPx}, last=${lastBucket}, text="${finalStr.substring(0, 30)}..."`);
         ctx.cellLastTextBucket.set(layoutId, rawBucketPx);
       }
     } else {
-      // First text in this cell, initialize
-      console.log(`[DEBUG] First text in cell: bucket=${rawBucketPx}, text="${finalStr.substring(0, 30)}..."`);
       if (!ctx.cellLastTextBucket) ctx.cellLastTextBucket = new Map();
       ctx.cellLastTextBucket.set(layoutId, rawBucketPx);
     }
@@ -154,11 +179,10 @@ export const parseTextNode = (ctx: DomParseContext, txt: Text, shouldExclude: (e
   // Otherwise the renderer will recalculate the x position based on group alignment, ignoring our exact coordinates
   const shouldSkipInlineGroup = isFloating || hasLayoutImpact;
 
-  // In table cells, only use TD/TH-aligned anchor X when we will still inline-group the fragments.
-  // If we must skip inline grouping (e.g. block wrappers like <span style="display:block">),
-  // we must render using the browser-measured left edge (xMmActual) and force 'left' alignment,
-  // otherwise mixed-style fragments can overlap when each fragment is centered independently.
-  const shouldUseCellAlignedX = inTableCell && !shouldSkipInlineGroup && (textAlign === 'right' || textAlign === 'center');
+  // New: Assign inlineGroupId for ALL block containers (p, div, td, etc.)
+  // This is the KEY FIX: mixed-style text in <p> tags now gets grouped and positioned correctly
+  // const isBlockContainer = layoutEl !== parentEl; // Redundant - defined at top
+  const shouldUseCellAlignedX = isBlockContainer && !shouldSkipInlineGroup && (textAlign === 'right' || textAlign === 'center');
 
   // Helper to create the non-aggregated render item
   const createItem = (isFirstItemInWrapped: boolean = false) => ({
@@ -171,7 +195,10 @@ export const parseTextNode = (ctx: DomParseContext, txt: Text, shouldExclude: (e
     text: finalStr,
     textAlign: shouldUseCellAlignedX ? textAlign : shouldSkipInlineGroup ? 'left' : textAlign,
     cellTextAlign:
+      /****
       inTableCell && shouldSkipInlineGroup && !shouldUseCellAlignedX && (textAlign === 'right' || textAlign === 'center')
+      ****/
+      isBlockContainer && shouldSkipInlineGroup && !shouldUseCellAlignedX && (textAlign === 'right' || textAlign === 'center')
         ? textAlign
         : undefined,
     maxWidthMm: ctx.px2mm(contentWidthPx - (isFirstItemInWrapped ? firstRect.left - contentLeftPx : 0)),
@@ -179,8 +206,23 @@ export const parseTextNode = (ctx: DomParseContext, txt: Text, shouldExclude: (e
     noWrap: !browserWrapped,
     cssNoWrap,
     rectsLen,
-    inlineGroupId: !shouldSkipInlineGroup ? `${ctx.getLayoutId(layoutEl)}|${yBucketPx}` : undefined,
-    inlineOrder: !shouldSkipInlineGroup ? walked : undefined,
+    /****
+    // OLD: Assigned inlineGroupId to ALL block containers, causing jsPDF width errors to accumulate
+    inlineGroupId: isBlockContainer && !shouldSkipInlineGroup ? `${ctx.getLayoutId(layoutEl)}|${yBucketPx}` : undefined,
+    inlineOrder: isBlockContainer && !shouldSkipInlineGroup ? walked : undefined,
+    ****/
+    // NEW: Only use inline grouping when alignment requires position recalculation (center/right).
+    // For left-aligned text, use browser's exact coordinates (xMmActual) directly.
+    // This eliminates jsPDF width measurement errors that cause text overlapping.
+    // WHY THIS WORKS: Browser already calculated perfect positions. We just need to use them.
+    // WHY WE STILL NEED GROUPING FOR CENTER/RIGHT: Those alignments require knowing total line width
+    // to calculate the starting X position, which we can only know after measuring all fragments.
+    inlineGroupId: isBlockContainer && !shouldSkipInlineGroup && (textAlign === 'center' || textAlign === 'right')
+      ? `${ctx.getLayoutId(layoutEl)}|${yBucketPx}`
+      : undefined,
+    inlineOrder: isBlockContainer && !shouldSkipInlineGroup && (textAlign === 'center' || textAlign === 'right')
+      ? walked
+      : undefined,
     alignmentBucket: `${ctx.getLayoutId(layoutEl)}|${yBucketPx}`,
     floatLeft: isFloatLeft,
     contentLeftMm: xLeftMm,
@@ -188,10 +230,7 @@ export const parseTextNode = (ctx: DomParseContext, txt: Text, shouldExclude: (e
     zIndex: 20
   });
 
-  if (inTableCell) {
-    ctx.items.push(createItem(false));
-    return;
-  }
 
-  ctx.items.push(createItem(true));
+  // Simplified: All block containers use the same logic now
+  ctx.items.push(createItem(isBlockContainer ? false : true));
 };
