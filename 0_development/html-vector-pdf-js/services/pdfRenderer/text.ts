@@ -105,8 +105,12 @@ export const renderText = (
     const align: TextAlign = (item.computedX != null ? 'left' : item.textAlign || 'left') as TextAlign;
     const maxWidthMm = item.maxWidthMm ?? 0;
     const lineHeightMm = item.lineHeightMm ?? px2mm(parseFloat(item.style.fontSize)) * 1.2 * cfg.text.scale;
-    const pdfTextWidthMm = doc.getTextWidth(item.text);
-    const lines = item.noWrap ? [item.text] : wrapTextToWidth(doc, item.text, maxWidthMm);
+    const textForPdfWidth = item.text.replaceAll('\u00A0', ' ');
+    const pdfTextWidthMm = doc.getTextWidth(textForPdfWidth);
+
+    // If we don't wrap, still normalize NBSP to normal spaces for consistent rendering in PDF.
+    // If we do wrap, wrapTextToWidth() preserves NBSP indentation and converts to spaces per-line.
+    const lines = item.noWrap ? [textForPdfWidth] : wrapTextToWidth(doc, item.text, maxWidthMm);
     const baseY = renderY;
 
     // Collect debug information
