@@ -71,7 +71,13 @@ const processFontLoadResults = (
         } else {
             const fontName = requiredFontsArray[i];
             console.warn(`[html_to_vector_pdf] Failed to load font ${fontName}:`, result.reason);
-            cfg.callbacks.onError?.(result.reason);
+            // Font loading is best-effort; never let a user-provided onError handler
+            // break PDF generation just because optional fonts failed to load.
+            try {
+                cfg.callbacks.onError?.(result.reason);
+            } catch {
+                // ignore
+            }
         }
     }
 

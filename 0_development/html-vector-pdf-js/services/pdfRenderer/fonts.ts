@@ -22,6 +22,7 @@ export const pickPdfFontFamily = (cssFontFamily: string | null | undefined): Pdf
     if (fam.includes('notosansjp')) return 'NotoSansJP';
     if (fam.includes('notosanstc')) return 'NotoSansTC';
     if (fam.includes('notosanskr')) return 'NotoSansKR';
+    if (fam.includes('notosans')) return 'NotoSans';
 
     if (fam.includes('times') || fam.includes('serif')) return 'times';
     if (fam.includes('courier') || fam.includes('mono')) return 'courier';
@@ -62,10 +63,26 @@ export const applyTextStyle = (
 ): void => {
     let fontName: PdfFontFamily = pickPdfFontFamily(style.fontFamily);
 
+    const hasRegisteredFont = (name: string): boolean => {
+        try {
+            const list = (doc as any).getFontList?.();
+            if (!list || typeof list !== 'object') return false;
+            return Object.prototype.hasOwnProperty.call(list, name);
+        } catch {
+            return false;
+        }
+    };
+
+    // If the CSS explicitly asks for a custom font (e.g. NotoSans*), but we didn't
+    // register it, fall back to a standard font to avoid jsPDF font lookup warnings/errors.
+    if (!['helvetica', 'times', 'courier'].includes(fontName) && !hasRegisteredFont(fontName)) {
+        fontName = 'helvetica';
+    }
+
     // Auto-detect CJK font if text is provided and current font is standard
     if (text && ['helvetica', 'times', 'courier'].includes(fontName)) {
         const requiredFont = detectRequiredFont(text);
-        if (requiredFont) {
+        if (requiredFont && hasRegisteredFont(requiredFont)) {
             fontName = requiredFont as PdfFontFamily;
         }
     }

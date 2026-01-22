@@ -55,6 +55,10 @@ export const parseTextNode = (ctx: DomParseContext, txt: Text, shouldExclude: (e
   };
   const layoutEl = findBlockContainer(parentEl);
 
+  // NOTE: `layoutEl` is our alignment/layout container. For a text node whose parent is the container itself
+  // (e.g. direct text children of <td align="right">), we still must treat it as a "block container" case
+  // for center/right alignment; otherwise we'd use browser-left coordinates combined with PDF right-align,
+  // causing multiple fragments to overlap.
   const isBlockContainer = layoutEl !== parentEl;
 
   const layoutStyle = window.getComputedStyle(layoutEl);
@@ -191,7 +195,10 @@ export const parseTextNode = (ctx: DomParseContext, txt: Text, shouldExclude: (e
   // New: Assign inlineGroupId for ALL block containers (p, div, td, etc.)
   // This is the KEY FIX: mixed-style text in <p> tags now gets grouped and positioned correctly
   // const isBlockContainer = layoutEl !== parentEl; // Redundant - defined at top
-  const shouldUseCellAlignedX = isBlockContainer && !shouldSkipInlineGroup && (textAlign === 'right' || textAlign === 'center');
+  // For center/right aligned lines, we anchor all fragments to the container's content box and use inline grouping
+  // so the renderer can compute correct per-fragment X positions.
+  const shouldGroupForAlignedLine = !shouldSkipInlineGroup && (textAlign === 'right' || textAlign === 'center');
+  const shouldUseCellAlignedX = shouldGroupForAlignedLine;
 
   // Helper to create the non-aggregated render item
   const createItem = (isFirstItemInWrapped: boolean = false) => ({
@@ -203,13 +210,9 @@ export const parseTextNode = (ctx: DomParseContext, txt: Text, shouldExclude: (e
     style: fontStyle,
     text: finalStr,
     textAlign: shouldUseCellAlignedX ? textAlign : shouldSkipInlineGroup ? 'left' : textAlign,
-    cellTextAlign:
-      /****
-      inTableCell && shouldSkipInlineGroup && !shouldUseCellAlignedX && (textAlign === 'right' || textAlign === 'center')
-      ****/
-      isBlockContainer && shouldSkipInlineGroup && !shouldUseCellAlignedX && (textAlign === 'right' || textAlign === 'center')
-        ? textAlign
-        : undefined,
+    cellTextAlign: shouldSkipInlineGroup && !shouldUseCellAlignedX && (textAlign === 'right' || textAlign === 'center')
+      ? textAlign
+      : undefined,
     maxWidthMm: ctx.px2mm(contentWidthPx - (isFirstItemInWrapped ? firstRect.left - contentLeftPx : 0)),
     lineHeightMm,
     noWrap: !browserWrapped,
@@ -226,12 +229,8 @@ export const parseTextNode = (ctx: DomParseContext, txt: Text, shouldExclude: (e
     // WHY THIS WORKS: Browser already calculated perfect positions. We just need to use them.
     // WHY WE STILL NEED GROUPING FOR CENTER/RIGHT: Those alignments require knowing total line width
     // to calculate the starting X position, which we can only know after measuring all fragments.
-    inlineGroupId: isBlockContainer && !shouldSkipInlineGroup && (textAlign === 'center' || textAlign === 'right')
-      ? `${ctx.getLayoutId(layoutEl)}|${yBucketPx}`
-      : undefined,
-    inlineOrder: isBlockContainer && !shouldSkipInlineGroup && (textAlign === 'center' || textAlign === 'right')
-      ? walked
-      : undefined,
+    inlineGroupId: shouldGroupForAlignedLine ? `${ctx.getLayoutId(layoutEl)}|${yBucketPx}` : undefined,
+    inlineOrder: shouldGroupForAlignedLine ? walked : undefined,
     alignmentBucket: `${ctx.getLayoutId(layoutEl)}|${yBucketPx}`,
     floatLeft: isFloatLeft,
     contentLeftMm: xLeftMm,

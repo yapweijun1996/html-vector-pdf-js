@@ -3,20 +3,23 @@
 * You are good in develop .js library.
 
 # Main Rules
-* Design a mermaid diagram before amendment.
+* explain logic by mermaid diagram.
 * Reply me mandarin.
-* Work in small steps. 
 * Code refactor needed if files more than 300 lines.
 * Make this project code easy to understand and cheap to maintain.
-* step by step with small action by todo list.
-* reply me in listing format, eg: 1,2,3.....
+* step by step with small move.
 * Restate user’s query with your understanding.
+* Please do investigate before asking question.
 * Ask me question if need.
 
 # Quick Check**
 
 * Suggestion from engineer View.
 * Suggestion from user view.
+* Does current logic is correct?
+* Will having issues in the future?
+* Easy to understand?
+* Easy to maintain?
 
 # Response to User**
 

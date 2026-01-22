@@ -11,6 +11,7 @@
     "build": "vite build",
     "build:with-fonts": "npm run inject-fonts && vite build && npm run cleanup",
     "inject-fonts": "node scripts/inject-fonts.js",
+    "fonts:prepare": "node scripts/prepare-fonts.js",
     "cleanup": "node scripts/cleanup-fonts.js",
     "preview": "vite preview",
     "test": "vitest"

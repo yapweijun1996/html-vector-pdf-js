@@ -65,7 +65,7 @@ export interface PdfConfig {
   textEngine?: {
     mode?: 'legacy' | 'pdfFirst' | 'auto';
     /** Tags to enable PDF-first text layout (default: ['P']). */
-    enabledTags?: Array<'P' | 'DIV'>;
+    enabledTags?: Array<'P' | 'DIV' | 'TD' | 'TH'>;
     /** Enable debug logging for the PDF-first text engine */
     debug?: boolean;
   };
@@ -127,7 +127,7 @@ export const DEFAULT_CONFIG: Required<PdfConfig> = {
   },
   textEngine: {
     mode: 'auto',
-    enabledTags: ['P'],
+    enabledTags: ['P', 'TD', 'TH'],
     debug: false
   }
 };

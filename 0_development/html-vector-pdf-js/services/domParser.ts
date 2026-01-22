@@ -6,7 +6,7 @@ import { parseElementNode } from './domParser/parseElementNode';
 import { parseTextNode } from './domParser/parseTextNode';
 import { mergeAdjacentLayoutBuckets, snapItemsInBuckets } from './domParser/postProcess';
 import { parsePx } from './pdfUnits';
-import { parseLineHeightPx } from './textLayout';
+import { parseLineHeightPx, pickTextAlign } from './textLayout';
 import { computeAlphabeticBaselineOffsetPx } from './textBaseline';
 
 export const parseElementToItems = async (
@@ -119,9 +119,12 @@ export const parseElementToItems = async (
             const baselineOffsetMm = px2mm(baselineOffsetPx) * cfg.text.scale;
 
             const xMm = cfg.margins.left + px2mm(contentLeftPx - rootRect.left);
+            const contentLeftMm = xMm;
+            const contentRightMm = cfg.margins.left + px2mm(contentRightPx - rootRect.left);
             const yTopMm = px2mm(rect.top + paddingTopPx - rootRect.top);
             const yBaselineMm = yTopMm + baselineOffsetMm;
             const wMm = px2mm(contentWidthPx);
+            const textAlign = pickTextAlign(el, style.textAlign || '');
 
             ctx.items.push({
               type: 'textBlock',
@@ -135,6 +138,9 @@ export const parseElementToItems = async (
               lineHeightMm,
               noWrap: true,
               cssNoWrap: true,
+              textAlign,
+              contentLeftMm,
+              contentRightMm,
               zIndex: 20
             });
 
