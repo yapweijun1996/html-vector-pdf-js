@@ -23,6 +23,10 @@ export const pickPdfFontFamily = (cssFontFamily: string | null | undefined): Pdf
     if (fam.includes('notosanstc')) return 'NotoSansTC';
     if (fam.includes('notosanskr')) return 'NotoSansKR';
 
+    /**** AMENDMENT [start] "Map Calibri to Carlito" ****/
+    if (fam.includes('calibri')) return 'Carlito';
+    /**** AMENDMENT [end] "Map Calibri to Carlito" ****/
+
     if (fam.includes('times') || fam.includes('serif')) return 'times';
     if (fam.includes('courier') || fam.includes('mono')) return 'courier';
     return 'helvetica';
@@ -62,8 +66,8 @@ export const applyTextStyle = (
 ): void => {
     let fontName: PdfFontFamily = pickPdfFontFamily(style.fontFamily);
 
-    // Auto-detect CJK font if text is provided and current font is standard
-    if (text && ['helvetica', 'times', 'courier'].includes(fontName)) {
+    // Auto-detect CJK font if text is provided and current font is standard or Carlito (for symbols)
+    if (text && ['helvetica', 'times', 'courier', 'Carlito'].includes(fontName)) {
         const requiredFont = detectRequiredFont(text);
         if (requiredFont) {
             fontName = requiredFont as PdfFontFamily;

@@ -1,5 +1,5 @@
 import { PdfConfig } from './pdfConfig';
-import { detectRequiredFonts, loadFontFromCDN } from './fontLoader';
+import { detectRequiredFonts, detectRequiredFontsFromFamilies, loadFontFromCDN } from './fontLoader';
 import { RenderItem } from './renderItems';
 import { FontData, FontLoadResult } from './generatePdf.types';
 import { buildInlineRuns } from './textEngine/runBuilder';
@@ -45,6 +45,29 @@ export const extractTextsFromItems = (
     });
 };
 
+/**** AMENDMENT [start] "Add family extractor" ****/
+/**
+ * Extract all font families from render items
+ * @param allElementItems - Array of element items containing render items
+ * @returns Array of unique font-family strings found in render items
+ */
+export const extractFamiliesFromItems = (
+    allElementItems: Array<{ items: RenderItem[] }>
+): string[] => {
+    const families = new Set<string>();
+
+    for (const elemItems of allElementItems) {
+        for (const item of elemItems.items) {
+            if (item.style?.fontFamily) {
+                families.add(item.style.fontFamily);
+            }
+        }
+    }
+
+    return Array.from(families);
+};
+/**** AMENDMENT [end] "Add family extractor" ****/
+
 /**
  * Process font load results and collect successfully loaded fonts
  * @param loadedResults - Results from Promise.allSettled
@@ -86,11 +109,17 @@ const processFontLoadResults = (
  */
 export const processFonts = async (
     allTexts: string[],
+    allFamilies: string[],
     cfg: Required<PdfConfig>
 ): Promise<FontLoadResult> => {
     cfg.callbacks.onProgress?.('font:detect:start', {});
 
-    const requiredFonts = detectRequiredFonts(allTexts);
+    const requiredFontsFromText = detectRequiredFonts(allTexts);
+    const requiredFontsFromFamilies = detectRequiredFontsFromFamilies(allFamilies);
+
+    // Merge sets
+    const requiredFonts = new Set([...Array.from(requiredFontsFromText), ...Array.from(requiredFontsFromFamilies)]);
+
     const loadedFonts: FontData[] = [];
 
     if (requiredFonts.size === 0) {

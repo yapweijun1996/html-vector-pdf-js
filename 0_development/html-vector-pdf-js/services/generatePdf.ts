@@ -7,7 +7,7 @@ import { asHtmlToVectorPdfError } from './errors';
 import { createYieldController } from './asyncYield';
 import { mergeConfig } from './generatePdf.config';
 import { findElements, validateElementSizes } from './generatePdf.elements';
-import { extractTextsFromItems, processFonts } from './generatePdf.fonts';
+import { extractTextsFromItems, extractFamiliesFromItems, processFonts } from './generatePdf.fonts';
 import { waitForElementsReady } from './renderReady';
 import { resolveGeneratePdfTarget } from './generatePdf.targetOverride';
 import { showLoaderUI, hideLoaderUI } from './uiLoader';
@@ -98,7 +98,13 @@ export const generatePdf = async (
 
     // Process fonts: detect required fonts and load from CDN
     const allTexts = extractTextsFromItems(allElementItems);
-    const { loadedFonts } = await processFonts(allTexts, cfg);
+    /**** AMENDMENT [start] "Extract families for font detection" ****/
+    const allFamilies = extractFamiliesFromItems(allElementItems);
+    if (cfg.debug) {
+      console.log('[html_to_vector_pdf] Extracted families:', allFamilies);
+    }
+    const { loadedFonts } = await processFonts(allTexts, allFamilies, cfg);
+    /**** AMENDMENT [end] "Extract families for font detection" ****/
 
     // Pass loaded fonts to renderer via config
     if (loadedFonts.length > 0) {

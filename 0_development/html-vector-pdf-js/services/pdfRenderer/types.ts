@@ -12,7 +12,9 @@ export type PdfFontFamily =
     | 'NotoSansSC'
     | 'NotoSansJP'
     | 'NotoSansTC'
-    | 'NotoSansKR';
+    | 'NotoSansKR'
+    | 'NotoSans'
+    | 'Carlito';
 
 /**
  * PDF font styles

@@ -95,17 +95,21 @@ export const renderToPdf = async (
 
         // Apply font to get accurate width measurement
         applyTextStyle(doc, item.style, cfg.text.scale, item.text);
-        const textWidth = doc.getTextWidth(item.text || '');
+        /**** AMENDMENT [start] "Normalize text and prevent overlap in chaining" ****/
+        const textForPdfWidth = (item.text || '').replaceAll('\u00A0', ' ');
+        const textWidth = doc.getTextWidth(textForPdfWidth);
 
         if (i === 0) {
           // First item keeps browser coordinate - it's the anchor
           item.computedX = item.x;
         } else {
-          // Subsequent items start where previous ended
-          item.computedX = cursorX;
+          // Subsequent items start where previous ended, but NEVER earlier than browser X
+          // to prevent overlap if PDF measurement is too narrow.
+          item.computedX = Math.max(item.x, cursorX);
         }
 
-        cursorX += textWidth;
+        cursorX = (item.computedX || item.x) + textWidth;
+        /**** AMENDMENT [end] "Normalize text and prevent overlap in chaining" ****/
       }
     }
 

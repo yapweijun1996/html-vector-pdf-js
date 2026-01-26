@@ -15,6 +15,9 @@ export const registerLoadedFonts = (
     for (const font of loadedFonts) {
         try {
             const vfsName = `${font.name}-${font.style}.ttf`;
+            if (cfg.debug) {
+                console.log(`[html_to_vector_pdf] Registering font to jsPDF: ${font.name} (${font.style}) data length: ${font.data.length}`);
+            }
             doc.addFileToVFS(vfsName, font.data);
             doc.addFont(vfsName, font.name, font.style);
             if (cfg.debug) {
