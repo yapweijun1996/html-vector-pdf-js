@@ -48,7 +48,6 @@ export const generatePdf = async (
 
     cfg.callbacks.onProgress?.('select:done', { elementCount: elements.length });
 
-    /**** AMENDMENT [start] "Wait for render ready before parsing DOM" ****/
     // Wait for fonts, images, and layout to stabilize before parsing
     // This fixes issues where multi-page PDFs have rendering artifacts on later pages
     // because resources were not fully loaded on first click
@@ -60,7 +59,6 @@ export const generatePdf = async (
       settleDelay: 50
     });
     cfg.callbacks.onProgress?.('render:wait:done', { elementCount: elements.length });
-    /**** AMENDMENT [end] "Wait for render ready before parsing DOM" ****/
 
     if (cfg.debug) {
       if (effectiveTarget !== elementOrSelector) {
@@ -98,13 +96,11 @@ export const generatePdf = async (
 
     // Process fonts: detect required fonts and load from CDN
     const allTexts = extractTextsFromItems(allElementItems);
-    /**** AMENDMENT [start] "Extract families for font detection" ****/
     const allFamilies = extractFamiliesFromItems(allElementItems);
     if (cfg.debug) {
       console.log('[html_to_vector_pdf] Extracted families:', allFamilies);
     }
     const { loadedFonts } = await processFonts(allTexts, allFamilies, cfg);
-    /**** AMENDMENT [end] "Extract families for font detection" ****/
 
     // Pass loaded fonts to renderer via config
     if (loadedFonts.length > 0) {

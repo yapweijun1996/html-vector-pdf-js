@@ -95,7 +95,6 @@ export const renderToPdf = async (
 
         // Apply font to get accurate width measurement
         applyTextStyle(doc, item.style, cfg.text.scale, item.text);
-        /**** AMENDMENT [start] "Normalize text and prevent overlap in chaining" ****/
         const textForPdfWidth = (item.text || '').replaceAll('\u00A0', ' ');
         const textWidth = doc.getTextWidth(textForPdfWidth);
 
@@ -109,7 +108,6 @@ export const renderToPdf = async (
         }
 
         cursorX = (item.computedX || item.x) + textWidth;
-        /**** AMENDMENT [end] "Normalize text and prevent overlap in chaining" ****/
       }
     }
 
