@@ -14,9 +14,7 @@ export interface DomParseContext {
   aggregatedTextByKey: Map<string, RenderItem>;
   getLayoutId: (el: Element) => number;
   cellHasMixedTextStyles: (cell: Element) => boolean;
-  /**** AMENDMENT [start] "Track last bucket per cell" ****/
   cellLastTextBucket?: Map<number, number>;
-  /**** AMENDMENT [end] "Track last bucket per cell" ****/
   /** Containers handled by PDF-first text engine; descendant text nodes should be skipped. */
   skipTextContainers?: WeakSet<HTMLElement>;
 }
@@ -39,14 +37,18 @@ export const createCellHasMixedTextStyles = (): ((cell: Element) => boolean) => 
     const cached = hasMixedTextStylesByCell.get(cell);
     if (typeof cached === 'boolean') return cached;
 
-    const cellStyleKey = buildTextStyleKey(window.getComputedStyle(cell as HTMLElement));
+    let firstStyleKey: string | null = null;
+
     const textWalker = document.createTreeWalker(cell, NodeFilter.SHOW_TEXT);
     let n = textWalker.nextNode();
     while (n) {
       const t = n as Text;
       if (/\S/.test(t.textContent || '') && t.parentElement) {
         const key = buildTextStyleKey(window.getComputedStyle(t.parentElement));
-        if (key !== cellStyleKey) {
+
+        if (firstStyleKey === null) {
+          firstStyleKey = key;
+        } else if (key !== firstStyleKey) {
           hasMixedTextStylesByCell.set(cell, true);
           return true;
         }
@@ -58,4 +60,3 @@ export const createCellHasMixedTextStyles = (): ((cell: Element) => boolean) => 
     return false;
   };
 };
-
