@@ -14,6 +14,7 @@ A powerful, client-side library for generating vector-based PDFs from HTML conte
   - Supports standard CSS borders (individual side colors/widths).
   - Background colors.
   - Image rendering (including automatic SVG-to-PNG conversion).
+- **Advanced Text Engine**: Optional "PDF-First" text layout mode for pixel-perfect text rendering.
 - **Pagination Control**: Automatic page breaks with support for manual break triggers.
 - **Configurable**: Extensive options for margins, page size, and format.
 
@@ -261,24 +262,40 @@ html_to_vector_pdf.generatePdf('#report', {
 
 The `generatePdf` function accepts a configuration object with the following options:
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `filename` | `string` | `"document.pdf"` | Name of the output file. |
-| `pageSize` | `"a4" \| "letter"` | `"a4"` | Page size standard. |
-| `orientation` | `"portrait" \| "landscape"` | `"portrait"` | Page orientation. |
-| `margins` | `{ top, right, bottom, left }` | `{ top:10, right:10, bottom:10, left:10 }` | Margins in millimeters. |
-| `excludeSelectors` | `string[]` | (built-in list) | Elements matching these selectors are skipped. |
-| `callbacks.onProgress` | `(stage, detail) => void` | (none) | Progress hook (parsing/rendering/saving). |
-| `callbacks.onError` | `(error) => void` | (none) | Error hook with deterministic error codes. |
-| `performance.yieldEveryNodes` | `number` | `250` | Async yield cadence to reduce UI freezes. |
-| `performance.yieldEveryMs` | `number` | `16` | Minimum time between yields. |
-| `errors.failOnAssetError` | `boolean` | `false` | Throw on image/svg failures (default keeps going). |
-| `text.scale` | `number` | `1` | Global scaling factor for text size. |
-| `render.pxToMm` | `number` | (auto) | Override px→mm conversion for consistent scaling. |
-| `pagination.pageBreakBeforeSelectors` | `string[]` | `[".pagebreak_bf_processed","[data-pdf-page-break-before=\"true\"]"]` | CSS selectors that force a new page before an element. |
-| `ui.showLoader` | `boolean` | `true` | Show/hide the built-in full screen loading overlay. |
-| `debugOverlay.enabled` | `boolean` | `false` | Draws debug rectangles (table cell content boxes). |
-| `debug` | `boolean` | `false` | Enable console logging for layout debugging. |
+| Category | Option | Type | Default | Description |
+|----------|--------|------|---------|-------------|
+| **General** | `filename` | `string` | `"document.pdf"` | Name of the output file. |
+| | `pageSize` | `"a4" \| "letter"` | `"a4"` | Page size standard. |
+| | `orientation` | `"portrait" \| "landscape"` | `"portrait"` | Page orientation. |
+| | `margins` | `{ top, right, bottom, left }` | `{...}` | Margins in millimeters (default 10mm). |
+| | `excludeSelectors` | `string[]` | (built-in list) | Elements matching these selectors are skipped. |
+| **Assets** | `assets.proxy` | `string` | `undefined` | URL prefix for proxying CORS images (e.g. `https://my-proxy?url=`). |
+| | `assets.urlResolver` | `(url) => string` | `undefined` | Custom function to rewrite image URLs. |
+| | `errors.failOnAssetError` | `boolean` | `false` | Throw error if image loading fails. |
+| **Text** | `text.scale` | `number` | `1` | Global scaling factor for text size. |
+| | `textEngine.mode` | `"legacy" \| "pdfFirst" \| "auto"` | `"auto"` | Text layout strategy (see below). |
+| | `textEngine.enabledTags` | `string[]` | `['P']` | Tags to use `pdfFirst` engine on (if mode is auto/pdfFirst). |
+| | `textEngine.debug` | `boolean` | `false` | Log text layout metrics. |
+| **Render** | `render.pxToMm` | `number` | (auto) | Override px→mm conversion for consistent scaling. |
+| | `render.rasterScale` | `number` | `2` | Quality scale for rasterized elements (canvas/svg). |
+| | `render.backgroundRasterScale`| `number` | `4` | Quality scale for CSS background images. |
+| **Pagination**| `pagination.pageBreakBeforeSelectors` | `string[]` | (built-in list) | Selectors that force a new page. |
+| **Performance**| `performance.renderReadyTimeout` | `number` | `10000` | Max wait time (ms) for resources to load. |
+| | `performance.yieldEveryNodes` | `number` | `250` | Nodes processed before yielding to main thread. |
+| | `performance.yieldEveryMs` | `number` | `16` | Minimum time between yields. |
+| **UI/Debug** | `ui.showLoader` | `boolean` | `true` | Show built-in loading overlay. |
+| | `debugOverlay.enabled` | `boolean` | `false` | Draw debug boxes around elements. |
+| | `debug` | `boolean` | `false` | Enable console logging. |
+
+### Text Engine Modes
+
+The library supports two text layout strategies controlled by `textEngine.mode`:
+
+1.  **`legacy`**: The original engine. Excellent compatibility. Renders text based on DOM fragments.
+2.  **`pdfFirst`**: A newer engine that measures text using PDF font metrics instead of browser metrics.
+    *   **Pros**: more accurate "What You See Is What You Get" for mixed styles (bold/italic in same line), better justification, and handles special characters better in some cases.
+    *   **Cons**: Slightly slower.
+3.  **`auto`** (Default): Automatically switches to `pdfFirst` for complex paragraphs (containing `<br>`, mixed styles, or specific tags like `<p>`) and uses `legacy` for simple text.
 
 ## 🔧 Technical Implementation
 
