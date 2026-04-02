@@ -3,6 +3,53 @@ import { px2pt } from '../pdfUnits';
 import { RenderItem } from '../renderItems';
 import { drawBorderSide } from './borderRenderer';
 
+const halfStrokeMm = (widthPx: number, px2mm: (px: number) => number): number => px2mm(widthPx) / 2;
+
+const getInsideStrokeCoordinates = (
+    item: RenderItem,
+    renderY: number,
+    px2mm: (px: number) => number
+) => {
+    const sides = item.borderSides!;
+    const topHalf = sides.t > 0 ? halfStrokeMm(sides.t, px2mm) : 0;
+    const rightHalf = sides.r > 0 ? halfStrokeMm(sides.r, px2mm) : 0;
+    const bottomHalf = sides.b > 0 ? halfStrokeMm(sides.b, px2mm) : 0;
+    const leftHalf = sides.l > 0 ? halfStrokeMm(sides.l, px2mm) : 0;
+
+    return {
+        top: {
+            x1: item.x + leftHalf,
+            y1: renderY + topHalf,
+            x2: item.x + item.w - rightHalf,
+            y2: renderY + topHalf
+        },
+        bottom: {
+            x1: item.x + leftHalf,
+            y1: renderY + item.h - bottomHalf,
+            x2: item.x + item.w - rightHalf,
+            y2: renderY + item.h - bottomHalf
+        },
+        left: {
+            x1: item.x + leftHalf,
+            y1: renderY + topHalf,
+            x2: item.x + leftHalf,
+            y2: renderY + item.h - bottomHalf
+        },
+        right: {
+            x1: item.x + item.w - rightHalf,
+            y1: renderY + topHalf,
+            x2: item.x + item.w - rightHalf,
+            y2: renderY + item.h - bottomHalf
+        },
+        uniformRect: {
+            x: item.x + leftHalf,
+            y: renderY + topHalf,
+            w: Math.max(0, item.w - leftHalf - rightHalf),
+            h: Math.max(0, item.h - topHalf - bottomHalf)
+        }
+    };
+};
+
 // ============================================================================
 // Border Rendering
 // ============================================================================
@@ -62,17 +109,18 @@ export const renderBorder = (
     const { t, r, b, l } = item.borderSides;
     const colors = item.borderColors;
     const styles = item.borderStyles || { t: 'solid', r: 'solid', b: 'solid', l: 'solid' };
+    const inside = getInsideStrokeCoordinates(item, renderY, px2mm);
 
     if (hasUniformBorder(item.borderSides, colors, styles)) {
         // Optimized uniform border rendering
         doc.setDrawColor(colors.t[0], colors.t[1], colors.t[2]);
         doc.setLineWidth((px2pt(t) / 72) * 25.4);
-        doc.rect(item.x, renderY, item.w, item.h, 'D');
+        doc.rect(inside.uniformRect.x, inside.uniformRect.y, inside.uniformRect.w, inside.uniformRect.h, 'D');
     } else {
         // Per-side border rendering
-        drawBorderSide(doc, item.x, renderY, item.x + item.w, renderY, t, colors.t, styles.t, 't', px2mm);
-        drawBorderSide(doc, item.x, renderY + item.h, item.x + item.w, renderY + item.h, b, colors.b, styles.b, 'b', px2mm);
-        drawBorderSide(doc, item.x, renderY, item.x, renderY + item.h, l, colors.l, styles.l, 'l', px2mm);
-        drawBorderSide(doc, item.x + item.w, renderY, item.x + item.w, renderY + item.h, r, colors.r, styles.r, 'r', px2mm);
+        drawBorderSide(doc, inside.top.x1, inside.top.y1, inside.top.x2, inside.top.y2, t, colors.t, styles.t, 't', px2mm);
+        drawBorderSide(doc, inside.bottom.x1, inside.bottom.y1, inside.bottom.x2, inside.bottom.y2, b, colors.b, styles.b, 'b', px2mm);
+        drawBorderSide(doc, inside.left.x1, inside.left.y1, inside.left.x2, inside.left.y2, l, colors.l, styles.l, 'l', px2mm);
+        drawBorderSide(doc, inside.right.x1, inside.right.y1, inside.right.x2, inside.right.y2, r, colors.r, styles.r, 'r', px2mm);
     }
 };

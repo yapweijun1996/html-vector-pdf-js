@@ -63,6 +63,7 @@ export const parseTextNode = (ctx: DomParseContext, txt: Text, shouldExclude: (e
   const contentLeftPx = contentBox.left;
   const contentRightPx = contentBox.right;
   const contentWidthPx = contentBox.width;
+  const inTableCell = layoutEl.tagName === 'TD' || layoutEl.tagName === 'TH' || layoutStyle.display === 'table-cell';
 
   const finalStr = applyTextTransform(str, fontStyle);
 
@@ -92,8 +93,31 @@ export const parseTextNode = (ctx: DomParseContext, txt: Text, shouldExclude: (e
   const effectiveLineBoxPx = hasReliableMeasuredLineBox ? measuredLineBoxPx : lineHeightPx;
   const lineHeightMm = ctx.px2mm(effectiveLineBoxPx) * ctx.cfg.text.scale;
   const textWidthMm = ctx.px2mm(firstRect.width);
+  const resolveVerticalAlign = (): 'top' | 'middle' | 'bottom' => {
+    const attr = (layoutEl.getAttribute('valign') || '').toLowerCase();
+    const css = (layoutStyle.verticalAlign || '').toLowerCase();
+    const raw = attr || css;
+    if (raw === 'middle' || raw === 'center') return 'middle';
+    if (raw === 'bottom' || raw === 'text-bottom') return 'bottom';
+    return 'top';
+  };
+  const shouldUseTableCellPacking =
+    inTableCell &&
+    !collapseTableInfo &&
+    !browserWrapped &&
+    effectiveLineBoxPx > 0 &&
+    contentBox.height > 0;
+  const verticalAlign = shouldUseTableCellPacking ? resolveVerticalAlign() : 'top';
+  const packedYOffsetPx = !shouldUseTableCellPacking
+    ? 0
+    : verticalAlign === 'middle'
+      ? Math.max(0, (contentBox.height - effectiveLineBoxPx) / 2)
+      : verticalAlign === 'bottom'
+        ? Math.max(0, contentBox.height - effectiveLineBoxPx)
+        : 0;
+  const textTopPx = shouldUseTableCellPacking ? contentBox.top + packedYOffsetPx : firstRect.top;
 
-  const y = ctx.px2mm(firstRect.top - ctx.rootRect.top);
+  const y = ctx.px2mm(textTopPx - ctx.rootRect.top);
   const h = ctx.px2mm(firstRect.height);
   const baselineOffsetPx = computeAlphabeticBaselineOffsetPx(fontStyle, effectiveLineBoxPx);
   const baselineOffset = ctx.px2mm(baselineOffsetPx) * ctx.cfg.text.scale;
@@ -102,7 +126,6 @@ export const parseTextNode = (ctx: DomParseContext, txt: Text, shouldExclude: (e
   const xLeftMm = ctx.cfg.margins.left + ctx.px2mm(contentLeftPx - ctx.rootRect.left);
   const xRightMm = ctx.cfg.margins.left + ctx.px2mm(contentRightPx - ctx.rootRect.left);
   const xMmCellAligned = textAlign === 'right' ? xRightMm : textAlign === 'center' ? (xLeftMm + xRightMm) / 2 : xLeftMm;
-  const inTableCell = layoutEl.tagName === 'TD' || layoutEl.tagName === 'TH';
   // Standard bucket calculation based on RELATIVE top position (not viewport)
   const relativeTopPx = firstRect.top - ctx.rootRect.top;
   const rawBucketPx = Math.round(relativeTopPx / 2) * 2;

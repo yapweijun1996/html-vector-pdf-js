@@ -41,6 +41,12 @@
   - added a dedicated box-model helper for border-box / content-box conversion
   - form-field text anchoring now respects border + padding on all sides
   - nested inline wrappers with padding/borders now reduce available text width consistently
+- Ordinary borders now render with inside-stroke semantics instead of expanding outward from the box edge.
+  - `.prowitem`-style single-row tables no longer accumulate half-stroke height on every bottom border
+  - uniform border rectangles are inset by half the stroke width on all sides
+- Single-line non-collapse table cells now use content-box packing for vertical placement.
+  - `valign="middle"` / `vertical-align: middle` cells derive baseline from cell content height
+  - this specifically targets logo/header/title style cells where text should visually sit inside the table box, not just follow the fragment top
 - `dist/html_to_vector_pdf.js` was rebuilt with `build:with-fonts`.
 - Full test suite passed under temporary `Node 20` runtime.
-  - current status: `23` test files, `101` tests passing
+  - current status: `25` test files, `104` tests passing
