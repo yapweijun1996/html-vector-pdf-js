@@ -1,6 +1,7 @@
 import { PdfConfig } from '../pdfConfig';
 import { RenderItem } from '../renderItems';
 import { buildTextStyleKey } from '../textLayout';
+import type { CollapseBorderCandidate, CollapseTableInfo } from './collapsedBorders';
 
 export type ParsedElement = { items: RenderItem[]; pageBreakBeforeYs: number[] };
 
@@ -13,8 +14,11 @@ export interface DomParseContext {
   items: RenderItem[];
   aggregatedTextByKey: Map<string, RenderItem>;
   getLayoutId: (el: Element) => number;
+  getCollapseTableInfo: (el: Element | null) => CollapseTableInfo | null;
   cellHasMixedTextStyles: (cell: Element) => boolean;
   cellLastTextBucket?: Map<number, number>;
+  collapsedBorderCandidates: CollapseBorderCandidate[];
+  collapseBorderSourceOrder: number;
   /** Containers handled by PDF-first text engine; descendant text nodes should be skipped. */
   skipTextContainers?: WeakSet<HTMLElement>;
 }

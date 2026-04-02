@@ -1,7 +1,7 @@
-import { parsePx } from '../pdfUnits';
 import { computeAlphabeticBaselineOffsetPx } from '../textBaseline';
 import { parseLineHeightPx } from '../textLayout';
 import { DomParseContext } from './context';
+import { getContentBoxFromRectPx } from './boxModel';
 
 export const maybeAddFormFieldValueText = (
   ctx: DomParseContext,
@@ -38,13 +38,10 @@ export const maybeAddFormFieldValueText = (
   else if (tt === 'capitalize') valueText = valueText.replace(/\b[a-z]/gi, (l) => l.toUpperCase());
 
   // Calculate text position similar to parseTextNode but using element bounds
-  const paddingL = parsePx(style.paddingLeft);
-  const paddingR = parsePx(style.paddingRight);
-  const paddingT = parsePx(style.paddingTop);
-
-  const contentLeftPx = rect.left + paddingL;
-  const contentRightPx = rect.right - paddingR;
-  const contentWidthPx = Math.max(0, contentRightPx - contentLeftPx);
+  const contentBox = getContentBoxFromRectPx(rect, style);
+  const contentLeftPx = contentBox.left;
+  const contentRightPx = contentBox.right;
+  const contentWidthPx = contentBox.width;
 
   // Text alignment inside input
   const textAlign = style.textAlign || 'left';
@@ -52,24 +49,28 @@ export const maybeAddFormFieldValueText = (
   const fontSizePx = parseFloat(style.fontSize);
   const lineHeightPx = parseLineHeightPx(style.lineHeight, fontSizePx);
   const lineHeightMm = ctx.px2mm(lineHeightPx) * ctx.cfg.text.scale;
-
   // Vertical alignment approx (inputs usually center text vertically if single line)
-  const contentHeightPx = rect.height - paddingT - parsePx(style.paddingBottom);
-  let yOffsetPx = paddingT; // Default top aligned
+  const contentHeightPx = contentBox.height;
+  const textLineBoxPx = Math.min(
+    lineHeightPx,
+    contentHeightPx > 0 ? contentHeightPx : lineHeightPx
+  );
+
+  let yOffsetPx = 0; // Default top aligned within the content box
 
   // Simple heuristic for vertical center in inputs
-  if (el.tagName === 'INPUT' && contentHeightPx > fontSizePx) {
-    yOffsetPx += (contentHeightPx - fontSizePx) / 2;
+  if (el.tagName === 'INPUT' && contentHeightPx > textLineBoxPx) {
+    yOffsetPx += (contentHeightPx - textLineBoxPx) / 2;
   }
 
-  const baselineOffsetPx = computeAlphabeticBaselineOffsetPx(style, fontSizePx); // approx using font size as height
+  const baselineOffsetPx = computeAlphabeticBaselineOffsetPx(style, textLineBoxPx);
   const baselineOffset = ctx.px2mm(baselineOffsetPx) * ctx.cfg.text.scale;
 
   const xLeftMm = ctx.cfg.margins.left + ctx.px2mm(contentLeftPx - ctx.rootRect.left);
   const xRightMm = ctx.cfg.margins.left + ctx.px2mm(contentRightPx - ctx.rootRect.left);
   const textX =
     textAlign === 'right' ? xRightMm : textAlign === 'center' ? (xLeftMm + xRightMm) / 2 : xLeftMm;
-  const textY = ctx.px2mm(rect.top + yOffsetPx - ctx.rootRect.top) + baselineOffset;
+  const textY = ctx.px2mm(contentBox.top + yOffsetPx - ctx.rootRect.top) + baselineOffset;
 
   ctx.items.push({
     type: 'text',

@@ -61,7 +61,10 @@ describe('parseElementNode', () => {
       items: [],
       aggregatedTextByKey: new Map(),
       getLayoutId: vi.fn(),
-      cellHasMixedTextStyles: vi.fn()
+      getCollapseTableInfo: vi.fn().mockReturnValue(null),
+      cellHasMixedTextStyles: vi.fn(),
+      collapsedBorderCandidates: [],
+      collapseBorderSourceOrder: 0
     };
 
     // Create a dummy element

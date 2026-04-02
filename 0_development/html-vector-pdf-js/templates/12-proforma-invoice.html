@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proforma Invoice - PI-2026-0019</title>
+<link rel="stylesheet" href="../template-base.css">
+<style>
+:root { --accent: #4a148c; }
+/* template overrides */
+.pheader h1 { color: var(--accent); font-size: 18pt; letter-spacing: 2px; margin: 0; }
+.pheader .pi-number { color: #6a1b9a; font-weight: bold; font-size: 12pt; }
+.customs-banner { border: 2px dashed #7b1fa2; background: #ede7f6; color: var(--accent); font-weight: bold; text-align: center; padding: 8px; font-size: 10pt; margin: 4px 0; }
+.card-header { background: var(--accent); color: white; padding: 5px 8px; font-weight: bold; font-size: 9pt; }
+.card-body { border: 1px solid #ce93d8; padding: 6px 8px; background: #f3e5f5; }
+.prowheader th { background: var(--accent); color: white; font-weight: bold; font-size: 8pt; padding: 4px 5px; }
+.prowitem td { border-bottom: 1px solid #e0e0e0; padding: 3px 5px; }
+.cif-total { background: var(--accent); color: white; font-weight: bold; font-size: 10pt; padding: 4px 8px; }
+.ship-box { border: 1px solid #ce93d8; background: #f3e5f5; text-align: center; padding: 6px; }
+.ship-box .label { font-size: 7pt; color: #6a1b9a; font-weight: bold; text-transform: uppercase; }
+.ship-box .value { font-size: 9pt; font-weight: bold; color: var(--accent); }
+.bank-header { background: #ede7f6; color: var(--accent); font-weight: bold; padding: 5px 8px; border: 2px solid #7b1fa2; border-bottom: 1px solid #ce93d8; }
+.bank-cell { padding: 3px 8px; font-size: 9pt; border-left: 2px solid #7b1fa2; border-right: 2px solid #7b1fa2; }
+.bank-cell-last { border-bottom: 2px solid #7b1fa2; }
+.bank-label { font-weight: bold; }
+.terms-label { color: var(--accent); font-weight: bold; }
+.sig-block { border-top: 1px solid var(--accent); margin-top: 45px; padding-top: 3px; font-weight: bold; font-size: 8pt; color: var(--accent); text-align: center; }
+</style>
+</head>
+<body>
+<div class="controls">
+  <a href="../index.html">&larr; Back to Gallery</a>
+  <button class="btn-pdf" onclick="downloadPdf('12-proforma-invoice.pdf')">Download PDF</button>
+</div>
+<div class="printform paper_width"
+     data-papersize-width="750" data-papersize-height="1050"
+     data-repeat-header="y" data-repeat-docinfo="y" data-repeat-rowheader="y"
+     data-repeat-footer-logo="y" data-repeat-footer-pagenum="y"
+     data-insert-dummy-row-item-while-format-table="y">
+
+  <!-- Page Header -->
+  <div class="pheader block">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="480" style="vertical-align:middle;">
+          <h1>PROFORMA INVOICE</h1>
+        </td>
+        <td width="270" style="vertical-align:top;text-align:right;">
+          <span class="pi-number" contenteditable="true">PI-2026-0019</span><br>
+          <span style="font-size:8pt;">Date: <span contenteditable="true">02 April 2026</span></span>
+        </td>
+      </tr>
+    </table>
+    <div style="border-top:3px solid var(--accent);margin:4px 0 0;"></div>
+    <div class="customs-banner">FOR CUSTOMS / PREPAYMENT PURPOSES ONLY &mdash; NOT A TAX INVOICE</div>
+  </div>
+
+  <!-- Document Info: Seller/Buyer Cards -->
+  <div class="pdocinfo block">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="360" style="vertical-align:top;padding-right:10px;">
+          <table width="100%" cellspacing="0" cellpadding="0">
+            <tr><td class="card-header">SELLER</td></tr>
+            <tr><td class="card-body">
+              <span style="font-weight:bold;" contenteditable="true">ACME CORPORATION PTE LTD</span><br>
+              <span contenteditable="true">10 Anson Road, #20-05 International Plaza<br>Singapore 079903</span><br>
+              <span contenteditable="true">Tel: +65 6223 4567</span><br>
+              <span contenteditable="true">Email: exports@acmecorp.com.sg</span><br>
+              <span style="font-size:8pt;color:#666;">Co. Reg. 200312345K</span>
+            </td></tr>
+          </table>
+        </td>
+        <td width="10"></td>
+        <td width="380" style="vertical-align:top;">
+          <table width="100%" cellspacing="0" cellpadding="0">
+            <tr><td class="card-header">BUYER</td></tr>
+            <tr><td class="card-body">
+              <span style="font-weight:bold;" contenteditable="true">IOTA DISTRIBUTION LLC</span><br>
+              <span contenteditable="true">Office 1204, Al Shafar Tower 1<br>Tecom, Barsha Heights<br>Dubai, UAE</span><br>
+              <span contenteditable="true">Tel: +971 4 392 8800</span><br>
+              <span contenteditable="true">Attn: Mr. Ahmed Al-Farsi</span>
+            </td></tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Header -->
+  <div class="prowheader">
+    <table class="paper_width">
+      <tr>
+        <th width="30" style="text-align:center;">No</th>
+        <th width="80">Item Code</th>
+        <th width="250">Description of Goods</th>
+        <th width="40" style="text-align:center;">Qty</th>
+        <th width="40" style="text-align:center;">Unit</th>
+        <th width="100" style="text-align:right;">FOB Price (USD)</th>
+        <th width="100" style="text-align:right;">HS Code</th>
+        <th width="110" style="text-align:right;">Amount (USD)</th>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Item 1 -->
+  <div class="prowitem">
+    <table class="paper_width">
+      <tr>
+        <td width="30" style="text-align:center;">1</td>
+        <td width="80" contenteditable="true">HYD-3200</td>
+        <td width="250" contenteditable="true">Hydraulic Power Unit 32L/min 200bar</td>
+        <td width="40" style="text-align:center;" contenteditable="true">2</td>
+        <td width="40" style="text-align:center;">unit</td>
+        <td width="100" style="text-align:right;" contenteditable="true">4,250.00</td>
+        <td width="100" style="text-align:right;" contenteditable="true">8413.50</td>
+        <td width="110" style="text-align:right;">8,500.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Item 2 -->
+  <div class="prowitem">
+    <table class="paper_width">
+      <tr>
+        <td width="30" style="text-align:center;">2</td>
+        <td width="80" contenteditable="true">PMP-1080</td>
+        <td width="250" contenteditable="true">Industrial Centrifugal Pump 10HP SS316</td>
+        <td width="40" style="text-align:center;" contenteditable="true">3</td>
+        <td width="40" style="text-align:center;">unit</td>
+        <td width="100" style="text-align:right;" contenteditable="true">1,890.00</td>
+        <td width="100" style="text-align:right;" contenteditable="true">8413.70</td>
+        <td width="110" style="text-align:right;">5,670.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Item 3 -->
+  <div class="prowitem">
+    <table class="paper_width">
+      <tr>
+        <td width="30" style="text-align:center;">3</td>
+        <td width="80" contenteditable="true">VLV-4520</td>
+        <td width="250" contenteditable="true">Pneumatic Ball Valve DN50 PN40 Actuated</td>
+        <td width="40" style="text-align:center;" contenteditable="true">10</td>
+        <td width="40" style="text-align:center;">unit</td>
+        <td width="100" style="text-align:right;" contenteditable="true">385.00</td>
+        <td width="100" style="text-align:right;" contenteditable="true">8481.80</td>
+        <td width="110" style="text-align:right;">3,850.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Item 4 -->
+  <div class="prowitem">
+    <table class="paper_width">
+      <tr>
+        <td width="30" style="text-align:center;">4</td>
+        <td width="80" contenteditable="true">FLT-2250</td>
+        <td width="250" contenteditable="true">HEPA Filter Cartridge 0.3 micron Industrial</td>
+        <td width="40" style="text-align:center;" contenteditable="true">20</td>
+        <td width="40" style="text-align:center;">pcs</td>
+        <td width="100" style="text-align:right;" contenteditable="true">175.00</td>
+        <td width="100" style="text-align:right;" contenteditable="true">8421.39</td>
+        <td width="110" style="text-align:right;">3,500.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Item 5 -->
+  <div class="prowitem">
+    <table class="paper_width">
+      <tr>
+        <td width="30" style="text-align:center;">5</td>
+        <td width="80" contenteditable="true">CMP-7600</td>
+        <td width="250" contenteditable="true">Air Compressor 7.5kW Screw Type Silent</td>
+        <td width="40" style="text-align:center;" contenteditable="true">1</td>
+        <td width="40" style="text-align:center;">unit</td>
+        <td width="100" style="text-align:right;" contenteditable="true">6,480.00</td>
+        <td width="100" style="text-align:right;" contenteditable="true">8414.40</td>
+        <td width="110" style="text-align:right;">6,480.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Item 6 -->
+  <div class="prowitem">
+    <table class="paper_width">
+      <tr>
+        <td width="30" style="text-align:center;">6</td>
+        <td width="80" contenteditable="true">GEN-2100</td>
+        <td width="250" contenteditable="true">Diesel Generator Set 50kVA 3-Phase</td>
+        <td width="40" style="text-align:center;" contenteditable="true">1</td>
+        <td width="40" style="text-align:center;">unit</td>
+        <td width="100" style="text-align:right;" contenteditable="true">8,200.00</td>
+        <td width="100" style="text-align:right;" contenteditable="true">8502.13</td>
+        <td width="110" style="text-align:right;">8,200.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Item 7 -->
+  <div class="prowitem">
+    <table class="paper_width">
+      <tr>
+        <td width="30" style="text-align:center;">7</td>
+        <td width="80" contenteditable="true">HEX-4400</td>
+        <td width="250" contenteditable="true">Plate Heat Exchanger 50kW SS316L</td>
+        <td width="40" style="text-align:center;" contenteditable="true">2</td>
+        <td width="40" style="text-align:center;">unit</td>
+        <td width="100" style="text-align:right;" contenteditable="true">3,150.00</td>
+        <td width="100" style="text-align:right;" contenteditable="true">8419.50</td>
+        <td width="110" style="text-align:right;">6,300.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Item 8 -->
+  <div class="prowitem">
+    <table class="paper_width">
+      <tr>
+        <td width="30" style="text-align:center;">8</td>
+        <td width="80" contenteditable="true">TNK-1200</td>
+        <td width="250" contenteditable="true">Stainless Steel Storage Tank 1000L Vertical</td>
+        <td width="40" style="text-align:center;" contenteditable="true">2</td>
+        <td width="40" style="text-align:center;">unit</td>
+        <td width="100" style="text-align:right;" contenteditable="true">2,800.00</td>
+        <td width="100" style="text-align:right;" contenteditable="true">7309.00</td>
+        <td width="110" style="text-align:right;">5,600.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Item 9 -->
+  <div class="prowitem">
+    <table class="paper_width">
+      <tr>
+        <td width="30" style="text-align:center;">9</td>
+        <td width="80" contenteditable="true">AGT-3300</td>
+        <td width="250" contenteditable="true">Pneumatic Agitator Mixer 1.5kW SS Shaft</td>
+        <td width="40" style="text-align:center;" contenteditable="true">3</td>
+        <td width="40" style="text-align:center;">unit</td>
+        <td width="100" style="text-align:right;" contenteditable="true">1,450.00</td>
+        <td width="100" style="text-align:right;" contenteditable="true">8479.82</td>
+        <td width="110" style="text-align:right;">4,350.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Item 10 -->
+  <div class="prowitem">
+    <table class="paper_width">
+      <tr>
+        <td width="30" style="text-align:center;">10</td>
+        <td width="80" contenteditable="true">CVY-5500</td>
+        <td width="250" contenteditable="true">Belt Conveyor System 6m PVC Food Grade</td>
+        <td width="40" style="text-align:center;" contenteditable="true">1</td>
+        <td width="40" style="text-align:center;">set</td>
+        <td width="100" style="text-align:right;" contenteditable="true">5,800.00</td>
+        <td width="100" style="text-align:right;" contenteditable="true">8428.33</td>
+        <td width="110" style="text-align:right;">5,800.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Item 11 -->
+  <div class="prowitem">
+    <table class="paper_width">
+      <tr>
+        <td width="30" style="text-align:center;">11</td>
+        <td width="80" contenteditable="true">WGH-2200</td>
+        <td width="250" contenteditable="true">Industrial Platform Weighing Scale 500kg</td>
+        <td width="40" style="text-align:center;" contenteditable="true">2</td>
+        <td width="40" style="text-align:center;">unit</td>
+        <td width="100" style="text-align:right;" contenteditable="true">980.00</td>
+        <td width="100" style="text-align:right;" contenteditable="true">8423.82</td>
+        <td width="110" style="text-align:right;">1,960.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Item 12 -->
+  <div class="prowitem">
+    <table class="paper_width">
+      <tr>
+        <td width="30" style="text-align:center;">12</td>
+        <td width="80" contenteditable="true">SPR-6600</td>
+        <td width="250" contenteditable="true">Spare Parts Kit for Centrifugal Pump</td>
+        <td width="40" style="text-align:center;" contenteditable="true">3</td>
+        <td width="40" style="text-align:center;">set</td>
+        <td width="100" style="text-align:right;" contenteditable="true">420.00</td>
+        <td width="100" style="text-align:right;" contenteditable="true">8413.91</td>
+        <td width="110" style="text-align:right;">1,260.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Item 13 -->
+  <div class="prowitem">
+    <table class="paper_width">
+      <tr>
+        <td width="30" style="text-align:center;">13</td>
+        <td width="80" contenteditable="true">PNL-7700</td>
+        <td width="250" contenteditable="true">Electrical Control Panel IP54 800x600x250</td>
+        <td width="40" style="text-align:center;" contenteditable="true">2</td>
+        <td width="40" style="text-align:center;">unit</td>
+        <td width="100" style="text-align:right;" contenteditable="true">2,350.00</td>
+        <td width="100" style="text-align:right;" contenteditable="true">8537.10</td>
+        <td width="110" style="text-align:right;">4,700.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Terms: Totals, Shipping, Bank, Payment, Signatures -->
+  <div class="prowitem"><table class="paper_width" style="border:none;">
+    <tr>
+      <td colspan="6" width="530"></td>
+      <td width="110" style="text-align:right;padding:3px 4px;color:var(--accent);font-weight:bold;">FOB Subtotal:</td>
+      <td width="110" style="text-align:right;padding:3px 4px;border-top:1px solid var(--accent);" contenteditable="true">USD 28,000.00</td>
+    </tr>
+    <tr>
+      <td colspan="6"></td>
+      <td style="text-align:right;padding:3px 4px;color:var(--accent);">Freight:</td>
+      <td style="text-align:right;padding:3px 4px;" contenteditable="true">USD 1,850.00</td>
+    </tr>
+    <tr>
+      <td colspan="6"></td>
+      <td style="text-align:right;padding:3px 4px;color:var(--accent);">Insurance:</td>
+      <td style="text-align:right;padding:3px 4px;" contenteditable="true">USD 298.50</td>
+    </tr>
+    <tr>
+      <td colspan="6"></td>
+      <td class="cif-total" style="text-align:right;">CIF TOTAL:</td>
+      <td class="cif-total" style="text-align:right;" contenteditable="true">USD 30,148.50</td>
+    </tr>
+    <tr>
+      <td colspan="8" style="padding:8px 0 4px;">
+        <table class="paper_width" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="250" style="padding-right:5px;">
+              <div class="ship-box">
+                <span class="label">Incoterms</span><br>
+                <span class="value" contenteditable="true">CIF Dubai</span>
+              </div>
+            </td>
+            <td width="250" style="padding:0 3px;">
+              <div class="ship-box">
+                <span class="label">Country of Origin</span><br>
+                <span class="value" contenteditable="true">Singapore</span>
+              </div>
+            </td>
+            <td width="250" style="padding-left:5px;">
+              <div class="ship-box">
+                <span class="label">Validity</span><br>
+                <span class="value" contenteditable="true">15 days from issue</span>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="8" style="padding:6px 0 0;">
+        <table class="paper_width" cellspacing="0" cellpadding="0">
+          <tr><td colspan="4" class="bank-header">BANK TRANSFER DETAILS</td></tr>
+          <tr>
+            <td width="120" class="bank-cell bank-label">Beneficiary:</td>
+            <td width="255" class="bank-cell" contenteditable="true">ACME Corporation Pte Ltd</td>
+            <td width="100" class="bank-cell bank-label">SWIFT:</td>
+            <td width="275" class="bank-cell" style="border-right:2px solid #7b1fa2;" contenteditable="true">DBSSSGSG</td>
+          </tr>
+          <tr>
+            <td class="bank-cell bank-label">Bank:</td>
+            <td class="bank-cell" contenteditable="true">DBS Bank Ltd, Singapore</td>
+            <td class="bank-cell bank-label">Account No.:</td>
+            <td class="bank-cell" style="border-right:2px solid #7b1fa2;" contenteditable="true">003-901234-5</td>
+          </tr>
+          <tr>
+            <td class="bank-cell bank-cell-last bank-label">Bank Address:</td>
+            <td colspan="3" class="bank-cell bank-cell-last" style="border-right:2px solid #7b1fa2;" contenteditable="true">12 Marina Boulevard, DBS Asia Central, Singapore 018982</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="8" style="padding:6px 0;font-size:8pt;line-height:1.5;">
+        <span class="terms-label">Payment:</span> <span contenteditable="true">100% T/T in advance before shipment</span><br>
+        <span class="terms-label">Delivery:</span> <span contenteditable="true">Within 14 working days upon receipt of payment</span><br>
+        <span class="terms-label">Packing:</span> <span contenteditable="true">Standard export packing on wooden pallets, fumigation certified</span>
+      </td>
+    </tr>
+  </table>
+
+  <!-- Signature Footer -->
+  <div class="pfooter block">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="375" style="text-align:center;vertical-align:bottom;padding:0 20px;">
+          <div class="sig-block">Authorized Signatory (Seller)</div>
+          <div style="font-size:7pt;color:#666;">ACME Corporation Pte Ltd<br>Date: ___________</div>
+        </td>
+        <td width="375" style="text-align:center;vertical-align:bottom;padding:0 20px;">
+          <div class="sig-block">Accepted By (Buyer)</div>
+          <div style="font-size:7pt;color:#666;">IOTA Distribution LLC<br>Date: ___________</div>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="pfooter_logo">ACME Corporation Pte Ltd</div>
+  <div class="pfooter_pagenum">Page <span data-page-number></span> of <span data-page-total></span></div>
+</div>
+<script src="../dist/printform.js"></script>
+<script src="../dist/html_to_vector_pdf.js"></script>
+<script src="../template-base.js"></script>
+</body>
+</html>

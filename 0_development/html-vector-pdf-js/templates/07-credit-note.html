@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Credit Note - SUMMIT ENGINEERING PTE LTD</title>
+<link rel="stylesheet" href="../template-base.css">
+<style>
+:root { --accent: #e65100; }
+/* template overrides */
+.pheader { border-left: 5px solid var(--accent); }
+.pheader h1 { color: var(--accent); font-size: 18pt; margin: 0; }
+.pheader .cn-number { font-size: 11pt; font-weight: bold; color: #333; }
+.pdocinfo { background: #f5f5f5; }
+.pdocinfo b { color: var(--accent); }
+.reason-box { background: #fff3e0; border-left: 4px solid var(--accent); padding: 10px 12px; margin: 6px 0; }
+.reason-box b { color: var(--accent); }
+.prowheader th { background: var(--accent); color: white; font-weight: bold; font-size: 8pt; padding: 4px 5px; }
+.prowitem td { border-bottom: 1px solid #f0f0f0; padding: 3px 5px; }
+.credit-total { border: 1px solid var(--accent); padding: 8px 10px; text-align: center; }
+.credit-total .label { font-size: 8pt; color: var(--accent); font-weight: bold; }
+.credit-total .value { font-size: 14pt; font-weight: bold; color: var(--accent); }
+.note-line { font-size: 8pt; color: #555; border-top: 1px solid #ddd; padding: 6px 5px; }
+.sig-block { border-top: 1px solid #333; width: 200px; padding-top: 4px; font-size: 8pt; }
+</style>
+</head>
+<body>
+<div class="controls">
+  <a href="../index.html">&larr; Back to Gallery</a>
+  <button class="btn-pdf" onclick="downloadPdf('07-credit-note.pdf')">Download PDF</button>
+</div>
+<div class="printform paper_width"
+     data-papersize-width="750" data-papersize-height="1050"
+     data-repeat-header="y" data-repeat-docinfo="y" data-repeat-rowheader="y"
+     data-repeat-footer-logo="y" data-repeat-footer-pagenum="y"
+     data-insert-dummy-row-item-while-format-table="y">
+
+  <!-- Page Header -->
+  <div class="pheader block">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="450" style="padding:4px 8px;">
+          <h1>CREDIT NOTE</h1>
+          <small style="color:#666;">Summit Engineering Pte Ltd</small>
+        </td>
+        <td width="300" align="right" style="padding:10px 8px 4px;vertical-align:bottom;">
+          <span class="cn-number" contenteditable="true">CN-2026-0042</span>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Document Info -->
+  <div class="pdocinfo block grid">
+    <div><b>From:</b> <span contenteditable="true">Summit Engineering Pte Ltd</span></div>
+    <div><b>To:</b> <span contenteditable="true">Coastal Marine Pte Ltd</span></div>
+    <div><b>Date:</b> <span contenteditable="true">02 April 2026</span></div>
+    <div><b>Ref Invoice:</b> <span contenteditable="true">INV-2026-0195</span></div>
+  </div>
+
+  <!-- Reason for Credit (memo style) -->
+  <div class="reason-box">
+    <b>REASON FOR CREDIT:</b><br>
+    <span contenteditable="true">Overcharge on Invoice INV-2026-0195 dated 18 March 2026. The client was billed at the old rate of $185/hour instead of the agreed revised rate of $160/hour for mechanical drafting services. This credit note adjusts the difference for 24 billable hours, plus corrects an incorrectly applied material surcharge.</span>
+  </div>
+
+  <!-- Row Header -->
+  <div class="prowheader">
+    <table class="paper_width">
+      <tr>
+        <th width="40" style="text-align:center;">No.</th>
+        <th width="400">Description</th>
+        <th width="155" style="text-align:right;">Credit (SGD)</th>
+        <th width="155" style="text-align:right;">GST (SGD)</th>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Item 1 -->
+  <div class="prowitem">
+    <table class="paper_width">
+      <tr>
+        <td width="40" style="text-align:center;">1</td>
+        <td width="400" contenteditable="true">Rate adjustment: 24 hrs x ($185 - $160) = $600 overcharge</td>
+        <td width="155" style="text-align:right;" contenteditable="true">600.00</td>
+        <td width="155" style="text-align:right;" contenteditable="true">54.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Item 2 -->
+  <div class="prowitem">
+    <table class="paper_width">
+      <tr>
+        <td width="40" style="text-align:center;">2</td>
+        <td width="400" contenteditable="true">Material surcharge incorrectly applied (steel brackets)</td>
+        <td width="155" style="text-align:right;" contenteditable="true">245.00</td>
+        <td width="155" style="text-align:right;" contenteditable="true">22.05</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Item 3 -->
+  <div class="prowitem">
+    <table class="paper_width">
+      <tr>
+        <td width="40" style="text-align:center;">3</td>
+        <td width="400" contenteditable="true">Duplicate charge for site transport (removed)</td>
+        <td width="155" style="text-align:right;" contenteditable="true">80.00</td>
+        <td width="155" style="text-align:right;" contenteditable="true">7.20</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Terms / Totals -->
+  <div class="prowitem"><table class="paper_width" style="border:none;">
+    <tr>
+      <td width="450"></td>
+      <td width="300">
+        <div class="credit-total">
+          <span class="label">TOTAL CREDIT (INCL. GST):</span><br>
+          <span class="value" contenteditable="true">SGD 1,008.25</span>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" class="note-line">
+        This credit will be applied to your next invoice or refunded on request.
+      </td>
+    </tr>
+  </table>
+
+  <!-- Signature Footer -->
+  <div class="pfooter block">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="500"></td>
+        <td width="250">
+          <div class="sig-block">Issued By</div>
+          <div style="font-size:8pt;" contenteditable="true">Tan Mei Ling, Finance Manager</div>
+          <div style="font-size:7pt;color:#888;">Summit Engineering Pte Ltd</div>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="pfooter_logo">Summit Engineering Pte Ltd</div>
+  <div class="pfooter_pagenum">Page <span data-page-number></span> of <span data-page-total></span></div>
+</div>
+<script src="../dist/printform.js"></script>
+<script src="../dist/html_to_vector_pdf.js"></script>
+<script src="../template-base.js"></script>
+</body>
+</html>

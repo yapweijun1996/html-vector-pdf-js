@@ -64,8 +64,8 @@ export interface PdfConfig {
    */
   textEngine?: {
     mode?: 'legacy' | 'pdfFirst' | 'auto';
-    /** Tags to enable PDF-first text layout (default: ['P']). */
-    enabledTags?: Array<'P' | 'DIV'>;
+    /** Tags to enable PDF-first text layout. TD/TH use the legacy path (aggregation + chaining). */
+    enabledTags?: Array<'P' | 'DIV' | 'LI' | 'BLOCKQUOTE' | 'ARTICLE' | 'SECTION'>;
     /** Enable debug logging for the PDF-first text engine */
     debug?: boolean;
   };

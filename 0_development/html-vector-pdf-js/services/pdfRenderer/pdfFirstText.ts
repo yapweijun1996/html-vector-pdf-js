@@ -1,10 +1,11 @@
 import jsPDF from 'jspdf';
 import { PdfConfig } from '../pdfConfig';
-import { RenderItem } from '../renderItems';
+import { RenderItem, TextAlign } from '../renderItems';
 import { applyTextStyle } from './fonts';
 import { buildInlineRuns } from '../textEngine/runBuilder';
 import { tokenizeRuns } from '../textEngine/tokenizer';
 import { breakTokensToLines } from '../textEngine/lineBreaker';
+import { buildTextStyleKey } from '../textLayout';
 
 export const expandPdfFirstTextBlocks = (
   doc: jsPDF,
@@ -14,6 +15,8 @@ export const expandPdfFirstTextBlocks = (
   if ((cfg.textEngine?.mode || 'legacy') === 'legacy') return items;
 
   const out: RenderItem[] = [];
+  // Measurement cache: styleKey|text → width in mm
+  const widthCache = new Map<string, number>();
 
   for (const item of items) {
     if (item.type !== 'textBlock' || !item.element) {
@@ -26,18 +29,44 @@ export const expandPdfFirstTextBlocks = (
     const tokens = tokenizeRuns(runs);
 
     const measure = (text: string, tokenStyle: CSSStyleDeclaration): number => {
-      applyTextStyle(doc, tokenStyle, cfg.text.scale, text);
-      return doc.getTextWidth(text);
+      const cacheKey = `${buildTextStyleKey(tokenStyle)}|${text}`;
+      const cached = widthCache.get(cacheKey);
+      if (cached !== undefined) return cached;
+
+      applyTextStyle(doc, tokenStyle, cfg.text.scale, text, cfg.debug);
+      const w = doc.getTextWidth(text);
+      widthCache.set(cacheKey, w);
+      return w;
     };
 
     const lines = breakTokensToLines(tokens, item.w, measure);
     const lineHeightMm = item.lineHeightMm ?? item.h;
+    const align: TextAlign = item.textAlign || 'left';
 
     for (let lineIdx = 0; lineIdx < lines.length; lineIdx++) {
       const line = lines[lineIdx];
       const baselineY = item.y + lineIdx * lineHeightMm;
 
-      let cursorX = item.x;
+      // Calculate total line width for center/right alignment
+      let lineWidth = 0;
+      for (const t of line.tokens) {
+        if (t.kind === 'space') {
+          lineWidth += measure(' ', t.style);
+        } else {
+          lineWidth += measure(t.text, t.style);
+        }
+      }
+
+      // Determine starting X based on alignment
+      let cursorX: number;
+      if (align === 'right') {
+        cursorX = item.x - lineWidth;
+      } else if (align === 'center') {
+        cursorX = item.x - lineWidth / 2;
+      } else {
+        cursorX = item.x;
+      }
+
       for (const t of line.tokens) {
         if (t.kind === 'space') {
           cursorX += measure(' ', t.style);
@@ -45,7 +74,7 @@ export const expandPdfFirstTextBlocks = (
         }
 
         const text = t.text;
-        applyTextStyle(doc, t.style, cfg.text.scale, text);
+        applyTextStyle(doc, t.style, cfg.text.scale, text, cfg.debug);
         const w = doc.getTextWidth(text);
 
         out.push({
@@ -56,6 +85,7 @@ export const expandPdfFirstTextBlocks = (
           h: lineHeightMm,
           style: t.style,
           text,
+          textWidthMm: w,
           computedX: cursorX,
           textAlign: 'left',
           noWrap: true,

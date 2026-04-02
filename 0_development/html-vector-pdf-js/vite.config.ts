@@ -2,13 +2,20 @@ import path from 'path';
 import fs from 'fs/promises';
 import { defineConfig, Plugin } from 'vite';
 
+const ROOT_DIR = __dirname;
+const ROOT_DIST_DIR = path.resolve(ROOT_DIR, 'dist');
+const SAMPLE_PRINTFORM_DIST_PATH = path.resolve(
+  ROOT_DIR,
+  'sample-project/printform-js/dist/printform.js'
+);
+
 export default defineConfig(() => {
   return {
     server: {
       port: 3000,
       host: '0.0.0.0',
     },
-    plugins: [copyAssetsToDist()],
+    plugins: [servePrintformFromSampleDist(), copyAssetsToDist()],
     resolve: {
       alias: {
         '@': path.resolve(__dirname, '.'),
@@ -40,15 +47,46 @@ function rewriteDistScriptPath(html: string): string {
   );
 }
 
+function servePrintformFromSampleDist(): Plugin {
+  return {
+    name: 'serve-printform-from-sample-dist',
+    apply: 'serve',
+    configureServer(server) {
+      server.middlewares.use(async (req, res, next) => {
+        const urlPath = req.url ? req.url.split('?')[0] : '';
+        if (urlPath !== '/dist/printform.js') {
+          next();
+          return;
+        }
+
+        try {
+          const contents = await fs.readFile(SAMPLE_PRINTFORM_DIST_PATH, 'utf8');
+          res.statusCode = 200;
+          res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+          res.end(contents);
+        } catch (err: any) {
+          console.warn(
+            `[serve-printform-from-sample-dist] Missing sample printform bundle: ${SAMPLE_PRINTFORM_DIST_PATH}`
+          );
+          res.statusCode = 404;
+          res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+          res.end(
+            `Missing sample-project/printform-js/dist/printform.js.\nExpected path: ${SAMPLE_PRINTFORM_DIST_PATH}\n` +
+            'Build the sample printform bundle before loading templates from the root dev server.'
+          );
+        }
+      });
+    }
+  };
+}
+
 function copyAssetsToDist(): Plugin {
   return {
     name: 'copy-assets-to-dist',
     apply: 'build',
     async closeBundle() {
-      const distDir = path.resolve(__dirname, 'dist');
-
       try {
-        const entries = await fs.readdir(__dirname, { withFileTypes: true });
+        const entries = await fs.readdir(ROOT_DIR, { withFileTypes: true });
         const filesToCopy = entries
           .filter((entry) =>
             entry.isFile() &&
@@ -58,12 +96,12 @@ function copyAssetsToDist(): Plugin {
           )
           .map((entry) => entry.name);
 
-        await fs.mkdir(distDir, { recursive: true });
+        await fs.mkdir(ROOT_DIST_DIR, { recursive: true });
 
         await Promise.all(
           filesToCopy.map(async (fileName) => {
-            const srcPath = path.resolve(__dirname, fileName);
-            const outPath = path.resolve(distDir, fileName);
+            const srcPath = path.resolve(ROOT_DIR, fileName);
+            const outPath = path.resolve(ROOT_DIST_DIR, fileName);
 
             if (fileName.toLowerCase().endsWith('.html')) {
               const html = await fs.readFile(srcPath, 'utf8');
@@ -74,6 +112,17 @@ function copyAssetsToDist(): Plugin {
             }
           })
         );
+
+        try {
+          await fs.copyFile(
+            SAMPLE_PRINTFORM_DIST_PATH,
+            path.resolve(ROOT_DIST_DIR, 'printform.js')
+          );
+        } catch (err: any) {
+          console.warn(
+            `[copy-assets-to-dist] Missing sample printform bundle: ${SAMPLE_PRINTFORM_DIST_PATH}`
+          );
+        }
       } catch (err) {
         console.warn('[copy-assets-to-dist] Skipped:', err);
       }

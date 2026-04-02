@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payment Voucher - PV-2026-0198</title>
+<link rel="stylesheet" href="../template-base.css">
+<style>
+  :root { --accent: #1a237e; --accent-light: #3949ab; --accent-bg: #e8eaf6; --accent-border: #c5cae9; --accent-dark: #0d1642; }
+  .prowheader th, .prowheader_processed th { background: var(--accent); color: white; font-size: 8pt; text-transform: uppercase; letter-spacing: .04em; padding: 5px 6px; border: 1px solid var(--accent); }
+  .prowitem td, .prowitem_processed td { border: 1px solid #e5e7eb; padding: 4px 6px; }
+  .pv-number { font-family: 'Courier New', monospace; font-size: 14pt; font-weight: bold; color: var(--accent); letter-spacing: 2px; }
+  .payee-header { background: var(--accent); color: white; padding: 5px 10px; font-weight: bold; font-size: 10pt; }
+  .payee-body { border: 1px solid var(--accent-light); padding: 6px 10px; background: var(--accent-bg); }
+  .mono-text { font-family: 'Courier New', monospace; letter-spacing: 1px; font-weight: bold; }
+  .words-box { border: 2px solid var(--accent-light); background: var(--accent-bg); padding: 8px 12px; }
+  .words-text { font-style: italic; font-size: 10pt; color: var(--accent); }
+  .method-option { display: inline-block; padding: 3px 8px; border: 1px solid var(--accent-border); margin-right: 6px; font-size: 8pt; }
+  .method-selected { background: var(--accent-bg); border: 2px solid var(--accent); font-weight: bold; color: var(--accent); }
+  .chk { display: inline-block; width: 11px; height: 11px; border: 1px solid var(--accent); margin-right: 3px; vertical-align: middle; text-align: center; font-size: 7pt; line-height: 11px; }
+  .total-row td { background: var(--accent); color: white; font-weight: bold; font-size: 10pt; padding: 5px 8px; }
+  .bank-label { background: var(--accent-bg); font-weight: bold; color: var(--accent); font-size: 8pt; }
+  .bank-grid td { border: 1px solid var(--accent-border); padding: 4px 8px; }
+</style>
+</head>
+<body>
+<div class="controls">
+  <a href="../index.html">&larr; Back to Gallery</a>
+  <button class="btn-pdf" onclick="downloadPdf('payment-voucher.pdf')">Download PDF</button>
+</div>
+
+<div class="printform paper_width" data-papersize-width="750" data-papersize-height="1050" data-repeat-header="y" data-repeat-rowheader="y" data-repeat-footer-logo="y" data-repeat-footer-pagenum="y" data-insert-dummy-row-item-while-format-table="y">
+
+  <!-- ========== PAGE HEADER ========== -->
+  <table cellpadding="0" cellspacing="0" class="paper_width pheader">
+    <tr>
+      <td width="420" style="vertical-align:top;">
+        <span style="color:var(--accent);font-size:18pt;font-weight:bold;letter-spacing:2px;border-bottom:3px double var(--accent);padding-bottom:4px;display:inline-block;">PAYMENT VOUCHER</span><br>
+        <span style="font-size:8pt;color:#666;">ACME CORPORATION PTE LTD</span><br>
+        <span style="font-size:8pt;color:#666;">Co. Reg. No. 200312345K &nbsp;|&nbsp; GST Reg. No. M2-0012345-6</span>
+      </td>
+      <td width="330" style="vertical-align:top;text-align:right;">
+        <span class="pv-number" contenteditable="true">PV-2026-0198</span><br>
+        <span style="font-size:8pt;">Payment Date: <span contenteditable="true" style="font-weight:bold;">02 April 2026</span></span>
+      </td>
+    </tr>
+    <tr><td colspan="2" style="border-top:3px solid var(--accent);height:4px;"></td></tr>
+  </table>
+
+  <!-- ========== DOC INFO ========== -->
+  <table cellpadding="0" cellspacing="0" class="paper_width pdocinfo">
+    <tr><td class="payee-header">PAYEE</td></tr>
+    <tr><td class="payee-body">
+      <span style="font-size:11pt;font-weight:bold;" contenteditable="true">OMEGA SUPPLIES PTE LTD</span><br>
+      <span contenteditable="true">51 Ubi Avenue 1, #03-12, Paya Ubi Industrial Park, Singapore 408933</span><br>
+      <span contenteditable="true">Tel: +65 6745 8901 &nbsp;|&nbsp; Attn: Accounts Receivable Dept</span>
+    </td></tr>
+    <tr><td style="height:6px;"></td></tr>
+    <tr>
+      <td>
+        <table cellpadding="0" cellspacing="0" class="paper_width">
+          <tr>
+            <td width="375" style="vertical-align:top;">
+              <b>Cheque / TT Reference:</b><br>
+              <span class="mono-text" contenteditable="true">TT-DBS-20260402-0781</span>
+            </td>
+            <td width="375" style="vertical-align:top;">
+              <b>Value Date:</b> <span contenteditable="true">02 April 2026</span><br>
+              <b>Currency:</b> <span contenteditable="true">SGD &mdash; Singapore Dollar</span>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr><td style="height:6px;"></td></tr>
+    <tr>
+      <td style="padding:4px 0;">
+        <b>Payment Method:</b>&nbsp;&nbsp;
+        <span class="method-option method-selected"><span class="chk" style="color:var(--accent);">&check;</span> Telegraphic Transfer</span>
+        <span class="method-option"><span class="chk"></span> Cheque</span>
+        <span class="method-option"><span class="chk"></span> Cash</span>
+      </td>
+    </tr>
+    <tr><td style="height:6px;"></td></tr>
+  </table>
+
+  <!-- ========== ROW HEADER ========== -->
+  <table cellpadding="0" cellspacing="0" class="paper_width prowheader">
+    <tr>
+      <th width="35" style="text-align:center;">No</th>
+      <th width="100">Invoice No.</th>
+      <th width="305">Description</th>
+      <th width="100">Account Code</th>
+      <th width="210" style="text-align:right;">Amount (SGD)</th>
+    </tr>
+  </table>
+
+  <!-- ========== ROW ITEMS ========== -->
+  <table cellpadding="0" cellspacing="0" class="paper_width prowitem">
+    <tr>
+      <td width="35" style="text-align:center;">1</td>
+      <td width="100" contenteditable="true">INV-0891</td>
+      <td width="305" contenteditable="true">Supply of bearings and drive belts per PO-2026-0042</td>
+      <td width="100" contenteditable="true">5100-MRO</td>
+      <td width="210" style="text-align:right;" contenteditable="true">828.00</td>
+    </tr>
+  </table>
+
+  <table cellpadding="0" cellspacing="0" class="paper_width prowitem">
+    <tr>
+      <td width="35" style="text-align:center;">2</td>
+      <td width="100" contenteditable="true">INV-0903</td>
+      <td width="305" contenteditable="true">Supply of proximity sensors per PO-2026-0042</td>
+      <td width="100" contenteditable="true">5100-MRO</td>
+      <td width="210" style="text-align:right;" contenteditable="true">520.00</td>
+    </tr>
+  </table>
+
+  <table cellpadding="0" cellspacing="0" class="paper_width prowitem">
+    <tr>
+      <td width="35" style="text-align:center;">3</td>
+      <td width="100" contenteditable="true">INV-0915</td>
+      <td width="305" contenteditable="true">Supply of lubricants and grease per PO-2026-0055</td>
+      <td width="100" contenteditable="true">5200-CON</td>
+      <td width="210" style="text-align:right;" contenteditable="true">370.00</td>
+    </tr>
+  </table>
+
+  <table cellpadding="0" cellspacing="0" class="paper_width prowitem">
+    <tr>
+      <td width="35" style="text-align:center;">4</td>
+      <td width="100" contenteditable="true">INV-0928</td>
+      <td width="305" contenteditable="true">Supply of AC motor per PO-2026-0042</td>
+      <td width="100" contenteditable="true">5300-CAP</td>
+      <td width="210" style="text-align:right;" contenteditable="true">480.00</td>
+    </tr>
+  </table>
+
+  <table cellpadding="0" cellspacing="0" class="paper_width prowitem">
+    <tr>
+      <td width="35" style="text-align:center;">5</td>
+      <td width="100" contenteditable="true">INV-0941</td>
+      <td width="305" contenteditable="true">Supply of safety equipment per PO-2026-0060</td>
+      <td width="100" contenteditable="true">5100-MRO</td>
+      <td width="210" style="text-align:right;" contenteditable="true">615.00</td>
+    </tr>
+  </table>
+
+  <table cellpadding="0" cellspacing="0" class="paper_width prowitem">
+    <tr>
+      <td width="35" style="text-align:center;">6</td>
+      <td width="100" contenteditable="true">INV-0953</td>
+      <td width="305" contenteditable="true">Supply of electrical components per PO-2026-0063</td>
+      <td width="100" contenteditable="true">5300-CAP</td>
+      <td width="210" style="text-align:right;" contenteditable="true">1,240.00</td>
+    </tr>
+  </table>
+
+  <table cellpadding="0" cellspacing="0" class="paper_width prowitem">
+    <tr>
+      <td width="35" style="text-align:center;">7</td>
+      <td width="100" contenteditable="true">INV-0967</td>
+      <td width="305" contenteditable="true">Supply of hydraulic hoses and fittings per PO-2026-0068</td>
+      <td width="100" contenteditable="true">5200-CON</td>
+      <td width="210" style="text-align:right;" contenteditable="true">890.00</td>
+    </tr>
+  </table>
+
+  <table cellpadding="0" cellspacing="0" class="paper_width prowitem">
+    <tr>
+      <td width="35" style="text-align:center;">8</td>
+      <td width="100" contenteditable="true">INV-0978</td>
+      <td width="305" contenteditable="true">Supply of pneumatic cylinders per PO-2026-0070</td>
+      <td width="100" contenteditable="true">5300-CAP</td>
+      <td width="210" style="text-align:right;" contenteditable="true">1,560.00</td>
+    </tr>
+  </table>
+
+  <table cellpadding="0" cellspacing="0" class="paper_width prowitem">
+    <tr>
+      <td width="35" style="text-align:center;">9</td>
+      <td width="100" contenteditable="true">INV-0985</td>
+      <td width="305" contenteditable="true">Supply of welding consumables per PO-2026-0072</td>
+      <td width="100" contenteditable="true">5200-CON</td>
+      <td width="210" style="text-align:right;" contenteditable="true">435.00</td>
+    </tr>
+  </table>
+
+  <table cellpadding="0" cellspacing="0" class="paper_width prowitem">
+    <tr>
+      <td width="35" style="text-align:center;">10</td>
+      <td width="100" contenteditable="true">INV-0991</td>
+      <td width="305" contenteditable="true">Supply of hand tools and hardware per PO-2026-0075</td>
+      <td width="100" contenteditable="true">5100-MRO</td>
+      <td width="210" style="text-align:right;" contenteditable="true">720.00</td>
+    </tr>
+  </table>
+
+  <table cellpadding="0" cellspacing="0" class="paper_width prowitem">
+    <tr>
+      <td width="35" style="text-align:center;">11</td>
+      <td width="100" contenteditable="true">INV-1002</td>
+      <td width="305" contenteditable="true">Supply of filter cartridges per PO-2026-0078</td>
+      <td width="100" contenteditable="true">5200-CON</td>
+      <td width="210" style="text-align:right;" contenteditable="true">385.00</td>
+    </tr>
+  </table>
+
+  <table cellpadding="0" cellspacing="0" class="paper_width prowitem">
+    <tr>
+      <td width="35" style="text-align:center;">12</td>
+      <td width="100" contenteditable="true">INV-1015</td>
+      <td width="305" contenteditable="true">Supply of industrial adhesives and sealants per PO-2026-0080</td>
+      <td width="100" contenteditable="true">5200-CON</td>
+      <td width="210" style="text-align:right;" contenteditable="true">298.00</td>
+    </tr>
+  </table>
+
+  <!-- ========== PTAC ========== -->
+  <table cellpadding="0" cellspacing="0" class="paper_width ptac">
+    <tr class="total-row">
+      <td width="540" style="text-align:right;padding-right:10px;">TOTAL PAYMENT:</td>
+      <td width="210" style="text-align:right;" contenteditable="true">SGD 2,198.00</td>
+    </tr>
+    <tr><td colspan="2" style="height:6px;"></td></tr>
+    <tr>
+      <td colspan="2" class="words-box">
+        <span style="font-size:7pt;color:var(--accent);font-weight:bold;">AMOUNT IN WORDS</span><br>
+        <span class="words-text" contenteditable="true">Singapore Dollars Two Thousand One Hundred and Ninety-Eight Only</span>
+      </td>
+    </tr>
+    <tr><td colspan="2" style="height:6px;"></td></tr>
+    <tr>
+      <td colspan="2" style="font-weight:bold;color:var(--accent);padding-bottom:3px;font-size:9pt;">PAYEE BANK DETAILS</td>
+    </tr>
+  </table>
+  <table cellpadding="0" cellspacing="0" class="paper_width ptac bank-grid">
+    <tr>
+      <td width="120" class="bank-label">Bank Name</td>
+      <td width="255" contenteditable="true">OCBC Bank, Singapore</td>
+      <td width="120" class="bank-label">Account Name</td>
+      <td width="255" contenteditable="true">Omega Supplies Pte Ltd</td>
+    </tr>
+    <tr>
+      <td class="bank-label">Account No.</td>
+      <td contenteditable="true" class="mono-text">501-234567-001</td>
+      <td class="bank-label">SWIFT Code</td>
+      <td contenteditable="true" class="mono-text">OCBCSGSG</td>
+    </tr>
+    <tr>
+      <td class="bank-label">Branch</td>
+      <td colspan="3" contenteditable="true">Ubi Branch, 53 Ubi Avenue 1, Singapore 408934</td>
+    </tr>
+  </table>
+  <table cellpadding="0" cellspacing="0" class="paper_width ptac">
+    <tr><td colspan="3" style="height:6px;"></td></tr>
+    <tr>
+      <td colspan="3" style="font-size:8pt;">
+        <b>Remarks:</b> <span contenteditable="true">Consolidation of 4 invoices for April 2026 payment run. No credit notes applied.</span>
+      </td>
+    </tr>
+    <tr><td colspan="3" style="height:10px;"></td></tr>
+    <tr>
+      <td width="250" style="text-align:center;vertical-align:bottom;padding:0 8px;">
+        <div style="border-top:2px solid var(--accent);margin-top:45px;padding-top:3px;font-weight:bold;font-size:8pt;color:var(--accent);">Prepared By</div>
+        <div style="font-size:7pt;color:#666;">Name: ___________<br>Date: ___________</div>
+      </td>
+      <td width="250" style="text-align:center;vertical-align:bottom;padding:0 8px;">
+        <div style="border-top:2px solid var(--accent);margin-top:45px;padding-top:3px;font-weight:bold;font-size:8pt;color:var(--accent);">Checked By (Finance)</div>
+        <div style="font-size:7pt;color:#666;">Name: ___________<br>Date: ___________</div>
+      </td>
+      <td width="250" style="text-align:center;vertical-align:bottom;padding:0 8px;">
+        <div style="border-top:2px solid var(--accent);margin-top:45px;padding-top:3px;font-weight:bold;font-size:8pt;color:var(--accent);">Approved By (Director)</div>
+        <div style="font-size:7pt;color:#666;">Name: ___________<br>Date: ___________</div>
+      </td>
+    </tr>
+  </table>
+
+  <!-- ========== FOOTER ========== -->
+  <table cellpadding="0" cellspacing="0" class="paper_width pfooter">
+    <tr><td style="height:6px;"></td></tr>
+  </table>
+
+  <table cellpadding="0" cellspacing="0" class="paper_width pfooter_logo">
+    <tr>
+      <td style="text-align:center;font-size:8pt;color:#666;border-top:1px solid var(--accent);padding-top:4px;">
+        PV-2026-0198 &nbsp;|&nbsp; ACME Corporation Pte Ltd
+      </td>
+    </tr>
+  </table>
+
+  <table cellpadding="0" cellspacing="0" class="paper_width pfooter_pagenum">
+    <tr>
+      <td style="text-align:center;font-size:8pt;color:#999;padding-top:2px;"></td>
+    </tr>
+  </table>
+
+</div>
+
+<script src="../dist/printform.js"></script>
+<script src="../dist/html_to_vector_pdf.js"></script>
+<script src="../template-base.js"></script>
+</body>
+</html>

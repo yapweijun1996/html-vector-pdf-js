@@ -6,6 +6,23 @@ import { PdfConfig } from '../pdfConfig';
 import { applyTextStyle } from './fonts';
 import { DebugTextRow, TextAlign } from './types';
 
+const getRenderedLineWidthMm = (
+    doc: jsPDF,
+    lineText: string,
+    item: RenderItem,
+    totalLines: number
+): number => {
+    if (
+        totalLines === 1 &&
+        typeof item.textWidthMm === 'number' &&
+        item.textWidthMm > 0
+    ) {
+        return item.textWidthMm;
+    }
+
+    return doc.getTextWidth(lineText);
+};
+
 // ============================================================================
 // Text Rendering
 // ============================================================================
@@ -44,6 +61,7 @@ const calculateDecorationPositions = (
  */
 const drawTextDecorations = (
     doc: jsPDF,
+    item: RenderItem,
     lineText: string,
     x: number,
     baseY: number,
@@ -51,13 +69,14 @@ const drawTextDecorations = (
     lineHeightMm: number,
     fontSizeMm: number,
     align: TextAlign,
+    totalLines: number,
     color: [number, number, number],
     hasUnderline: boolean,
     hasLineThrough: boolean
 ): void => {
     if (!hasUnderline && !hasLineThrough) return;
 
-    const lineWidth = doc.getTextWidth(lineText);
+    const lineWidth = getRenderedLineWidthMm(doc, lineText, item, totalLines);
     let lineStartX = x;
     if (align === 'center') lineStartX = x - lineWidth / 2;
     else if (align === 'right') lineStartX = x - lineWidth;
@@ -99,12 +118,12 @@ export const renderText = (
 ): void => {
     if (item.type !== 'text' || !item.text) return;
 
-    applyTextStyle(doc, item.style, cfg.text.scale, item.text);
+    applyTextStyle(doc, item.style, cfg.text.scale, item.text, cfg.debug);
 
     const x = item.computedX ?? item.x;
     const align: TextAlign = (item.computedX != null ? 'left' : item.textAlign || 'left') as TextAlign;
     const maxWidthMm = item.maxWidthMm ?? 0;
-    const lineHeightMm = item.lineHeightMm ?? px2mm(parseFloat(item.style.fontSize)) * 1.2 * cfg.text.scale;
+    const lineHeightMm = item.lineHeightMm ?? item.h ?? px2mm(parseFloat(item.style.fontSize)) * 1.2 * cfg.text.scale;
     const textForPdfWidth = item.text.replaceAll('\u00A0', ' ');
     const pdfTextWidthMm = doc.getTextWidth(textForPdfWidth);
 
@@ -142,6 +161,7 @@ export const renderText = (
             const color = parseColor(item.style.color);
             drawTextDecorations(
                 doc,
+                item,
                 lineText,
                 x,
                 baseY,
@@ -149,6 +169,7 @@ export const renderText = (
                 lineHeightMm,
                 fontSizeMm,
                 align,
+                lines.length,
                 color,
                 hasUnderline,
                 hasLineThrough

@@ -1,11 +1,16 @@
 import { parseColor } from '../colors';
 import { DomParseContext } from './context';
+import { collectCollapsedBorderCandidates } from './collapsedBorders';
 
 export const maybeAddBorder = (
   ctx: DomParseContext,
+  el: HTMLElement,
   style: CSSStyleDeclaration,
+  rect: DOMRect,
   box: { x: number; y: number; w: number; h: number }
 ): void => {
+  if (collectCollapsedBorderCandidates(ctx, el, style, rect)) return;
+
   const bt = parseFloat(style.borderTopWidth);
   const br = parseFloat(style.borderRightWidth);
   const bb = parseFloat(style.borderBottomWidth);

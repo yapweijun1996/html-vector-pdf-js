@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Debit Note - VERTEX SUPPLY CHAIN PTE LTD</title>
+<link rel="stylesheet" href="../template-base.css">
+<style>
+:root { --accent: #880e4f; }
+/* template overrides */
+.pheader { border-top: 6px solid var(--accent); }
+.pheader h1 { color: var(--accent); font-size: 18pt; margin: 0; }
+.pheader small { color: #666; font-size: 8pt; }
+.notice-banner { background: #fce4ec; color: var(--accent); font-weight: bold; text-align: center; padding: 8px 10px; font-size: 9pt; border: 1px solid var(--accent); letter-spacing: 1px; margin: 4px 0; }
+.ref-bar { text-align: center; padding: 10px 5px; font-size: 10pt; background: #f5f5f5; border: 1px solid #ddd; }
+.ref-bar b { color: var(--accent); }
+.customer-card { border: 2px solid var(--accent); padding: 10px 12px; }
+.customer-card b.label { font-size: 9pt; color: var(--accent); }
+.prowheader th { background: var(--accent); color: white; font-weight: bold; font-size: 8pt; padding: 4px 5px; }
+.prowitem td { border-bottom: 1px solid #e0e0e0; padding: 3px 5px; }
+.totals-accent { color: var(--accent); font-weight: bold; }
+.total-bar-bg { background: var(--accent); color: white; font-weight: bold; padding: 6px 5px; }
+.payment-label { color: var(--accent); font-weight: bold; font-size: 9pt; }
+.warning-line { font-size: 8pt; color: var(--accent); font-weight: bold; border-top: 1px solid var(--accent); border-bottom: 1px solid var(--accent); padding: 10px 5px; }
+.sig-block { border-top: 1px solid #333; width: 200px; padding-top: 4px; font-size: 8pt; }
+</style>
+</head>
+<body>
+<div class="controls">
+  <a href="../index.html">&larr; Back to Gallery</a>
+  <button class="btn-pdf" onclick="downloadPdf('08-debit-note.pdf')">Download PDF</button>
+</div>
+<div class="printform paper_width"
+     data-papersize-width="750" data-papersize-height="1050"
+     data-repeat-header="y" data-repeat-docinfo="y" data-repeat-rowheader="y"
+     data-repeat-footer-logo="y" data-repeat-footer-pagenum="y"
+     data-insert-dummy-row-item-while-format-table="y">
+
+  <!-- Page Header -->
+  <div class="pheader block">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="480" style="padding:8px 5px 2px;">
+          <h1>DEBIT NOTE</h1>
+          <small contenteditable="true">Vertex Supply Chain Pte Ltd | 25 International Business Park, #03-50, Singapore 609916</small>
+        </td>
+        <td width="270" align="right" style="padding:8px 5px 2px;vertical-align:top;">
+          <span style="font-size:12pt;font-weight:bold;" contenteditable="true">DN-2026-0031</span><br>
+          <span style="font-size:8pt;color:#666;" contenteditable="true">02 April 2026</span>
+        </td>
+      </tr>
+    </table>
+    <div class="notice-banner">ADDITIONAL CHARGES &mdash; Please remit within 14 days</div>
+  </div>
+
+  <!-- Document Info -->
+  <div class="pdocinfo block">
+    <div class="ref-bar">
+      Reference: Original Invoice <b contenteditable="true">INV-2026-0289</b> dated <span contenteditable="true">12 March 2026</span>
+    </div>
+    <div class="customer-card" style="margin-top:6px;">
+      <b class="label">CUSTOMER</b><br>
+      <span style="font-weight:bold;font-size:10pt;" contenteditable="true">ATLAS FREIGHT SERVICES PTE LTD</span><br>
+      <span contenteditable="true">15 Changi Business Park Central 1, #06-08, Singapore 486057</span><br>
+      <span style="font-size:8pt;">Contact: <span contenteditable="true">Mr. Benjamin Koh</span> | Tel: <span contenteditable="true">+65 6549 2300</span></span>
+    </div>
+  </div>
+
+  <!-- Row Header -->
+  <div class="prowheader">
+    <table class="paper_width">
+      <tr>
+        <th width="30" style="text-align:center;">S/N</th>
+        <th width="380">Description</th>
+        <th width="60" style="text-align:center;">QTY</th>
+        <th width="140" style="text-align:right;">Unit Price (SGD)</th>
+        <th width="140" style="text-align:right;">Amount (SGD)</th>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Item 1 -->
+  <div class="prowitem">
+    <table class="paper_width">
+      <tr>
+        <td width="30" style="text-align:center;">1</td>
+        <td width="380" contenteditable="true">Additional express shipping surcharge (air freight upgrade, AWB #176-4521-8890)</td>
+        <td width="60" style="text-align:center;" contenteditable="true">1</td>
+        <td width="140" style="text-align:right;" contenteditable="true">1,280.00</td>
+        <td width="140" style="text-align:right;">1,280.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Item 2 -->
+  <div class="prowitem">
+    <table class="paper_width">
+      <tr>
+        <td width="30" style="text-align:center;">2</td>
+        <td width="380" contenteditable="true">Price adjustment — revised FOB unit cost for palletized cargo (40-ft HC container)</td>
+        <td width="60" style="text-align:center;" contenteditable="true">1</td>
+        <td width="140" style="text-align:right;" contenteditable="true">560.00</td>
+        <td width="140" style="text-align:right;">560.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Item 3 -->
+  <div class="prowitem">
+    <table class="paper_width">
+      <tr>
+        <td width="30" style="text-align:center;">3</td>
+        <td width="380" contenteditable="true">Special handling fee — hazardous materials documentation and compliance</td>
+        <td width="60" style="text-align:center;" contenteditable="true">1</td>
+        <td width="140" style="text-align:right;" contenteditable="true">420.00</td>
+        <td width="140" style="text-align:right;">420.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Terms / Totals / Bank Details -->
+  <div class="prowitem"><table class="paper_width" style="border:none;">
+    <tr>
+      <td width="470"></td>
+      <td width="140" style="text-align:right;padding:5px;font-weight:bold;font-size:8pt;">Subtotal:</td>
+      <td width="140" style="text-align:right;padding:5px;border-top:1px solid #333;" contenteditable="true">2,260.00</td>
+    </tr>
+    <tr>
+      <td></td>
+      <td style="text-align:right;padding:3px 5px;font-weight:bold;font-size:8pt;">GST 9%:</td>
+      <td style="text-align:right;padding:3px 5px;" contenteditable="true">203.40</td>
+    </tr>
+    <tr>
+      <td></td>
+      <td class="total-bar-bg" style="text-align:right;font-size:9pt;">TOTAL DEBIT:</td>
+      <td class="total-bar-bg" style="text-align:right;font-size:11pt;" contenteditable="true">SGD 2,463.40</td>
+    </tr>
+    <tr>
+      <td colspan="3" style="padding:10px 5px 4px;">
+        <span class="payment-label">PAYMENT DETAILS</span>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" style="padding:2px 5px;font-size:8pt;">
+        <b>Bank:</b> <span contenteditable="true">UOB, Jurong East Branch</span><br>
+        <b>Account Name:</b> <span contenteditable="true">Vertex Supply Chain Pte Ltd</span>
+      </td>
+      <td style="padding:2px 5px;font-size:8pt;">
+        <b>Account No:</b> <span contenteditable="true">392-104-567-8</span><br>
+        <b>SWIFT:</b> <span contenteditable="true">UOVBSGSG</span>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3" class="warning-line">
+        Failure to pay within 14 days will incur interest at 1.5% per month on the outstanding balance.
+      </td>
+    </tr>
+  </table>
+
+  <!-- Signature Footer -->
+  <div class="pfooter block">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="500"></td>
+        <td width="250">
+          <div class="sig-block">Authorised Signatory</div>
+          <div style="font-size:8pt;" contenteditable="true">Wong Chee Heng</div>
+          <div style="font-size:7pt;color:#888;">Vertex Supply Chain Pte Ltd</div>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="pfooter_logo">Vertex Supply Chain Pte Ltd</div>
+  <div class="pfooter_pagenum">Page <span data-page-number></span> of <span data-page-total></span></div>
+</div>
+<script src="../dist/printform.js"></script>
+<script src="../dist/html_to_vector_pdf.js"></script>
+<script src="../template-base.js"></script>
+</body>
+</html>

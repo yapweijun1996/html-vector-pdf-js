@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTML-to-Vector-PDF Stress Test</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Arial, Helvetica, sans-serif; background: #f0f0f0; padding: 20px; }
+    .controls {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+      background: #333; color: #fff; padding: 10px 20px;
+      display: flex; gap: 10px; align-items: center;
+    }
+    .controls button {
+      background: #4CAF50; color: white; border: none; padding: 8px 16px;
+      border-radius: 4px; cursor: pointer; font-size: 14px;
+    }
+    .controls button:hover { background: #45a049; }
+    .controls select { padding: 6px; border-radius: 4px; }
+
+    .page-container {
+      max-width: 210mm; margin: 60px auto 20px; background: white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15); padding: 15mm;
+    }
+
+    /* ====== TEST SECTIONS ====== */
+
+    /* 1. Typography stress */
+    .section-title {
+      font-size: 18px; font-weight: bold; color: #1a1a1a;
+      border-bottom: 2px solid #333; padding-bottom: 4px; margin: 20px 0 10px;
+    }
+    .typo-test p { margin-bottom: 6px; line-height: 1.5; }
+    .typo-test .mixed-inline {
+      font-size: 12px;
+    }
+    .typo-test .mixed-inline b { color: #c00; }
+    .typo-test .mixed-inline i { color: #060; }
+    .typo-test .mixed-inline u { color: #006; }
+    .typo-test .small { font-size: 9px; color: #666; }
+    .typo-test .large { font-size: 22px; font-weight: bold; }
+    .typo-test .serif { font-family: 'Times New Roman', Times, serif; }
+    .typo-test .mono { font-family: 'Courier New', Courier, monospace; font-size: 11px; background: #f5f5f5; padding: 2px 4px; }
+    .typo-test .strike { text-decoration: line-through; color: #999; }
+    .typo-test .underline { text-decoration: underline; }
+
+    /* 2. Table stress */
+    table { border-collapse: collapse; width: 100%; margin-bottom: 15px; }
+    th, td { border: 1px solid #333; padding: 5px 8px; font-size: 11px; }
+    th { background: #2c3e50; color: white; font-weight: bold; text-align: center; }
+    .align-left { text-align: left; }
+    .align-center { text-align: center; }
+    .align-right { text-align: right; }
+    .cell-highlight { background: #fff3cd; }
+    .cell-danger { background: #f8d7da; color: #721c24; }
+    .cell-success { background: #d4edda; color: #155724; }
+    .cell-nowrap { white-space: nowrap; }
+    .cell-wrap { word-wrap: break-word; max-width: 120px; }
+    .nested-table { width: 100%; border: 1px solid #999; }
+    .nested-table td { border: 1px solid #ccc; padding: 3px 5px; font-size: 10px; }
+
+    /* 3. Currency / number alignment */
+    .currency { font-family: 'Courier New', monospace; text-align: right; }
+    .currency-symbol { float: left; }
+
+    /* 4. Borders stress */
+    .border-test { display: flex; gap: 10px; flex-wrap: wrap; margin: 10px 0; }
+    .border-box { width: 80px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 10px; }
+    .border-solid { border: 2px solid #333; }
+    .border-dashed { border: 2px dashed #c00; }
+    .border-double { border: 4px double #060; }
+    .border-mixed { border-top: 3px solid red; border-right: 2px dashed blue; border-bottom: 1px solid green; border-left: 4px double orange; }
+    .border-thick { border: 5px solid #333; }
+    .border-thin { border: 0.5px solid #999; }
+    .border-rounded { border: 2px solid #333; border-radius: 8px; }
+
+    /* 5. Background colors */
+    .bg-test { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; }
+    .bg-box { width: 70px; height: 35px; display: flex; align-items: center; justify-content: center; font-size: 9px; color: white; }
+
+    /* 6. Lists */
+    .list-test ul, .list-test ol { margin-left: 20px; margin-bottom: 8px; font-size: 11px; }
+    .list-test li { margin-bottom: 3px; }
+
+    /* 7. Multi-column layout */
+    .columns-2 { column-count: 2; column-gap: 20px; font-size: 11px; line-height: 1.5; }
+
+    /* 8. NBSP indentation */
+    .indent-test { font-size: 11px; }
+    .indent-test p { margin-bottom: 4px; }
+
+    /* 9. Long text wrapping */
+    .wrap-test { font-size: 11px; }
+    .wrap-test .narrow-box { width: 200px; border: 1px solid #ccc; padding: 5px; margin: 5px 0; }
+
+    /* 10. Page break */
+    .pagebreak_bf { page-break-before: always; }
+    [data-pdf-page-break-before="true"] { page-break-before: always; }
+
+    /* 11. Form-like layout */
+    .form-row { display: flex; margin-bottom: 8px; font-size: 11px; }
+    .form-label { width: 120px; font-weight: bold; color: #333; flex-shrink: 0; }
+    .form-value { flex: 1; border-bottom: 1px solid #ccc; padding: 2px 4px; }
+    .form-value-box { flex: 1; border: 1px solid #333; padding: 4px 6px; min-height: 20px; }
+
+    /* 12. Signature block */
+    .sig-block { margin-top: 30px; display: flex; justify-content: space-between; }
+    .sig-area { width: 200px; text-align: center; font-size: 11px; }
+    .sig-line { border-top: 1px solid #333; margin-top: 40px; padding-top: 5px; }
+
+    /* 13. Header with logo placeholder */
+    .header-bar {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      border-bottom: 3px solid #2c3e50; padding-bottom: 10px; margin-bottom: 15px;
+    }
+    .company-info { flex: 1; }
+    .company-name { font-size: 20px; font-weight: bold; color: #2c3e50; }
+    .company-details { font-size: 10px; color: #666; line-height: 1.4; }
+    .doc-title { font-size: 24px; font-weight: bold; color: #c0392b; text-align: right; }
+    .doc-subtitle { font-size: 11px; color: #666; text-align: right; }
+
+    /* 14. Footer */
+    .footer {
+      margin-top: 20px; padding-top: 8px; border-top: 1px solid #ccc;
+      font-size: 9px; color: #999; text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<div class="controls">
+  <button id="pdf-download-btn" onclick="downloadPdf()">Download PDF</button>
+  <select id="wrapper-select">
+    <option value="single">Wrapper: Single Page</option>
+    <option value="multi" selected>Wrapper: Multi Page</option>
+  </select>
+  <span style="font-size:12px; opacity:0.7;">HTML-to-Vector-PDF Stress Test</span>
+</div>
+
+<!-- ============ PAGE 1 ============ -->
+<div class="page-container html_to_vector_pdf" id="stress-test-page1">
+
+  <!-- Header -->
+  <div class="header-bar">
+    <div class="company-info">
+      <div class="company-name">ACME CORPORATION PTE LTD</div>
+      <div class="company-details">
+        100 Robinson Road, #12-01 AIA Tower<br>
+        Singapore 068898<br>
+        Tel: +65 6123 4567 | Fax: +65 6123 4568<br>
+        GST Reg No: 200012345K | UEN: 200012345K
+      </div>
+    </div>
+    <div>
+      <div class="doc-title">PURCHASE ORDER</div>
+      <div class="doc-subtitle">PO-2026-0042 | 02 APR 2026</div>
+    </div>
+  </div>
+
+  <!-- Form-like fields -->
+  <div style="display:flex; gap: 40px; margin-bottom: 15px;">
+    <div style="flex:1;">
+      <div class="form-row"><span class="form-label">Vendor:</span><span class="form-value">BETA ELECTRONICS SDN BHD</span></div>
+      <div class="form-row"><span class="form-label">Address:</span><span class="form-value">No. 42, Jalan Teknologi, 81400 Senai, Johor, Malaysia</span></div>
+      <div class="form-row"><span class="form-label">Contact:</span><span class="form-value">Mr. Ahmad bin Ibrahim | +60 12-345 6789</span></div>
+      <div class="form-row"><span class="form-label">Payment Terms:</span><span class="form-value">Net 30 Days</span></div>
+    </div>
+    <div style="flex:1;">
+      <div class="form-row"><span class="form-label">Ship To:</span><span class="form-value">ACME Corp Warehouse, 10 Changi South Lane</span></div>
+      <div class="form-row"><span class="form-label">Delivery Date:</span><span class="form-value">15 APR 2026</span></div>
+      <div class="form-row"><span class="form-label">Currency:</span><span class="form-value">SGD (Singapore Dollar)</span></div>
+      <div class="form-row"><span class="form-label">Prepared By:</span><span class="form-value">Jane Lim, Procurement Manager</span></div>
+    </div>
+  </div>
+
+  <!-- Section 1: Typography Stress -->
+  <div class="section-title">1. Typography Stress Test</div>
+  <div class="typo-test">
+    <p class="mixed-inline">
+      This line has <b>bold text</b>, <i>italic text</i>, <u>underlined text</u>,
+      <b><i>bold-italic</i></b>, and <span class="mono">monospace code</span> all mixed together.
+    </p>
+    <p class="mixed-inline">
+      Price breakdown: <b>SGD 1,234.56</b> (excl. GST) + <i>GST 9%: SGD 111.11</i> = <b style="font-size:14px; color:#c00;">Total: SGD 1,345.67</b>
+    </p>
+    <p><span class="strike">Old price: $999.00</span> &rarr; <span class="underline" style="color:#c00; font-weight:bold;">New price: $799.00</span></p>
+    <p class="small">DISCLAIMER: This is small print. Terms and conditions apply. See overleaf for full details of warranty coverage and limitations.</p>
+    <p class="serif">This text uses Times New Roman serif font for formal document sections.</p>
+  </div>
+
+  <!-- Section 2: Complex Table -->
+  <div class="section-title">2. Complex Table with Mixed Alignment</div>
+  <table>
+    <thead>
+      <tr>
+        <th style="width:35px;">S/N</th>
+        <th style="width:90px;">Item Code</th>
+        <th>Description</th>
+        <th style="width:40px;">QTY</th>
+        <th style="width:35px;">UOM</th>
+        <th style="width:80px;">Unit Price</th>
+        <th style="width:50px;">Disc %</th>
+        <th style="width:90px;">Amount (SGD)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="align-center">1</td>
+        <td>ELEC-IC-001</td>
+        <td>Integrated Circuit Module ARM Cortex-M4, <b>128KB Flash</b>, 32KB RAM, QFP-48 Package</td>
+        <td class="align-center">500</td>
+        <td class="align-center">PCS</td>
+        <td class="align-right">12.50</td>
+        <td class="align-center">5%</td>
+        <td class="align-right"><span class="currency-symbol">S$</span><span style="float:right;">5,937.50</span></td>
+      </tr>
+      <tr>
+        <td class="align-center">2</td>
+        <td>ELEC-CAP-002</td>
+        <td class="cell-wrap">Ceramic Capacitor 100nF/50V, X7R Dielectric, 0603 (1608 Metric), -55C to +125C Operating Range</td>
+        <td class="align-center">10,000</td>
+        <td class="align-center">PCS</td>
+        <td class="align-right">0.08</td>
+        <td class="align-center">10%</td>
+        <td class="align-right"><span class="currency-symbol">S$</span><span style="float:right;">720.00</span></td>
+      </tr>
+      <tr>
+        <td class="align-center">3</td>
+        <td>ELEC-RES-003</td>
+        <td>Resistor Kit Assortment, 1/4W, 1% Tolerance, <i>170 Values</i>, E96 Series, 0402-1206</td>
+        <td class="align-center">50</td>
+        <td class="align-center">SET</td>
+        <td class="align-right">45.00</td>
+        <td class="align-center">0%</td>
+        <td class="align-right cell-highlight"><span class="currency-symbol">S$</span><span style="float:right;">2,250.00</span></td>
+      </tr>
+      <tr>
+        <td class="align-center">4</td>
+        <td>ELEC-PCB-004</td>
+        <td>Custom PCB Fabrication, 4-Layer, FR4 1.6mm, <b>ENIG finish</b>, IPC Class 2, Gerber Rev 3.2</td>
+        <td class="align-center">200</td>
+        <td class="align-center">PCS</td>
+        <td class="align-right">8.75</td>
+        <td class="align-center">0%</td>
+        <td class="align-right"><span class="currency-symbol">S$</span><span style="float:right;">1,750.00</span></td>
+      </tr>
+      <tr>
+        <td class="align-center">5</td>
+        <td>ELEC-CON-005</td>
+        <td>USB-C Connector, 24-Pin, SMD, Right Angle, <b style="color:#c00;">RoHS Compliant</b></td>
+        <td class="align-center">1,000</td>
+        <td class="align-center">PCS</td>
+        <td class="align-right">0.95</td>
+        <td class="align-center">15%</td>
+        <td class="align-right cell-success"><span class="currency-symbol">S$</span><span style="float:right;">807.50</span></td>
+      </tr>
+      <tr>
+        <td class="align-center">6</td>
+        <td>TOOL-SOLD-006</td>
+        <td>Soldering Station Digital, 75W, ESD Safe, Temperature Range 200-480&deg;C with 3 Tips</td>
+        <td class="align-center">5</td>
+        <td class="align-center">SET</td>
+        <td class="align-right">289.00</td>
+        <td class="align-center">0%</td>
+        <td class="align-right"><span class="currency-symbol">S$</span><span style="float:right;">1,445.00</span></td>
+      </tr>
+      <tr>
+        <td class="align-center">7</td>
+        <td>SHIP-FRT-007</td>
+        <td class="cell-danger">Freight Charges - Express Air Shipment (JB &rarr; SG), <b>Fragile Handling Required</b></td>
+        <td class="align-center">1</td>
+        <td class="align-center">LOT</td>
+        <td class="align-right">350.00</td>
+        <td class="align-center">0%</td>
+        <td class="align-right"><span class="currency-symbol">S$</span><span style="float:right;">350.00</span></td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="7" class="align-right" style="font-weight:bold; border-bottom:none;">SUB TOTAL:</td>
+        <td class="align-right" style="font-weight:bold; border-bottom:none;">S$ 13,260.00</td>
+      </tr>
+      <tr>
+        <td colspan="7" class="align-right" style="border-top:none; border-bottom:none;">Discount (Volume):</td>
+        <td class="align-right" style="border-top:none; border-bottom:none; color:#c00;">- S$ 663.00</td>
+      </tr>
+      <tr>
+        <td colspan="7" class="align-right" style="border-top:none; border-bottom:none;">GST (9%):</td>
+        <td class="align-right" style="border-top:none; border-bottom:none;">S$ 1,133.73</td>
+      </tr>
+      <tr>
+        <td colspan="7" class="align-right" style="font-weight:bold; font-size:13px; border-top:2px solid #333;">TOTAL SGD:</td>
+        <td class="align-right" style="font-weight:bold; font-size:13px; border-top:2px solid #333;">S$ 13,730.73</td>
+      </tr>
+    </tfoot>
+  </table>
+
+  <!-- Section 3: Borders & Backgrounds -->
+  <div class="section-title">3. Border Styles & Background Colors</div>
+  <div class="border-test">
+    <div class="border-box border-solid">Solid</div>
+    <div class="border-box border-dashed">Dashed</div>
+    <div class="border-box border-double">Double</div>
+    <div class="border-box border-mixed">Mixed</div>
+    <div class="border-box border-thick">Thick</div>
+    <div class="border-box border-thin">Thin</div>
+  </div>
+  <div class="bg-test">
+    <div class="bg-box" style="background:#e74c3c;">Red</div>
+    <div class="bg-box" style="background:#3498db;">Blue</div>
+    <div class="bg-box" style="background:#2ecc71;">Green</div>
+    <div class="bg-box" style="background:#f39c12;">Orange</div>
+    <div class="bg-box" style="background:#9b59b6;">Purple</div>
+    <div class="bg-box" style="background:#1abc9c;">Teal</div>
+    <div class="bg-box" style="background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);">Gradient</div>
+  </div>
+
+  <!-- Section 4: NBSP Indentation & Special Characters -->
+  <div class="section-title">4. NBSP Indentation & Special Characters</div>
+  <div class="indent-test">
+    <p>Level 0: No indentation</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;Level 1: 4 NBSP indent</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level 2: 8 NBSP indent</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level 3: 12 NBSP indent</p>
+    <p style="margin-top:8px;">Special chars: &copy; 2026 | &reg; | &trade; | &deg;C | &frac12; | &frac14; | &bull; | &mdash; | &laquo; &raquo; | &#x2713; | &#x2717;</p>
+    <p>Currency symbols: $ &euro; &pound; &yen; &#x20B9; &#x20A9; S$ RM</p>
+  </div>
+
+  <div class="footer">
+    Page 1 of 2 | PO-2026-0042 | Generated by HTML-to-Vector-PDF Stress Test | Confidential
+  </div>
+</div>
+
+<!-- ============ PAGE 2 ============ -->
+<div class="page-container html_to_vector_pdf" id="stress-test-page2" data-pdf-page-break-before="true">
+
+  <!-- Section 5: Nested Table -->
+  <div class="section-title">5. Nested Table & Merged Cells</div>
+  <table>
+    <tr>
+      <th rowspan="2" style="width:100px;">Category</th>
+      <th colspan="3">Specifications</th>
+      <th rowspan="2" style="width:80px;">Status</th>
+    </tr>
+    <tr>
+      <th>Parameter</th>
+      <th>Min</th>
+      <th>Max</th>
+    </tr>
+    <tr>
+      <td rowspan="3" style="font-weight:bold; background:#ecf0f1;">Electrical</td>
+      <td>Supply Voltage (VCC)</td>
+      <td class="align-center">3.0V</td>
+      <td class="align-center">3.6V</td>
+      <td class="align-center cell-success">OK</td>
+    </tr>
+    <tr>
+      <td>Operating Current</td>
+      <td class="align-center">10mA</td>
+      <td class="align-center">50mA</td>
+      <td class="align-center cell-success">OK</td>
+    </tr>
+    <tr>
+      <td>Sleep Current</td>
+      <td class="align-center">1uA</td>
+      <td class="align-center">10uA</td>
+      <td class="align-center cell-danger">FAIL</td>
+    </tr>
+    <tr>
+      <td rowspan="2" style="font-weight:bold; background:#ecf0f1;">Thermal</td>
+      <td>Operating Temperature</td>
+      <td class="align-center">-40&deg;C</td>
+      <td class="align-center">+85&deg;C</td>
+      <td class="align-center cell-success">OK</td>
+    </tr>
+    <tr>
+      <td>Storage Temperature</td>
+      <td class="align-center">-55&deg;C</td>
+      <td class="align-center">+125&deg;C</td>
+      <td class="align-center cell-highlight">TBD</td>
+    </tr>
+  </table>
+
+  <!-- Section 6: Long Text Wrapping -->
+  <div class="section-title">6. Long Text Wrapping</div>
+  <div class="wrap-test">
+    <div class="narrow-box">
+      <b>Narrow container (200px):</b> This text should wrap properly within a narrow container. It tests the line-breaking algorithm with mixed <b>bold</b> and <i>italic</i> content inline.
+    </div>
+    <p style="margin:8px 0;">
+      <b>Superlongwordwithoutspaces:</b> Pneumonoultramicroscopicsilicovolcanoconiosis is one of the longest English words and should be split at character boundaries when it exceeds the container width.
+    </p>
+    <p>
+      <b>URL wrapping:</b> https://www.example.com/very/long/path/that/should/wrap/correctly/in/the/pdf/output/document/renderer
+    </p>
+  </div>
+
+  <!-- Section 7: Terms & Conditions (multi-paragraph) -->
+  <div class="section-title">7. Terms & Conditions</div>
+  <div style="font-size:10px; line-height:1.5; color:#444;">
+    <p style="margin-bottom:6px;"><b>1. Delivery:</b> All items shall be delivered to the specified Ship To address within the agreed delivery timeframe. Partial deliveries are acceptable only with prior written approval from the Buyer. The Seller shall provide tracking information for all shipments.</p>
+    <p style="margin-bottom:6px;"><b>2. Quality:</b> All goods supplied must conform to the specifications stated in this Purchase Order. The Buyer reserves the right to inspect and reject non-conforming goods within <u>14 business days</u> of receipt. Rejected goods shall be returned at the Seller's expense.</p>
+    <p style="margin-bottom:6px;"><b>3. Payment:</b> Payment shall be made within <b>30 days</b> from the date of invoice, subject to satisfactory receipt of goods. Early payment discount of <i>2% / 10 days</i> is available.</p>
+    <p style="margin-bottom:6px;"><b>4. Warranty:</b> The Seller warrants that all goods are free from defects in materials and workmanship for a period of <b style="color:#c00;">12 months</b> from the date of delivery. This warranty does not cover damage caused by misuse, negligence, or unauthorized modification.</p>
+    <p><b>5. Governing Law:</b> This Purchase Order shall be governed by and construed in accordance with the laws of the Republic of Singapore.</p>
+  </div>
+
+  <!-- Section 8: Lists -->
+  <div class="section-title">8. Ordered & Unordered Lists</div>
+  <div class="list-test" style="display:flex; gap:30px;">
+    <div style="flex:1;">
+      <b style="font-size:11px;">Required Documents:</b>
+      <ol>
+        <li>Original Tax Invoice (2 copies)</li>
+        <li>Packing List with item weights</li>
+        <li>Certificate of Conformance (CoC)</li>
+        <li>Material Safety Data Sheet (MSDS)</li>
+        <li>Test Report per IPC-A-610 Class 2</li>
+      </ol>
+    </div>
+    <div style="flex:1;">
+      <b style="font-size:11px;">Packaging Requirements:</b>
+      <ul>
+        <li>Anti-static bags for all ICs</li>
+        <li>Moisture barrier bags with desiccant</li>
+        <li>Bubble wrap for soldering stations</li>
+        <li>ESD warning labels on all boxes</li>
+        <li>Fragile stickers on outer carton</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Section 9: Summary Table with Currency Alignment -->
+  <div class="section-title">9. Payment Schedule</div>
+  <table style="width:60%; margin-left:auto;">
+    <thead>
+      <tr>
+        <th>Milestone</th>
+        <th style="width:100px;">Due Date</th>
+        <th style="width:120px;">Amount (SGD)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Advance Payment (30%)</td>
+        <td class="align-center">05 APR 2026</td>
+        <td class="align-right">4,119.22</td>
+      </tr>
+      <tr>
+        <td>Upon Delivery (60%)</td>
+        <td class="align-center">15 APR 2026</td>
+        <td class="align-right">8,238.44</td>
+      </tr>
+      <tr>
+        <td>Final Payment (10%)</td>
+        <td class="align-center">15 MAY 2026</td>
+        <td class="align-right">1,373.07</td>
+      </tr>
+      <tr style="font-weight:bold; background:#f8f9fa;">
+        <td>Total</td>
+        <td class="align-center"></td>
+        <td class="align-right" style="border-top:2px solid #333;">S$ 13,730.73</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Section 10: Signatures -->
+  <div class="sig-block">
+    <div class="sig-area">
+      <div class="sig-line">
+        <b>Authorized Signatory</b><br>
+        ACME Corporation Pte Ltd<br>
+        <span style="font-size:10px; color:#666;">Name: ___________________</span><br>
+        <span style="font-size:10px; color:#666;">Date: ___________________</span>
+      </div>
+    </div>
+    <div class="sig-area">
+      <div class="sig-line">
+        <b>Acknowledged By</b><br>
+        Beta Electronics Sdn Bhd<br>
+        <span style="font-size:10px; color:#666;">Name: ___________________</span><br>
+        <span style="font-size:10px; color:#666;">Date: ___________________</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    Page 2 of 2 | PO-2026-0042 | Generated by HTML-to-Vector-PDF Stress Test | Confidential
+  </div>
+</div>
+
+<script src="dist/html_to_vector_pdf.js"></script>
+<script>
+  async function downloadPdf() {
+    const wrapper = document.getElementById('wrapper-select').value;
+    const target = wrapper === 'multi'
+      ? '.html_to_vector_pdf'
+      : '#stress-test-page1';
+
+    try {
+      await html_to_vector_pdf.generatePdf(target, {
+        filename: 'stress-test.pdf',
+        pageSize: 'a4',
+        orientation: 'portrait',
+        margins: { top: 10, right: 10, bottom: 10, left: 10 },
+        debug: false,
+        excludeSelectors: [
+          '.controls',
+          '#pdf-download-btn',
+          '#wrapper-select',
+          'script',
+          'style'
+        ]
+      });
+    } catch (err) {
+      console.error('PDF generation failed:', err);
+      alert('PDF generation failed: ' + err.message);
+    }
+  }
+</script>
+
+</body>
+</html>

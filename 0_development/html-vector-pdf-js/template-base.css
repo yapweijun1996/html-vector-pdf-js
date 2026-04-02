@@ -1,0 +1,115 @@
+/*
+ * Template Base CSS — printform.js + html_to_vector_pdf
+ *
+ * Uses printform.js class structure:
+ *   .printform > .pheader > .pdocinfo > .prowheader > .prowitem > .ptac > .pfooter
+ */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: Arial, sans-serif;
+  font-size: 9pt;
+  color: #333;
+  background: #f5f5f5;
+  padding: 0;
+}
+
+/* ── Control Bar (excluded from PDF) ── */
+.controls {
+  position: fixed; top: 0; left: 0; right: 0;
+  background: #333; color: white;
+  padding: 8px 20px; z-index: 9999;
+  display: flex; align-items: center; gap: 14px;
+  font-size: 13px;
+}
+.controls a { color: #aaa; text-decoration: none; }
+.controls a:hover { color: #fff; }
+.controls .btn-pdf {
+  padding: 8px 20px; color: white; border: none;
+  border-radius: 6px; font-size: 13px; cursor: pointer; font-weight: 600;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+.controls .btn-pdf:hover { opacity: 0.9; }
+
+/* ── Printform Container ── */
+.printform { width: 750px; margin: 50px auto 20px; }
+.paper_width { width: 750px; }
+
+/* ── Printform Sections ── */
+.block { border: 1px solid #e5e7eb; padding: 10px 12px; margin-bottom: 8px; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 16px; font-size: 9pt; }
+.grid b { color: #1f2937; }
+
+/* ── Page Header (repeats each page) ── */
+.pheader, .pheader_processed { margin-bottom: 6px; }
+.pheader h1, .pheader_processed h1 { margin: 0 0 2px 0; font-size: 13pt; }
+.pheader small, .pheader_processed small { color: #6b7280; font-size: 8pt; }
+
+/* ── Doc Info ── */
+.pdocinfo, .pdocinfo_processed { margin-bottom: 6px; }
+
+/* ── Row Header (table header, can repeat) ── */
+.prowheader table, .prowheader_processed table,
+.prowitem table, .prowitem_processed table,
+table.ptac, table.paddt,
+table.ptac-rowitem_processed, table.paddt-rowitem_processed {
+  width: 100%; border-collapse: collapse;
+}
+.prowheader th, .prowheader_processed th {
+  font-size: 8pt; text-transform: uppercase; letter-spacing: .04em;
+  background: #f3f4f6; padding: 5px 6px; border: 1px solid #e5e7eb;
+  font-weight: 600;
+}
+th, td { border: 1px solid #e5e7eb; padding: 4px 6px; vertical-align: top; font-size: 9pt; }
+
+/* ── Row Items ── */
+.prowitem td, .prowitem_processed td {
+  border: 1px solid #e5e7eb; padding: 4px 6px;
+}
+
+/* ── Column Utilities ── */
+.col-no { width: 35px; text-align: center; }
+.col-code { width: 80px; }
+.col-qty { width: 55px; text-align: right; }
+.col-unit { width: 45px; text-align: center; }
+.col-price { width: 85px; text-align: right; }
+.col-amount { width: 90px; text-align: right; }
+.col-desc { }
+
+/* ── PTAC (Terms After Content) ── */
+.ptac h3, .paddt h3 { margin: 0 0 4px 0; font-size: 9pt; }
+
+/* ── Page Footer ── */
+.pfooter, .pfooter_processed { font-size: 8pt; color: #6b7280; margin-top: 6px; }
+.pfooter_logo, .pfooter_logo_processed {
+  font-size: 8pt; line-height: 12px; font-weight: bold;
+  text-align: center; margin: 0; padding: 0;
+}
+.pfooter_pagenum, .pfooter_pagenum_processed {
+  font-size: 8pt; line-height: 12px;
+  text-align: center; color: #6b7280; margin: 0; padding: 0;
+}
+
+/* ── Totals ── */
+.totals-label { text-align: right; font-weight: bold; padding: 3px 6px; }
+.totals-value { text-align: right; padding: 3px 6px; }
+
+/* ── Editable ── */
+[contenteditable="true"] { outline: none; }
+[contenteditable="true"]:hover { background: rgba(52,152,219,0.05); outline: 1px dashed rgba(52,152,219,0.3); }
+[contenteditable="true"]:focus { background: #fffde7; outline: 1px solid #f0c040; }
+
+/* ── Print / PDF ── */
+/* Force print backgrounds without checkbox */
+* { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
+
+@media print {
+  .controls { display: none !important; }
+  body { background: white; }
+  .printform { margin: 0; }
+  .printform_page { position: relative; height: 1050px; }
+  .pfooter_logo_processed { position: absolute; left: 0; right: 0; bottom: 15px; }
+  .pfooter_pagenum_processed { position: absolute; left: 0; right: 0; bottom: 0; }
+}
+@media (max-width: 800px) { .printform, .paper_width { width: 100%; } }

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payroll Slip - March 2026</title>
+<link rel="stylesheet" href="../template-base.css">
+<style>
+  /* DARK GREEN PAYSLIP theme */
+  :root { --accent: #1b5e20; --accent-light: #e8f5e9; --accent-red: #c62828; }
+  .pheader .green-bar { background: var(--accent); color: white; padding: 10px 12px; }
+  .pheader .green-bar span { font-size: 14pt; font-weight: bold; letter-spacing: 1px; }
+  .pheader .green-bar-sub { font-size: 8pt; color: #c8e6c9; }
+  .pheader .pay-title { font-size: 12pt; font-weight: bold; color: var(--accent); }
+  .pdocinfo td { border: 2px solid var(--accent); padding: 6px 8px; background: #f1f8e9; }
+  .pdocinfo b { color: var(--accent); font-size: 8pt; }
+  .prowheader th { font-size: 8pt; }
+  .prowheader .earn-header th { background: #2e7d32; color: white; font-weight: bold; padding: 5px 6px; }
+  .prowheader .deduct-header th { background: var(--accent-red); color: white; font-weight: bold; padding: 5px 6px; }
+  .prowheader_processed .earn-header th { background: #2e7d32; color: white; font-weight: bold; padding: 5px 6px; }
+  .prowheader_processed .deduct-header th { background: var(--accent-red); color: white; font-weight: bold; padding: 5px 6px; }
+  .prowitem td, .prowitem_processed td { padding: 4px 6px; border-bottom: 1px solid #e0e0e0; }
+  .col-earn-desc { width: 240px; }
+  .col-earn-amt { width: 120px; text-align: right; }
+  .col-deduct-desc { width: 240px; }
+  .col-deduct-amt { width: 120px; text-align: right; }
+  .col-spacer { width: 30px; border: none !important; }
+  .ptac .earn-total td { background: #e8f5e9; font-weight: bold; border-top: 2px solid #2e7d32; padding: 5px 6px; }
+  .ptac .deduct-total td { background: #ffebee; font-weight: bold; border-top: 2px solid var(--accent-red); padding: 5px 6px; }
+  .ptac .cpf-row td { background: #e0f2f1; padding: 5px 8px; border: 1px solid #b2dfdb; }
+  .ptac .net-pay-box td { background: var(--accent); color: white; font-size: 14pt; font-weight: bold; text-align: center; padding: 12px; }
+  .ptac .ytd-header td { background: #388e3c; color: white; padding: 4px 6px; font-size: 8pt; }
+  .ptac .ytd-row td { background: #f1f8e9; padding: 4px 6px; font-size: 8pt; border-bottom: 1px solid #c8e6c9; }
+  .pfooter .sig-line { border-top: 1px solid #333; margin: 40px 40px 0; padding-top: 4px; text-align: center; }
+  .pfooter_logo { color: #666; border-top: 1px solid var(--accent); padding-top: 4px; }
+</style>
+</head>
+<body>
+<div class="controls">
+  <a href="../index.html">&larr; Back to Gallery</a>
+  <button class="btn-pdf" onclick="downloadPdf('payroll-slip.pdf')">Download PDF</button>
+</div>
+
+<div class="printform paper_width"
+     data-papersize-width="750"
+     data-papersize-height="1050"
+     data-repeat-header="y"
+     data-repeat-rowheader="y"
+     data-repeat-footer-logo="y"
+     data-repeat-footer-pagenum="y"
+     data-insert-dummy-row-item-while-format-table="y">
+
+  <!-- Page Header -->
+  <div class="pheader block">
+    <table class="paper_width" style="border:none;">
+      <tr>
+        <td style="border:none;" class="green-bar">
+          <span>ACME CORPORATION PTE LTD</span><br>
+          <span class="green-bar-sub">10 Anson Road, #20-05 International Plaza, Singapore 079903 &nbsp;|&nbsp; Co. Reg. 200312345K</span>
+        </td>
+      </tr>
+    </table>
+    <table class="paper_width" style="border:none;">
+      <tr>
+        <td width="375" style="border:none;padding:8px 0;">
+          <span class="pay-title">PAYROLL SLIP</span>
+        </td>
+        <td width="375" style="border:none;padding:8px 0;text-align:right;">
+          <b>Pay Period:</b> <span contenteditable="true">March 2026</span>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Document Info: Employee Details -->
+  <div class="pdocinfo block">
+    <table class="paper_width" style="border-collapse:collapse;">
+      <tr>
+        <td width="250"><b>Name:</b><br><span contenteditable="true">Tan Wei Ming</span></td>
+        <td width="250"><b>Employee ID:</b><br><span contenteditable="true">EMP-0156</span></td>
+        <td width="250"><b>Department:</b><br><span contenteditable="true">Engineering</span></td>
+      </tr>
+      <tr>
+        <td width="250"><b>Designation:</b><br><span contenteditable="true">Senior Engineer</span></td>
+        <td width="250"><b>Date Joined:</b><br><span contenteditable="true">15 Mar 2022</span></td>
+        <td width="250"><b>IC/FIN:</b><br><span contenteditable="true">****5678A</span></td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Header: Earnings and Deductions side by side -->
+  <div class="prowheader">
+    <table class="paper_width">
+      <tr class="earn-header">
+        <th class="col-earn-desc">EARNINGS</th>
+        <th class="col-earn-amt">SGD</th>
+        <th class="col-spacer" style="background:white;border:none;"></th>
+        <th class="col-deduct-desc">DEDUCTIONS</th>
+        <th class="col-deduct-amt">SGD</th>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Item: Basic Salary / CPF Employee -->
+  <div class="prowitem">
+    <table class="paper_width">
+      <tr>
+        <td class="col-earn-desc"><span contenteditable="true">Basic Salary</span></td>
+        <td class="col-earn-amt"><span contenteditable="true">5,800.00</span></td>
+        <td class="col-spacer"></td>
+        <td class="col-deduct-desc"><span contenteditable="true">CPF Employee (20%)</span></td>
+        <td class="col-deduct-amt"><span contenteditable="true">1,160.00</span></td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Item: Transport Allowance / SDL -->
+  <div class="prowitem">
+    <table class="paper_width">
+      <tr>
+        <td class="col-earn-desc"><span contenteditable="true">Transport Allowance</span></td>
+        <td class="col-earn-amt"><span contenteditable="true">200.00</span></td>
+        <td class="col-spacer"></td>
+        <td class="col-deduct-desc"><span contenteditable="true">SDL</span></td>
+        <td class="col-deduct-amt"><span contenteditable="true">0.25</span></td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Item: Meal Allowance / CDAC -->
+  <div class="prowitem">
+    <table class="paper_width">
+      <tr>
+        <td class="col-earn-desc"><span contenteditable="true">Meal Allowance</span></td>
+        <td class="col-earn-amt"><span contenteditable="true">150.00</span></td>
+        <td class="col-spacer"></td>
+        <td class="col-deduct-desc"><span contenteditable="true">CDAC</span></td>
+        <td class="col-deduct-amt"><span contenteditable="true">0.50</span></td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Item: Overtime -->
+  <div class="prowitem">
+    <table class="paper_width">
+      <tr>
+        <td class="col-earn-desc"><span contenteditable="true">Overtime (12 hrs)</span></td>
+        <td class="col-earn-amt"><span contenteditable="true">435.00</span></td>
+        <td class="col-spacer"></td>
+        <td class="col-deduct-desc"></td>
+        <td class="col-deduct-amt"></td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Item: Bonus -->
+  <div class="prowitem">
+    <table class="paper_width">
+      <tr>
+        <td class="col-earn-desc"><span contenteditable="true">Bonus</span></td>
+        <td class="col-earn-amt"><span contenteditable="true">500.00</span></td>
+        <td class="col-spacer"></td>
+        <td class="col-deduct-desc"></td>
+        <td class="col-deduct-amt"></td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- PTAC: Totals, CPF Summary, Net Pay, YTD, Bank Details, Signatures -->
+  <div class="prowitem"><table class="paper_width" style="border:none;">
+    <tr><td style="border:none;">
+
+      <!-- Earnings & Deductions Totals -->
+      <table class="paper_width" style="border:none;">
+        <tr>
+          <td width="360" style="border:none;vertical-align:top;padding-right:10px;">
+            <table width="360" style="border-collapse:collapse;">
+              <tr class="earn-total">
+                <td width="240">TOTAL EARNINGS</td>
+                <td width="120" align="right"><span contenteditable="true">7,085.00</span></td>
+              </tr>
+            </table>
+          </td>
+          <td width="30" style="border:none;"></td>
+          <td width="360" style="border:none;vertical-align:top;">
+            <table width="360" style="border-collapse:collapse;">
+              <tr class="deduct-total">
+                <td width="240">TOTAL DEDUCTIONS</td>
+                <td width="120" align="right"><span contenteditable="true">1,160.75</span></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+
+      <br>
+
+      <!-- CPF Summary -->
+      <table class="paper_width" style="border-collapse:collapse;">
+        <tr class="cpf-row">
+          <td width="250"><b>Employee CPF (20%):</b> <span contenteditable="true">$1,160.00</span></td>
+          <td width="250"><b>Employer CPF (17%):</b> <span contenteditable="true">$986.00</span></td>
+          <td width="250"><b>Total CPF:</b> <span contenteditable="true">$2,146.00</span></td>
+        </tr>
+      </table>
+
+      <br>
+
+      <!-- NET PAY Box -->
+      <table class="paper_width" style="border:none;">
+        <tr>
+          <td width="175" style="border:none;"></td>
+          <td width="400" style="border:none;">
+            <table width="400" style="border-collapse:collapse;">
+              <tr class="net-pay-box">
+                <td width="400">NET PAY: &nbsp; <span contenteditable="true">SGD 5,924.25</span></td>
+              </tr>
+            </table>
+          </td>
+          <td width="175" style="border:none;"></td>
+        </tr>
+      </table>
+
+      <br>
+
+      <!-- Year-To-Date Summary -->
+      <b style="color:var(--accent);">Year-To-Date Summary</b>
+      <table class="paper_width" style="border-collapse:collapse;">
+        <tr class="ytd-header">
+          <td width="187">Month</td>
+          <td width="188" align="right">Gross Earnings</td>
+          <td width="187" align="right">CPF (Employee)</td>
+          <td width="188" align="right">Net Pay</td>
+        </tr>
+        <tr class="ytd-row">
+          <td><span contenteditable="true">January 2026</span></td>
+          <td align="right"><span contenteditable="true">6,150.00</span></td>
+          <td align="right"><span contenteditable="true">1,160.00</span></td>
+          <td align="right"><span contenteditable="true">4,988.00</span></td>
+        </tr>
+        <tr class="ytd-row">
+          <td><span contenteditable="true">February 2026</span></td>
+          <td align="right"><span contenteditable="true">7,120.00</span></td>
+          <td align="right"><span contenteditable="true">1,160.00</span></td>
+          <td align="right"><span contenteditable="true">5,960.50</span></td>
+        </tr>
+        <tr class="ytd-row">
+          <td><span contenteditable="true">March 2026</span></td>
+          <td align="right"><span contenteditable="true">7,085.00</span></td>
+          <td align="right"><span contenteditable="true">1,160.00</span></td>
+          <td align="right"><span contenteditable="true">5,924.25</span></td>
+        </tr>
+      </table>
+
+      <br>
+
+      <!-- Bank & Payment Details -->
+      <table class="paper_width" style="border:none;">
+        <tr>
+          <td width="375" style="border:none;">
+            <b>Bank:</b> <span contenteditable="true">POSB Savings</span><br>
+            <b>Account No:</b> <span contenteditable="true">123-45678-9</span>
+          </td>
+          <td width="375" style="border:none;text-align:right;">
+            <b>Payment Date:</b> <span contenteditable="true">28 Mar 2026</span><br>
+            <b>Payment Mode:</b> GIRO
+          </td>
+        </tr>
+      </table>
+
+    </td></tr>
+  </table>
+
+  <!-- Footer: Signatures -->
+  <div class="pfooter block">
+    <table class="paper_width" style="border:none;">
+      <tr>
+        <td width="375" style="border:none;text-align:center;">
+          <div class="sig-line">
+            <b>HR / Payroll</b><br>
+            <span contenteditable="true">Jenny Lee</span><br>
+            <span style="font-size:8pt;">HR Executive</span>
+          </div>
+        </td>
+        <td width="375" style="border:none;text-align:center;">
+          <div class="sig-line">
+            <b>Employee Acknowledgement</b><br>
+            <span contenteditable="true">Tan Wei Ming</span><br>
+            <span style="font-size:8pt;">Senior Engineer</span>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="pfooter_logo">This is a computer-generated payslip. No signature required.</div>
+  <div class="pfooter_pagenum">Page <span data-page-number></span> of <span data-page-total></span></div>
+</div>
+
+<script src="../dist/printform.js"></script>
+<script src="../dist/html_to_vector_pdf.js"></script>
+<script src="../template-base.js"></script>
+</body>
+</html>

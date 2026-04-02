@@ -1,7 +1,7 @@
 export type TextAlign = 'left' | 'center' | 'right';
 
 export interface RenderItem {
-  type: 'text' | 'background' | 'border' | 'image' | 'debugRect' | 'textBlock';
+  type: 'text' | 'background' | 'border' | 'collapsedBorder' | 'image' | 'debugRect' | 'textBlock';
   x: number;
   y: number;
   w: number;
@@ -21,6 +21,7 @@ export interface RenderItem {
   cellTextAlign?: TextAlign;
   maxWidthMm?: number;
   lineHeightMm?: number;
+  textWidthMm?: number;
   noWrap?: boolean;
   cssNoWrap?: boolean;
   rectsLen?: number;
@@ -52,4 +53,13 @@ export interface RenderItem {
     b: string;
     l: string;
   };
+
+  collapseTableId?: number;
+  collapseBorderOrientation?: 'h' | 'v';
+  collapseBorderWidthPx?: number;
+  collapseBorderColor?: [number, number, number];
+  collapseBorderStyle?: string;
+  collapseBorderSourceSide?: 't' | 'r' | 'b' | 'l';
+  isOuterBorder?: boolean;
+  borderSourceOrder?: number;
 }

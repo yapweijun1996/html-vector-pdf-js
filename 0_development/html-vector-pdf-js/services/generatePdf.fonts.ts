@@ -120,6 +120,14 @@ export const processFonts = async (
     // Merge sets
     const requiredFonts = new Set([...Array.from(requiredFontsFromText), ...Array.from(requiredFontsFromFamilies)]);
 
+    if (cfg.debug) {
+        console.log('[html_to_vector_pdf] Font detection', {
+            fromText: Array.from(requiredFontsFromText),
+            fromFamilies: Array.from(requiredFontsFromFamilies),
+            families: allFamilies
+        });
+    }
+
     const loadedFonts: FontData[] = [];
 
     if (requiredFonts.size === 0) {
@@ -141,6 +149,13 @@ export const processFonts = async (
 
     // Process results and collect successfully loaded fonts
     const successfullyLoadedFonts = processFontLoadResults(loadedResults, requiredFontsArray, cfg);
+
+    if (cfg.debug) {
+        console.log('[html_to_vector_pdf] Font load summary', {
+            requested: requiredFontsArray,
+            loaded: successfullyLoadedFonts.map((font) => `${font.name}:${font.style}`)
+        });
+    }
 
     cfg.callbacks.onProgress?.('font:load:done', { loadedCount: successfullyLoadedFonts.length });
 

@@ -1,12 +1,13 @@
 import { PdfConfig } from './pdfConfig';
 import { createYieldController } from './asyncYield';
 import { ParsedElement, DomParseContext, createCellHasMixedTextStyles, createLayoutIdGetter } from './domParser/context';
+import { getContentBoxFromRectPx } from './domParser/boxModel';
+import { buildCollapsedBorderItems, createCollapseTableInfoGetter } from './domParser/collapsedBorders';
 import { createIsPageBreakBefore, createShouldExclude } from './domParser/selectors';
 import { parseElementNode } from './domParser/parseElementNode';
 import { parseTextNode } from './domParser/parseTextNode';
 import { mergeAdjacentLayoutBuckets, snapItemsInBuckets } from './domParser/postProcess';
-import { parsePx } from './pdfUnits';
-import { parseLineHeightPx } from './textLayout';
+import { parseLineHeightPx, pickTextAlign } from './textLayout';
 import { computeAlphabeticBaselineOffsetPx } from './textBaseline';
 
 export const parseElementToItems = async (
@@ -25,6 +26,7 @@ export const parseElementToItems = async (
 
   const items: DomParseContext['items'] = [];
   const getLayoutId = createLayoutIdGetter();
+  const getCollapseTableInfo = createCollapseTableInfoGetter(getLayoutId);
   const aggregatedTextByKey = new Map<string, DomParseContext['items'][number]>();
   const cellHasMixedTextStyles = createCellHasMixedTextStyles();
   const shouldExclude = createShouldExclude(cfg.excludeSelectors);
@@ -37,7 +39,10 @@ export const parseElementToItems = async (
     items,
     aggregatedTextByKey,
     getLayoutId,
+    getCollapseTableInfo,
     cellHasMixedTextStyles,
+    collapsedBorderCandidates: [],
+    collapseBorderSourceOrder: 0,
     skipTextContainers: (cfg.textEngine?.mode || 'legacy') !== 'legacy' ? new WeakSet<HTMLElement>() : undefined
   };
 
@@ -90,6 +95,7 @@ export const parseElementToItems = async (
         if (enabledTags.includes(tag as any)) {
           const style = window.getComputedStyle(el);
           const rect = el.getBoundingClientRect();
+          const collapseTableInfo = ctx.getCollapseTableInfo(el);
 
           // In auto mode, only enable PDF-first for "risky" containers (mixed inline styles / special chars / <br>).
           const autoEnabled =
@@ -97,20 +103,17 @@ export const parseElementToItems = async (
             (textEngineMode === 'auto' &&
               (el.querySelector('strong,b,em,i,span,br') !== null || /[^\x00-\xFF]/.test(el.textContent || '')));
 
-          if (autoEnabled && style.display !== 'none' && style.opacity !== '0' && rect.width > 0 && rect.height > 0) {
+          if (!collapseTableInfo && autoEnabled && style.display !== 'none' && style.opacity !== '0' && rect.width > 0 && rect.height > 0) {
             if (!/\S/.test(el.textContent || '')) {
               // No meaningful text content; skip.
               node = walker.nextNode();
               continue;
             }
 
-            const paddingLeftPx = parsePx(style.paddingLeft) + parsePx(style.borderLeftWidth);
-            const paddingRightPx = parsePx(style.paddingRight) + parsePx(style.borderRightWidth);
-            const paddingTopPx = parsePx(style.paddingTop) + parsePx(style.borderTopWidth);
-
-            const contentLeftPx = rect.left + paddingLeftPx;
-            const contentRightPx = rect.right - paddingRightPx;
-            const contentWidthPx = Math.max(0, contentRightPx - contentLeftPx);
+            const contentBox = getContentBoxFromRectPx(rect, style);
+            const contentLeftPx = contentBox.left;
+            const contentRightPx = contentBox.right;
+            const contentWidthPx = contentBox.width;
 
             const fontSizePx = parseFloat(style.fontSize || '0') || 0;
             const lineHeightPx = parseLineHeightPx(style.lineHeight, fontSizePx);
@@ -118,10 +121,16 @@ export const parseElementToItems = async (
             const baselineOffsetPx = computeAlphabeticBaselineOffsetPx(style, lineHeightPx);
             const baselineOffsetMm = px2mm(baselineOffsetPx) * cfg.text.scale;
 
-            const xMm = cfg.margins.left + px2mm(contentLeftPx - rootRect.left);
-            const yTopMm = px2mm(rect.top + paddingTopPx - rootRect.top);
+            const xLeftMm = cfg.margins.left + px2mm(contentLeftPx - rootRect.left);
+            const xRightMm = cfg.margins.left + px2mm(contentRightPx - rootRect.left);
+            const yTopMm = px2mm(contentBox.top - rootRect.top);
             const yBaselineMm = yTopMm + baselineOffsetMm;
             const wMm = px2mm(contentWidthPx);
+
+            const textAlign = pickTextAlign(el, style.textAlign || '');
+            const xMm = textAlign === 'right' ? xRightMm
+              : textAlign === 'center' ? (xLeftMm + xRightMm) / 2
+              : xLeftMm;
 
             ctx.items.push({
               type: 'textBlock',
@@ -131,10 +140,13 @@ export const parseElementToItems = async (
               h: lineHeightMm,
               style,
               element: el,
+              textAlign,
               maxWidthMm: wMm,
               lineHeightMm,
               noWrap: true,
               cssNoWrap: true,
+              contentLeftMm: xLeftMm,
+              contentRightMm: xRightMm,
               zIndex: 20
             });
 
@@ -151,6 +163,9 @@ export const parseElementToItems = async (
 
   if (aggregatedTextByKey.size > 0) {
     for (const item of aggregatedTextByKey.values()) items.push(item);
+  }
+  if (ctx.collapsedBorderCandidates.length > 0) {
+    items.push(...buildCollapsedBorderItems(ctx.collapsedBorderCandidates, rootRect, px2mm, cfg.margins.left));
   }
 
   // Post-process: Vertical snapping for items in the same alignmentBucket

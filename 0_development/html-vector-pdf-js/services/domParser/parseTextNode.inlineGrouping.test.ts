@@ -138,7 +138,10 @@ describe('parseTextNode - inline grouping in right-aligned TD', () => {
       items: [],
       aggregatedTextByKey: new Map(),
       getLayoutId: vi.fn().mockReturnValue(1),
-      cellHasMixedTextStyles: vi.fn().mockReturnValue(true)
+      getCollapseTableInfo: vi.fn().mockReturnValue(null),
+      cellHasMixedTextStyles: vi.fn().mockReturnValue(true),
+      collapsedBorderCandidates: [],
+      collapseBorderSourceOrder: 0
     };
   });
 

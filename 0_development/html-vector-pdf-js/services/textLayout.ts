@@ -82,6 +82,6 @@ export const wrapTextToWidth = (doc: jsPDF, text: string, maxWidthMm: number): s
 };
 
 export const buildTextStyleKey = (style: CSSStyleDeclaration): string => {
-  return [style.fontSize, style.fontWeight, style.fontStyle, style.color].join('|');
+  return [style.fontFamily, style.fontSize, style.fontWeight, style.fontStyle, style.color].join('|');
 };
 

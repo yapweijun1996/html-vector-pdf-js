@@ -8,6 +8,7 @@ import { registerLoadedFonts } from './pdfRenderer/fontRegistration';
 import { createBreakCounter, normalizePageBreaks } from './pdfRenderer/pageBreaks';
 import { processInlineTextGroups } from './pdfRenderer/inlineTextGroups';
 import { renderBorder } from './pdfRenderer/border';
+import { renderCollapsedBorder } from './pdfRenderer/collapsedBorder';
 import { renderBackground } from './pdfRenderer/background';
 import { renderText } from './pdfRenderer/text';
 import { renderImage } from './pdfRenderer/image';
@@ -94,9 +95,13 @@ export const renderToPdf = async (
         const item = groupItems[i];
 
         // Apply font to get accurate width measurement
-        applyTextStyle(doc, item.style, cfg.text.scale, item.text);
-        const textForPdfWidth = (item.text || '').replaceAll('\u00A0', ' ');
-        const textWidth = doc.getTextWidth(textForPdfWidth);
+        const textWidth = item.textWidthMm && item.textWidthMm > 0
+          ? item.textWidthMm
+          : (() => {
+              applyTextStyle(doc, item.style, cfg.text.scale, item.text, cfg.debug);
+              const textForPdfWidth = (item.text || '').replaceAll('\u00A0', ' ');
+              return doc.getTextWidth(textForPdfWidth);
+            })();
 
         if (i === 0) {
           // First item keeps browser coordinate - it's the anchor
@@ -139,6 +144,11 @@ export const renderToPdf = async (
 
       if (item.type === 'border') {
         renderBorder(doc, item, pagination.renderY, px2mm);
+        continue;
+      }
+
+      if (item.type === 'collapsedBorder') {
+        renderCollapsedBorder(doc, item, pagination.renderY, px2mm);
         continue;
       }
 

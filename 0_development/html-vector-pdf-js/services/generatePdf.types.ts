@@ -11,6 +11,7 @@ export interface WindowWithPdfGlobals extends Window {
     html_to_vector_pdf_margins?: Partial<PdfConfig['margins']>;
     html_to_vector_pdf_page_size?: PdfConfig['pageSize'];
     html_to_vector_pdf_orientation?: PdfConfig['orientation'];
+    html_to_vector_pdf_debug?: boolean;
     /**
      * Optional asset proxy base for images/background-images.
      * Example: window.html_to_vector_pdf_asset_proxy = 'http://localhost:8899/proxy?url='
@@ -30,6 +31,7 @@ export interface GlobalOverrides {
     margins?: Partial<PdfConfig['margins']>;
     pageSize?: PdfConfig['pageSize'];
     orientation?: PdfConfig['orientation'];
+    debug?: boolean;
     assetProxy?: string;
 }
 

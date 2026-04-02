@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leave Application Form</title>
+<link rel="stylesheet" href="../template-base.css">
+<style>
+  /* SOFT PURPLE HR FORM theme */
+  :root { --accent: #7b1fa2; --accent-light: #f3e5f5; --accent-dark: #4a148c; }
+  .pheader .purple-header { background: var(--accent); color: white; padding: 10px 12px; text-align: center; }
+  .pheader .purple-header span { font-size: 14pt; font-weight: bold; letter-spacing: 2px; }
+  .pdocinfo .section-title td { background: var(--accent-light); border-left: 4px solid var(--accent); padding: 5px 8px; font-weight: bold; color: var(--accent-dark); }
+  .pdocinfo .form-label { font-size: 8pt; color: var(--accent); font-weight: bold; text-transform: uppercase; }
+  .pdocinfo .form-field { border-bottom: 1px solid #9c27b0; padding: 2px 4px; display: inline-block; min-width: 140px; }
+  .pdocinfo .form-row td { padding: 6px 8px; border: none; }
+  .pdocinfo .checkbox-area td { padding: 5px 8px; line-height: 1.8; border: none; }
+  .pdocinfo .leave-period td { border: none; padding: 6px 8px; }
+  .pdocinfo .leave-period-box { border: 1px solid #9c27b0; padding: 3px 8px; background: var(--accent-light); }
+  .pdocinfo .reason-box td { border: 2px solid #ce93d8; padding: 10px; background: #fce4ec08; }
+  .prowheader th, .prowheader_processed th { background: var(--accent); color: white; padding: 4px 6px; font-size: 8pt; }
+  .prowitem td, .prowitem_processed td { padding: 4px 6px; border-bottom: 1px solid #e1bee7; }
+  .prowitem_processed:nth-child(even) td { background: var(--accent-light); }
+  .col-type { width: 200px; }
+  .col-entitled { width: 137px; text-align: center; }
+  .col-taken { width: 138px; text-align: center; }
+  .col-pending { width: 137px; text-align: center; }
+  .col-balance { width: 138px; text-align: center; }
+  .ptac .section-title td { background: var(--accent-light); border-left: 4px solid var(--accent); padding: 5px 8px; font-weight: bold; color: var(--accent-dark); border-top: none; border-right: none; border-bottom: none; }
+  .ptac .form-label { font-size: 8pt; color: var(--accent); font-weight: bold; text-transform: uppercase; }
+  .ptac .form-field { border-bottom: 1px solid #9c27b0; padding: 2px 4px; display: inline-block; min-width: 140px; }
+  .ptac .approval-box td { border: 1px solid #9c27b0; padding: 6px 8px; }
+  .ptac .hr-only td { background: #ede7f6; padding: 5px 8px; border: 1px dashed #9c27b0; }
+  .pfooter_logo { color: #666; border-top: 1px solid var(--accent); padding-top: 4px; }
+</style>
+</head>
+<body>
+<div class="controls">
+  <a href="../index.html">&larr; Back to Gallery</a>
+  <button class="btn-pdf" onclick="downloadPdf('leave-application.pdf')">Download PDF</button>
+</div>
+
+<div class="printform paper_width"
+     data-papersize-width="750"
+     data-papersize-height="1050"
+     data-repeat-header="y"
+     data-repeat-rowheader="y"
+     data-repeat-footer-logo="y"
+     data-repeat-footer-pagenum="y"
+     data-insert-dummy-row-item-while-format-table="y">
+
+  <!-- Page Header -->
+  <div class="pheader block">
+    <table class="paper_width" style="border:none;">
+      <tr>
+        <td style="border:none;" class="purple-header">
+          <span>LEAVE APPLICATION FORM</span><br>
+          <span style="font-size:8pt;color:#e1bee7;">ACME CORPORATION PTE LTD</span>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Document Info: Employee Details + Leave Type + Period + Reason -->
+  <div class="pdocinfo block">
+    <!-- Employee Details -->
+    <table class="paper_width" style="border:none;">
+      <tr class="section-title">
+        <td colspan="4" style="border:none;">EMPLOYEE DETAILS</td>
+      </tr>
+    </table>
+    <table class="paper_width" style="border:none;">
+      <tr class="form-row">
+        <td width="90"><span class="form-label">Name:</span></td>
+        <td width="285"><span class="form-field" contenteditable="true">Sarah Lim</span></td>
+        <td width="100"><span class="form-label">Employee ID:</span></td>
+        <td width="275"><span class="form-field" contenteditable="true">EMP-0089</span></td>
+      </tr>
+      <tr class="form-row">
+        <td width="90"><span class="form-label">Department:</span></td>
+        <td width="285"><span class="form-field" contenteditable="true">Marketing</span></td>
+        <td width="100"><span class="form-label">Designation:</span></td>
+        <td width="275"><span class="form-field" contenteditable="true">Marketing Executive</span></td>
+      </tr>
+      <tr class="form-row">
+        <td width="90"><span class="form-label">Date of Application:</span></td>
+        <td width="660" colspan="3"><span class="form-field" contenteditable="true">02 Apr 2026</span></td>
+      </tr>
+    </table>
+
+    <!-- Leave Type Checkboxes -->
+    <table class="paper_width" style="border:none;">
+      <tr class="section-title">
+        <td style="border:none;">LEAVE TYPE</td>
+      </tr>
+    </table>
+    <table class="paper_width" style="border:none;">
+      <tr class="checkbox-area">
+        <td width="250" contenteditable="true">&#9745; Annual Leave</td>
+        <td width="250" contenteditable="true">&#9744; Medical Leave</td>
+        <td width="250" contenteditable="true">&#9744; Childcare Leave</td>
+      </tr>
+      <tr class="checkbox-area">
+        <td width="250" contenteditable="true">&#9744; Compassionate Leave</td>
+        <td width="250" contenteditable="true">&#9744; Unpaid Leave</td>
+        <td width="250" contenteditable="true">&#9744; Other: _______</td>
+      </tr>
+    </table>
+
+    <!-- Leave Period -->
+    <table class="paper_width" style="border:none;">
+      <tr class="section-title">
+        <td style="border:none;">LEAVE PERIOD</td>
+      </tr>
+    </table>
+    <table class="paper_width" style="border:none;">
+      <tr class="leave-period">
+        <td width="60"><span class="form-label">From:</span></td>
+        <td width="220"><span class="leave-period-box" contenteditable="true">15 Apr 2026</span></td>
+        <td width="40"><span class="form-label">To:</span></td>
+        <td width="220"><span class="leave-period-box" contenteditable="true">18 Apr 2026</span></td>
+        <td width="50"><span class="form-label">Total:</span></td>
+        <td width="160"><span class="leave-period-box" style="font-weight:bold;" contenteditable="true">4 days</span></td>
+      </tr>
+    </table>
+
+    <!-- Reason -->
+    <table class="paper_width" style="border:none;">
+      <tr class="section-title">
+        <td style="border:none;">REASON FOR LEAVE</td>
+      </tr>
+    </table>
+    <table class="paper_width" style="border:none;">
+      <tr class="reason-box">
+        <td style="border:2px solid #ce93d8;padding:10px;">
+          <span contenteditable="true">Family vacation during school holidays. Will be contactable via mobile phone for any urgent matters during the leave period.</span>
+        </td>
+      </tr>
+    </table>
+
+    <!-- Leave Balance Section Title -->
+    <table class="paper_width" style="border:none;">
+      <tr class="section-title">
+        <td style="border:none;">LEAVE BALANCE</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Header: Leave Balance Table -->
+  <div class="prowheader">
+    <table class="paper_width">
+      <tr>
+        <th class="col-type">Type</th>
+        <th class="col-entitled">Entitled</th>
+        <th class="col-taken">Taken</th>
+        <th class="col-pending">Pending</th>
+        <th class="col-balance">Balance</th>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Item: Annual Leave -->
+  <div class="prowitem">
+    <table class="paper_width">
+      <tr>
+        <td class="col-type">Annual Leave</td>
+        <td class="col-entitled"><span contenteditable="true">14</span></td>
+        <td class="col-taken"><span contenteditable="true">6</span></td>
+        <td class="col-pending"><span contenteditable="true">4</span></td>
+        <td class="col-balance"><span contenteditable="true" style="font-weight:bold;">4</span></td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Item: Medical Leave -->
+  <div class="prowitem">
+    <table class="paper_width">
+      <tr>
+        <td class="col-type">Medical Leave</td>
+        <td class="col-entitled"><span contenteditable="true">14</span></td>
+        <td class="col-taken"><span contenteditable="true">2</span></td>
+        <td class="col-pending"><span contenteditable="true">0</span></td>
+        <td class="col-balance"><span contenteditable="true" style="font-weight:bold;">12</span></td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- PTAC: Covering Officer, Contact, Approval, HR -->
+  <div class="prowitem"><table class="paper_width" style="border:none;">
+    <tr><td style="border:none;">
+
+      <!-- Covering Officer & Contact -->
+      <table class="paper_width" style="border:none;">
+        <tr>
+          <td width="120" style="border:none;padding:6px 8px;"><span class="form-label">Covering Officer:</span></td>
+          <td width="280" style="border:none;padding:6px 8px;"><span class="form-field" contenteditable="true">Mr. James Wong, ext. 2345</span></td>
+          <td width="130" style="border:none;padding:6px 8px;"><span class="form-label">Contact During Leave:</span></td>
+          <td width="220" style="border:none;padding:6px 8px;"><span class="form-field" contenteditable="true">+65 9123 4567</span></td>
+        </tr>
+      </table>
+
+      <br>
+
+      <!-- Approval Section -->
+      <table class="paper_width" style="border:none;">
+        <tr class="section-title">
+          <td>APPROVAL</td>
+        </tr>
+      </table>
+      <table class="paper_width" style="border:none;">
+        <tr>
+          <td width="375" style="border:none;vertical-align:top;">
+            <table width="360" style="border-collapse:collapse;">
+              <tr class="approval-box">
+                <td width="360" style="text-align:center;">
+                  <div style="height:50px;"></div>
+                  <div style="border-top:1px solid #333;margin:0 30px;padding-top:4px;">
+                    <b>Applicant Signature</b><br>
+                    <span style="font-size:8pt;">Date: _______________</span>
+                  </div>
+                  <div style="height:6px;"></div>
+                </td>
+              </tr>
+            </table>
+          </td>
+          <td width="375" style="border:none;vertical-align:top;">
+            <table width="370" style="border-collapse:collapse;">
+              <tr class="approval-box">
+                <td width="370">
+                  <span contenteditable="true">&#9744; Approved &nbsp;&nbsp; &#9744; Rejected</span>
+                  <div style="height:40px;"></div>
+                  <div style="border-top:1px solid #333;margin:0 30px;padding-top:4px;text-align:center;">
+                    <b>Supervisor Signature</b><br>
+                    <span style="font-size:8pt;">Name: _______________ &nbsp; Date: _______________</span>
+                  </div>
+                  <div style="height:6px;"></div>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+
+      <br>
+
+      <!-- HR Use Only -->
+      <table class="paper_width" style="border:none;">
+        <tr class="section-title">
+          <td>FOR HR USE ONLY</td>
+        </tr>
+      </table>
+      <table class="paper_width" style="border:none;">
+        <tr class="hr-only">
+          <td>
+            <b>Remarks:</b> <span contenteditable="true">___________________________________________________________________________</span>
+          </td>
+        </tr>
+      </table>
+
+    </td></tr>
+  </table>
+
+  <!-- Footer -->
+  <div class="pfooter block">
+  </div>
+
+  <div class="pfooter_logo">This is a computer-generated form. Please submit to HR department upon completion.</div>
+  <div class="pfooter_pagenum">Page <span data-page-number></span> of <span data-page-total></span></div>
+</div>
+
+<script src="../dist/printform.js"></script>
+<script src="../dist/html_to_vector_pdf.js"></script>
+<script src="../template-base.js"></script>
+</body>
+</html>

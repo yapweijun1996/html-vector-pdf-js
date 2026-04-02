@@ -3,6 +3,19 @@ import { RenderItem } from '../renderItems';
 import { PdfConfig } from '../pdfConfig';
 import { applyTextStyle } from './fonts';
 
+const getItemTextWidthMm = (
+    doc: jsPDF,
+    item: RenderItem,
+    cfg: Required<PdfConfig>
+): number => {
+    if (typeof item.textWidthMm === 'number' && item.textWidthMm > 0) {
+        return item.textWidthMm;
+    }
+
+    applyTextStyle(doc, item.style, cfg.text.scale, item.text, cfg.debug);
+    return doc.getTextWidth(item.text || '');
+};
+
 /**
  * Group inline text items by their inlineGroupId
  */
@@ -72,8 +85,7 @@ export const processInlineTextGroups = (
         let totalWidthMm = 0;
         for (let i = 0; i < groupItems.length; i++) {
             const item = groupItems[i];
-            applyTextStyle(doc, item.style, cfg.text.scale, item.text);
-            const w = doc.getTextWidth(item.text || '');
+            const w = getItemTextWidthMm(doc, item, cfg);
             widthsMm.push(w);
             totalWidthMm += w;
         }

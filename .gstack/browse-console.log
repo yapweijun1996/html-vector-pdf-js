@@ -1,0 +1,58 @@
+[2026-04-02T06:56:31.809Z] [debug] [vite] connecting...
+[2026-04-02T06:56:32.110Z] [debug] [vite] connected.
+[2026-04-02T06:57:09.167Z] [debug] [vite] connecting...
+[2026-04-02T06:57:09.475Z] [debug] [vite] connected.
+[2026-04-02T06:57:17.106Z] [debug] [vite] connecting...
+[2026-04-02T06:57:17.416Z] [debug] [vite] connected.
+[2026-04-02T06:57:51.037Z] [debug] [vite] connecting...
+[2026-04-02T06:57:51.343Z] [debug] [vite] connected.
+[2026-04-02T06:58:00.959Z] [debug] [vite] connecting...
+[2026-04-02T06:58:01.273Z] [debug] [vite] connected.
+[2026-04-02T06:58:12.994Z] [debug] [vite] connecting...
+[2026-04-02T06:58:13.304Z] [debug] [vite] connected.
+[2026-04-02T07:01:37.989Z] [debug] [vite] connecting...
+[2026-04-02T07:01:38.303Z] [debug] [vite] connected.
+[2026-04-02T07:03:25.187Z] [debug] [vite] connecting...
+[2026-04-02T07:03:25.489Z] [debug] [vite] connected.
+[2026-04-02T07:03:41.001Z] [debug] [vite] connecting...
+[2026-04-02T07:03:41.305Z] [debug] [vite] connected.
+[2026-04-02T07:06:24.144Z] [debug] [vite] connecting...
+[2026-04-02T07:06:24.459Z] [debug] [vite] connected.
+[2026-04-02T07:11:03.025Z] [debug] [vite] connecting...
+[2026-04-02T07:11:03.341Z] [debug] [vite] connected.
+[2026-04-02T07:11:06.206Z] [log] [renderReady] Checking 1 element(s)...
+[2026-04-02T07:11:06.206Z] [log] [renderReady] Fonts ready
+[2026-04-02T07:11:06.207Z] [log] [renderReady] No images found
+[2026-04-02T07:11:06.209Z] [log] [renderReady] No background images found
+[2026-04-02T07:11:06.299Z] [log] [renderReady] All elements ready
+[2026-04-02T07:11:06.299Z] [log] [html_to_vector_pdf] Found 1 element(s) to convert
+[2026-04-02T07:11:06.304Z] [log] [html_to_vector_pdf] debug {pxToMm: 0.154140625, marginsMm: Object, textScale: 1, pageBreakBeforeSelectors: Array(3)}
+[2026-04-02T07:11:06.313Z] [log] [DEBUG] Aggregating text: "+65 6538 9000..." into existing key=2|Arial, sans-serif|10.6667px|400|normal|rgb(107, 114, 128)|18|right
+[2026-04-02T07:11:06.334Z] [log] [html_to_vector_pdf] Element 1: Parsed 200 render items
+[2026-04-02T07:11:06.335Z] [log] [html_to_vector_pdf] Extracted families: [Arial, sans-serif]
+[2026-04-02T07:11:06.335Z] [log] [html_to_vector_pdf] Loading fonts from CDN: [NotoSans]
+[2026-04-02T07:11:06.338Z] [warning] [html_to_vector_pdf] Failed to load font NotoSans: HtmlToVectorPdfError: Font data not injected for required font/style. Please run build:with-fonts after adding base64 files.
+    at Qv (http://localhost:5199/dist/html_to_vector_pdf.js:193:1796)
+    at Qx (http://localhost:5199/dist/html_to_vector_pdf.js:193:2796)
+    at http://localhost:5199/dist/html_to_vector_pdf.js:198:6360
+    at Array.map (<anonymous>)
+    at iU (http://localhost:5199/dist/html_to_vector_pdf.js:198:6353)
+    at Module.rf [as generatePdf] (http://localhost:5199/dist/html_to_vector_pdf.js:215:2098)
+    at async eval (eval at evaluate (:290:30), <anonymous>:8:5)
+[2026-04-02T07:11:06.347Z] [warning] Unable to look up font label for font 'NotoSans', 'normal'. Refer to getFontList() for available fonts.
+[2026-04-02T07:11:06.354Z] [warning] Unable to look up font label for font 'NotoSans', 'normal'. Refer to getFontList() for available fonts.
+[2026-04-02T07:11:06.355Z] [warning] Unable to look up font label for font 'NotoSans', 'normal'. Refer to getFontList() for available fonts.
+[2026-04-02T07:11:06.362Z] [warning] Unable to look up font label for font 'NotoSans', 'normal'. Refer to getFontList() for available fonts.
+[2026-04-02T07:11:06.364Z] [log] [html_to_vector_pdf] Generated 1 page(s) from 1 element(s)
+[2026-04-02T07:11:06.368Z] [table] [Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object]
+[2026-04-02T07:11:58.288Z] [debug] [vite] connecting...
+[2026-04-02T07:11:58.607Z] [debug] [vite] connected.
+[2026-04-02T07:16:55.633Z] [debug] [vite] connecting...
+[2026-04-02T07:16:55.946Z] [debug] [vite] connected.
+[2026-04-02T07:23:52.345Z] [debug] [vite] connecting...
+[2026-04-02T07:23:52.659Z] [debug] [vite] connected.
+[2026-04-02T07:28:42.957Z] [debug] [vite] connecting...
+[2026-04-02T07:28:43.275Z] [debug] [vite] connected.
+[2026-04-02T07:28:56.665Z] [debug] [vite] css hot updated: /template-base.css
+[2026-04-02T07:40:48.309Z] [debug] [vite] connecting...
+[2026-04-02T07:40:48.608Z] [debug] [vite] connected.

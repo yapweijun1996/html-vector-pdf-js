@@ -19,6 +19,7 @@ export const getGlobalOverrides = (): GlobalOverrides => {
         margins: win.html_to_vector_pdf_margins,
         pageSize: win.html_to_vector_pdf_page_size,
         orientation: win.html_to_vector_pdf_orientation,
+        debug: win.html_to_vector_pdf_debug,
         assetProxy: win.html_to_vector_pdf_asset_proxy
     };
 };
@@ -53,6 +54,7 @@ export const mergeConfig = (config: PdfConfig): Required<PdfConfig> => {
         // Global overrides (highest priority)
         ...(globalOverrides.pageSize ? { pageSize: globalOverrides.pageSize } : {}),
         ...(globalOverrides.orientation ? { orientation: globalOverrides.orientation } : {}),
+        ...(typeof globalOverrides.debug === 'boolean' ? { debug: globalOverrides.debug } : {}),
         margins: {
             ...DEFAULT_CONFIG.margins,
             ...config.margins,

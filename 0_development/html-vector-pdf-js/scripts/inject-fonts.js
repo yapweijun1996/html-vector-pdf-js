@@ -47,6 +47,16 @@ const INJECT_TARGETS = [
     constName: 'EMBEDDED_FONT_DATA_CARLITO_BOLD',
     placeholder: 'EMBEDDED_FONT_DATA_CARLITO_BOLD_PLACEHOLDER',
     base64Path: join(PROJECT_ROOT, 'fonts', 'Carlito-Bold.base64.txt')
+  },
+  {
+    constName: 'EMBEDDED_FONT_DATA_LIBERATIONSANS_NORMAL',
+    placeholder: 'EMBEDDED_FONT_DATA_LIBERATIONSANS_NORMAL_PLACEHOLDER',
+    base64Path: join(PROJECT_ROOT, 'fonts', 'LiberationSans-Regular.base64.txt')
+  },
+  {
+    constName: 'EMBEDDED_FONT_DATA_LIBERATIONSANS_BOLD',
+    placeholder: 'EMBEDDED_FONT_DATA_LIBERATIONSANS_BOLD_PLACEHOLDER',
+    base64Path: join(PROJECT_ROOT, 'fonts', 'LiberationSans-Bold.base64.txt')
   }
 ];
 

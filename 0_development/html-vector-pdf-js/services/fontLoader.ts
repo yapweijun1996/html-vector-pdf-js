@@ -80,6 +80,11 @@ const FONT_CDN_URLS: Record<string, FontDefinition> = {
         name: 'Carlito',
         url: 'EMBEDDED',
         format: 'truetype'
+    },
+    LiberationSans: {
+        name: 'LiberationSans',
+        url: 'EMBEDDED',
+        format: 'truetype'
     }
     /**** AMENDMENT [end] "Add Carlito font definition" ****/
 };
@@ -93,6 +98,8 @@ const EMBEDDED_FONT_DATA_NOTOSANSSC_BOLD = "EMBEDDED_FONT_DATA_NOTOSANSSC_BOLD_P
 /**** AMENDMENT [start] "Add Carlito placeholders" ****/
 const EMBEDDED_FONT_DATA_CARLITO_NORMAL = "EMBEDDED_FONT_DATA_CARLITO_NORMAL_PLACEHOLDER";
 const EMBEDDED_FONT_DATA_CARLITO_BOLD = "EMBEDDED_FONT_DATA_CARLITO_BOLD_PLACEHOLDER";
+const EMBEDDED_FONT_DATA_LIBERATIONSANS_NORMAL = "EMBEDDED_FONT_DATA_LIBERATIONSANS_NORMAL_PLACEHOLDER";
+const EMBEDDED_FONT_DATA_LIBERATIONSANS_BOLD = "EMBEDDED_FONT_DATA_LIBERATIONSANS_BOLD_PLACEHOLDER";
 /**** AMENDMENT [end] "Add Carlito placeholders" ****/
 
 type FontStyle = 'normal' | 'bold';
@@ -107,6 +114,9 @@ const getEmbeddedFontData = (fontName: string, style: FontStyle): string | null 
     /**** AMENDMENT [start] "Add Carlito case to font data resolver" ****/
     if (fontName === 'Carlito') {
         return style === 'bold' ? EMBEDDED_FONT_DATA_CARLITO_BOLD : EMBEDDED_FONT_DATA_CARLITO_NORMAL;
+    }
+    if (fontName === 'LiberationSans') {
+        return style === 'bold' ? EMBEDDED_FONT_DATA_LIBERATIONSANS_BOLD : EMBEDDED_FONT_DATA_LIBERATIONSANS_NORMAL;
     }
     /**** AMENDMENT [end] "Add Carlito case to font data resolver" ****/
     // Not embedded yet (JP/KR). Keep behavior explicit.
@@ -183,6 +193,9 @@ export const detectRequiredFontsFromFamilies = (families: string[]): Set<string>
         if (lowFam.includes('notosans')) requiredFonts.add('NotoSans');
         if (lowFam.includes('calibri') || lowFam.includes('carlito')) {
             requiredFonts.add('Carlito');
+        }
+        if (lowFam.includes('arial') || lowFam.includes('helvetica') || lowFam.includes('liberation sans')) {
+            requiredFonts.add('LiberationSans');
         }
     }
 

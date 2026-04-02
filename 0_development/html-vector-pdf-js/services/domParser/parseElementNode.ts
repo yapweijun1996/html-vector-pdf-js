@@ -23,7 +23,7 @@ export const parseElementNode = (
   maybeAddDebugOverlayForTableCell(ctx, el, style, rect);
   maybeAddBackgroundColor(ctx, style, box);
   maybeAddBackgroundImage(ctx, style, rect, box, imagePromises);
-  maybeAddBorder(ctx, style, box);
+  maybeAddBorder(ctx, el, style, rect, box);
   maybeAddFormFieldValueText(ctx, el, style, rect);
   maybeAddCanvasSnapshot(ctx, el, style, box);
   maybeAddImg(ctx, el, style, rect, box, imagePromises);

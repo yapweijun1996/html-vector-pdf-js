@@ -1,7 +1,7 @@
-import { parsePx } from '../pdfUnits';
 import { buildTextStyleKey, parseLineHeightPx, pickTextAlign } from '../textLayout';
 import { computeAlphabeticBaselineOffsetPx } from '../textBaseline';
 import { DomParseContext } from './context';
+import { getNestedContentBoxFromLayoutPx } from './boxModel';
 import {
   processWhitespace,
   applyTextTransform,
@@ -59,24 +59,10 @@ export const parseTextNode = (ctx: DomParseContext, txt: Text, shouldExclude: (e
 
   const layoutStyle = window.getComputedStyle(layoutEl);
   const layoutRect = layoutEl.getBoundingClientRect();
-
-  // `getBoundingClientRect()` measures the border box, so to compute the content box
-  // we must subtract both padding and border (margin is outside the border box).
-  let paddingLeftPx = parsePx(layoutStyle.paddingLeft) + parsePx(layoutStyle.borderLeftWidth);
-  let paddingRightPx = parsePx(layoutStyle.paddingRight) + parsePx(layoutStyle.borderRightWidth);
-
-  // Traverse up from parentEl to layoutEl to accumulate padding/borders of intermediate blocks
-  // This replaces the old check which only looked for the closest 'div'
-  let curr: HTMLElement | null = parentEl;
-  while (curr && curr !== layoutEl && layoutEl.contains(curr)) {
-    const s = window.getComputedStyle(curr);
-    paddingLeftPx += parsePx(s.paddingLeft) + parsePx(s.borderLeftWidth);
-    paddingRightPx += parsePx(s.paddingRight) + parsePx(s.borderRightWidth);
-    curr = curr.parentElement;
-  }
-  const contentLeftPx = layoutRect.left + paddingLeftPx;
-  const contentRightPx = layoutRect.right - paddingRightPx;
-  const contentWidthPx = Math.max(0, contentRightPx - contentLeftPx);
+  const contentBox = getNestedContentBoxFromLayoutPx(layoutEl, layoutStyle, parentEl);
+  const contentLeftPx = contentBox.left;
+  const contentRightPx = contentBox.right;
+  const contentWidthPx = contentBox.width;
 
   const finalStr = applyTextTransform(str, fontStyle);
 
@@ -96,11 +82,20 @@ export const parseTextNode = (ctx: DomParseContext, txt: Text, shouldExclude: (e
 
   const fontSizePx = parseFloat(fontStyle.fontSize);
   const lineHeightPx = parseLineHeightPx(layoutStyle.lineHeight, fontSizePx);
-  const lineHeightMm = ctx.px2mm(lineHeightPx) * ctx.cfg.text.scale;
+  const collapseTableInfo = ctx.getCollapseTableInfo(layoutEl);
+  const measuredLineBoxPx = firstRect.height;
+  const hasReliableMeasuredLineBox =
+    !!collapseTableInfo &&
+    Number.isFinite(measuredLineBoxPx) &&
+    measuredLineBoxPx > 0 &&
+    measuredLineBoxPx <= Math.max(lineHeightPx * 2.5, fontSizePx * 4);
+  const effectiveLineBoxPx = hasReliableMeasuredLineBox ? measuredLineBoxPx : lineHeightPx;
+  const lineHeightMm = ctx.px2mm(effectiveLineBoxPx) * ctx.cfg.text.scale;
+  const textWidthMm = ctx.px2mm(firstRect.width);
 
   const y = ctx.px2mm(firstRect.top - ctx.rootRect.top);
   const h = ctx.px2mm(firstRect.height);
-  const baselineOffsetPx = computeAlphabeticBaselineOffsetPx(fontStyle, firstRect.height);
+  const baselineOffsetPx = computeAlphabeticBaselineOffsetPx(fontStyle, effectiveLineBoxPx);
   const baselineOffset = ctx.px2mm(baselineOffsetPx) * ctx.cfg.text.scale;
 
   const xMmActual = ctx.cfg.margins.left + ctx.px2mm(firstRect.left - ctx.rootRect.left);
@@ -108,8 +103,9 @@ export const parseTextNode = (ctx: DomParseContext, txt: Text, shouldExclude: (e
   const xRightMm = ctx.cfg.margins.left + ctx.px2mm(contentRightPx - ctx.rootRect.left);
   const xMmCellAligned = textAlign === 'right' ? xRightMm : textAlign === 'center' ? (xLeftMm + xRightMm) / 2 : xLeftMm;
   const inTableCell = layoutEl.tagName === 'TD' || layoutEl.tagName === 'TH';
-  // Standard bucket calculation based on top position
-  const rawBucketPx = Math.round(firstRect.top / 2) * 2;
+  // Standard bucket calculation based on RELATIVE top position (not viewport)
+  const relativeTopPx = firstRect.top - ctx.rootRect.top;
+  const rawBucketPx = Math.round(relativeTopPx / 2) * 2;
   let yBucketPx = rawBucketPx;
 
   // Apply fuzzy bucket logic to ALL text nodes that share the same layout container.
@@ -119,8 +115,9 @@ export const parseTextNode = (ctx: DomParseContext, txt: Text, shouldExclude: (e
   const layoutId = ctx.getLayoutId(layoutEl);
   if (ctx.cellLastTextBucket && ctx.cellLastTextBucket.has(layoutId)) {
     const lastBucket = ctx.cellLastTextBucket.get(layoutId)!;
-    // Use 5px threshold to catch font-size variations on the same line
-    if (Math.abs(rawBucketPx - lastBucket) < 5) {
+    // Use adaptive threshold based on font size (min 3px for small fonts, max 5px for normal)
+    const bucketThreshold = Math.min(Math.max(fontSizePx * 0.4, 3), 5);
+    if (Math.abs(rawBucketPx - lastBucket) < bucketThreshold) {
       yBucketPx = lastBucket;
     } else {
       ctx.cellLastTextBucket.set(layoutId, rawBucketPx);
@@ -152,8 +149,9 @@ export const parseTextNode = (ctx: DomParseContext, txt: Text, shouldExclude: (e
 
     const existing = ctx.aggregatedTextByKey.get(key);
     if (existing) {
-      console.log(`[DEBUG] Aggregating text: "${finalStr.substring(0, 30)}..." into existing key=${key}`);
+      if (ctx.cfg.debug) console.log(`[DEBUG] Aggregating text: "${finalStr.substring(0, 30)}..." into existing key=${key}`);
       existing.text = `${existing.text ?? ''}${finalStr}`;
+      existing.textWidthMm = (existing.textWidthMm ?? 0) + textWidthMm;
       existing.cssNoWrap = (existing.cssNoWrap ?? false) || cssNoWrap;
       existing.rectsLen = Math.max(existing.rectsLen ?? 0, rectsLen);
       existing.noWrap = (existing.noWrap ?? true) && noWrap;
@@ -167,6 +165,8 @@ export const parseTextNode = (ctx: DomParseContext, txt: Text, shouldExclude: (e
         style: fontStyle,
         text: finalStr,
         textAlign,
+        collapseTableId: collapseTableInfo?.tableId,
+        textWidthMm,
         maxWidthMm: ctx.px2mm(contentWidthPx),
         lineHeightMm,
         noWrap,
@@ -196,10 +196,12 @@ export const parseTextNode = (ctx: DomParseContext, txt: Text, shouldExclude: (e
     type: 'text' as const,
     x: shouldUseInlineGroup ? xMmCellAligned : xMmActual,
     y: y + baselineOffset,
-    w: ctx.px2mm(firstRect.width),
+    w: textWidthMm,
     h,
     style: fontStyle,
     text: finalStr,
+    collapseTableId: collapseTableInfo?.tableId,
+    textWidthMm,
     // If we are not using inline grouping, `xMmActual` is the LEFT edge of the fragment,
     // so we must always force jsPDF align='left' to avoid shifting by its measured width.
     textAlign: shouldUseInlineGroup ? textAlign : 'left',
