@@ -8,28 +8,37 @@
 <style>
   /* WARM ORANGE EXPENSE theme */
   :root { --accent: #e65100; --accent-light: #fff3e0; --accent-dark: #bf360c; }
-  .pheader .doc-title { font-size: 14pt; font-weight: bold; color: var(--accent); letter-spacing: 1px; }
-  .pheader .orange-accent { border-top: 4px solid var(--accent); }
-  .pdocinfo td { background: var(--accent-light); padding: 6px 8px; border: 1px solid #ffcc02; }
-  .pdocinfo b { color: var(--accent-dark); font-size: 8pt; }
+  /* Header */
+  .pheader .hdr-title, .pheader_processed .hdr-title { font-size: 15pt; font-weight: 900; color: var(--accent); letter-spacing: 2px; line-height: 1.1; }
+  .pheader .hdr-company, .pheader_processed .hdr-company { font-size: 7.5pt; color: #777; margin-top: 3px; letter-spacing: 0.3px; }
+  /* Employee info strip */
+  .pdocinfo .info-cell, .pdocinfo_processed .info-cell { background: #fef6ee; padding: 7px 10px; border-right: 1px solid #ffcc80; border-top: none; border-bottom: none; border-left: none; }
+  .pdocinfo .info-cell:last-child, .pdocinfo_processed .info-cell:last-child { border-right: none; }
+  .pdocinfo .info-label, .pdocinfo_processed .info-label { font-size: 6.5pt; font-weight: bold; color: var(--accent-dark); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 3px; }
+  .pdocinfo .info-value, .pdocinfo_processed .info-value { font-size: 9pt; color: #222; font-weight: 500; }
+  /* Row header & items */
   .prowheader th, .prowheader_processed th { background: var(--accent); color: white; font-weight: bold; padding: 5px 6px; font-size: 8pt; }
   .prowitem td, .prowitem_processed td { padding: 5px 6px; border-bottom: 1px solid #ffe0b2; }
   .prowitem_processed:nth-child(even) td { background: #fff8e1; }
+  /* Badges */
   .badge { padding: 1px 6px; border-radius: 8px; font-size: 7pt; font-weight: bold; color: white; display: inline-block; }
   .badge-transport { background: #1565c0; }
   .badge-meals { background: #2e7d32; }
   .badge-accommodation { background: var(--accent); }
   .badge-others { background: #757575; }
+  /* Column widths */
   .col-date { width: 75px; }
   .col-desc { width: 235px; }
   .col-cat { width: 120px; }
   .col-receipt { width: 80px; }
   .col-amount { width: 240px; text-align: right; }
-  .ptac .summary-header td { background: var(--accent-dark); color: white; padding: 4px 6px; font-size: 8pt; }
-  .ptac .summary-row td { padding: 4px 6px; border-bottom: 1px solid #ffccbc; }
-  .ptac .total-box td { border: 2px solid var(--accent); background: var(--accent-light); padding: 8px 10px; font-size: 11pt; font-weight: bold; text-align: center; color: var(--accent-dark); }
-  .pfooter .sig-line { border-top: 1px solid #333; margin: 40px 15px 0; padding-top: 4px; text-align: center; }
-  .pfooter_logo { color: #666; border-top: 1px solid var(--accent); padding-top: 4px; }
+  /* PTAC summary */
+  .ptac .summary-header td, .ptac_processed .summary-header td { background: var(--accent-dark); color: white; padding: 4px 6px; font-size: 8pt; }
+  .ptac .summary-row td, .ptac_processed .summary-row td { padding: 4px 6px; border-bottom: 1px solid #ffccbc; }
+  .ptac .total-box td, .ptac_processed .total-box td { border: 2px solid var(--accent); background: var(--accent-light); padding: 8px 10px; font-size: 11pt; font-weight: bold; text-align: center; color: var(--accent-dark); }
+  /* Footer */
+  .pfooter .sig-line, .pfooter_processed .sig-line { border-top: 1px solid #333; margin: 40px 15px 0; padding-top: 4px; text-align: center; }
+  .pfooter_logo, .pfooter_logo_processed { color: #666; border-top: 1px solid var(--accent); padding-top: 4px; }
 </style>
 </head>
 <body>
@@ -49,15 +58,16 @@
 
   <!-- Page Header -->
   <div class="pheader block">
-    <table class="paper_width orange-accent" style="border:none;">
+    <table class="paper_width" style="border:none; border-top:5px solid #e65100; border-bottom:2px solid #ffcc80;">
       <tr>
-        <td width="500" style="border:none;padding:8px 0;">
-          <span class="doc-title">EXPENSE CLAIM FORM</span><br>
-          <span style="font-size:8pt;color:#666;">ACME CORPORATION PTE LTD</span>
+        <td style="border:none; background:#e65100; padding:0; width:8px;"></td>
+        <td style="border:none; padding:10px 14px; vertical-align:middle;">
+          <div class="hdr-title">EXPENSE CLAIM FORM</div>
+          <div class="hdr-company">ACME CORPORATION PTE LTD &nbsp;&bull;&nbsp; Co. Reg. 200312345K &nbsp;&bull;&nbsp; GST Reg. M2-0012345-6</div>
         </td>
-        <td width="250" style="border:none;text-align:right;vertical-align:top;padding:8px 0;">
-          <b style="font-size:10pt;">EC-2026-0087</b><br>
-          <span style="font-size:8pt;">Date: <span contenteditable="true">02 Apr 2026</span></span>
+        <td style="border:none; background:#e65100; padding:10px 16px; text-align:center; vertical-align:middle; width:175px;">
+          <div style="font-size:11pt; font-weight:bold; letter-spacing:1px; color:#fff; line-height:1.2;">EC-2026-0087</div>
+          <div style="font-size:7.5pt; color:rgba(255,255,255,0.85); margin-top:4px;">Date: <span contenteditable="true">02 Apr 2026</span></div>
         </td>
       </tr>
     </table>
@@ -65,12 +75,24 @@
 
   <!-- Document Info: Employee Info -->
   <div class="pdocinfo block">
-    <table class="paper_width" style="border-collapse:collapse;">
+    <table class="paper_width" style="border-collapse:collapse; border-bottom:2px solid #ffcc80;">
       <tr>
-        <td width="187"><b>Name:</b><br><span contenteditable="true">Michael Tan</span></td>
-        <td width="150"><b>Employee ID:</b><br><span contenteditable="true">EMP-0234</span></td>
-        <td width="188"><b>Department:</b><br><span contenteditable="true">Sales</span></td>
-        <td width="225"><b>Claim Period:</b><br><span contenteditable="true">01 Mar - 31 Mar 2026</span></td>
+        <td width="187" class="info-cell">
+          <div class="info-label">Employee Name</div>
+          <div class="info-value" contenteditable="true">Michael Tan</div>
+        </td>
+        <td width="150" class="info-cell">
+          <div class="info-label">Employee ID</div>
+          <div class="info-value" contenteditable="true">EMP-0234</div>
+        </td>
+        <td width="188" class="info-cell">
+          <div class="info-label">Department</div>
+          <div class="info-value" contenteditable="true">Sales</div>
+        </td>
+        <td width="225" class="info-cell">
+          <div class="info-label">Claim Period</div>
+          <div class="info-value" contenteditable="true">01 Mar - 31 Mar 2026</div>
+        </td>
       </tr>
     </table>
   </div>
