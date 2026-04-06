@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Goods Received Note - GRN-2026-0134</title>
+<link rel="stylesheet" href="../template-base.css">
+<style>
+  :root { --accent: #5d4037; --accent-light: #8d6e63; --accent-bg: #efebe9; --accent-border: #bcaaa4; --accent-dark: #3e2723; }
+  .prowheader th, .prowheader_processed th { background: var(--accent); color: white; font-size: 7pt; text-transform: uppercase; letter-spacing: .04em; padding: 5px 6px; border: 1px solid var(--accent); }
+  .prowitem td, .prowitem_processed td { border: 1px solid #e5e7eb; padding: 4px 6px; }
+  .ref-cell { background: var(--accent-bg); border: 1px solid var(--accent-light); text-align: center; padding: 5px 4px; }
+  .ref-label { font-size: 7pt; color: var(--accent); font-weight: bold; text-transform: uppercase; }
+  .ref-value { font-size: 9pt; font-weight: bold; color: var(--accent-dark); }
+  .supplier-card { border: 2px solid var(--accent-light); padding: 6px 8px; background: var(--accent-bg); }
+  .reject-cell { background: #ffebee; color: #c62828; font-weight: bold; }
+  .accept-cell { color: #2e7d32; }
+  .result-badge-amber { display: inline-block; background: #fff3e0; border: 2px solid #ff9800; color: #e65100; font-weight: bold; font-size: 10pt; padding: 4px 14px; letter-spacing: 1px; }
+  .disc-note { border: 1px solid #e65100; background: #fff8e1; padding: 6px 8px; }
+  .storage-cell { background: var(--accent); color: white; text-align: center; padding: 4px; font-weight: bold; }
+  .storage-value { background: var(--accent-bg); text-align: center; padding: 4px; font-weight: bold; color: var(--accent-dark); border: 1px solid var(--accent-border); }
+</style>
+</head>
+<body>
+<div class="controls">
+  <a href="../index.html">&larr; Back to Gallery</a>
+  <button class="btn-pdf" onclick="downloadPdf('goods-received-note.pdf')">Download PDF</button>
+</div>
+
+<div class="printform paper_width" data-papersize-width="750" data-papersize-height="1050" data-repeat-header="y" data-repeat-rowheader="y" data-repeat-footer-logo="y" data-repeat-footer-pagenum="y" data-insert-dummy-row-item-while-format-table="y">
+
+  <!-- ========== PAGE HEADER ========== -->
+  <table cellpadding="0" cellspacing="0" class="paper_width pheader">
+    <tr>
+      <td width="480" style="vertical-align:middle;">
+        <span style="color:var(--accent-dark);font-size:16pt;font-weight:bold;letter-spacing:1px;">GOODS RECEIVED NOTE</span><br>
+        <span style="font-size:8pt;color:#666;">ACME CORPORATION PTE LTD &nbsp;|&nbsp; Warehouse Operations</span>
+      </td>
+      <td width="270" style="vertical-align:top;text-align:right;">
+        <span style="font-size:8pt;color:var(--accent-light);">Document No.</span><br>
+        <span style="font-weight:bold;font-size:12pt;color:var(--accent-dark);" contenteditable="true">GRN-2026-0134</span>
+      </td>
+    </tr>
+    <tr><td colspan="2" style="border-top:3px solid var(--accent);height:4px;"></td></tr>
+  </table>
+
+  <!-- ========== DOC INFO ========== -->
+  <table cellpadding="0" cellspacing="0" class="paper_width pdocinfo">
+    <tr>
+      <td width="187" class="ref-cell">
+        <span class="ref-label">GRN No.</span><br>
+        <span class="ref-value" contenteditable="true">GRN-2026-0134</span>
+      </td>
+      <td width="188" class="ref-cell">
+        <span class="ref-label">PO Reference</span><br>
+        <span class="ref-value" contenteditable="true">PO-2026-0042</span>
+      </td>
+      <td width="187" class="ref-cell">
+        <span class="ref-label">DO Reference</span><br>
+        <span class="ref-value" contenteditable="true">DO-2026-0891</span>
+      </td>
+      <td width="188" class="ref-cell">
+        <span class="ref-label">Date Received</span><br>
+        <span class="ref-value" contenteditable="true">02 Apr 2026</span>
+      </td>
+    </tr>
+    <tr><td colspan="4" style="height:6px;"></td></tr>
+    <tr>
+      <td colspan="4" class="supplier-card">
+        <span style="font-weight:bold;color:var(--accent);font-size:8pt;">SUPPLIER DETAILS</span><br>
+        <span style="font-weight:bold;" contenteditable="true">OMEGA SUPPLIES PTE LTD</span> &nbsp;&nbsp;|&nbsp;&nbsp;
+        <span contenteditable="true">51 Ubi Avenue 1, #03-12, Paya Ubi Industrial Park, Singapore 408933</span> &nbsp;&nbsp;|&nbsp;&nbsp;
+        <span contenteditable="true">Tel: +65 6745 8901</span>
+      </td>
+    </tr>
+    <tr><td colspan="4" style="height:6px;"></td></tr>
+  </table>
+
+  <!-- ========== ROW HEADER ========== -->
+  <table cellpadding="0" cellspacing="0" class="paper_width prowheader">
+    <tr>
+      <th width="30" style="text-align:center;">No</th>
+      <th width="65">Item Code</th>
+      <th width="175">Description</th>
+      <th width="60" style="text-align:center;">Ordered</th>
+      <th width="60" style="text-align:center;">Received</th>
+      <th width="60" style="text-align:center;">Accepted</th>
+      <th width="60" style="text-align:center;">Rejected</th>
+      <th width="240">Inspection Remarks</th>
+    </tr>
+  </table>
+
+  <!-- ========== ROW ITEMS ========== -->
+  <table cellpadding="0" cellspacing="0" class="paper_width prowitem">
+    <tr>
+      <td width="30" style="text-align:center;">1</td>
+      <td width="65" contenteditable="true">BRG-6205</td>
+      <td width="175" contenteditable="true">Deep Groove Ball Bearing 6205-2RS</td>
+      <td width="60" style="text-align:center;" contenteditable="true">24</td>
+      <td width="60" style="text-align:center;" contenteditable="true">24</td>
+      <td width="60" style="text-align:center;" class="accept-cell">24</td>
+      <td width="60" style="text-align:center;">0</td>
+      <td width="240" contenteditable="true" style="font-size:8pt;">All units inspected, packaging intact, no defects</td>
+    </tr>
+  </table>
+
+  <table cellpadding="0" cellspacing="0" class="paper_width prowitem">
+    <tr>
+      <td width="30" style="text-align:center;">2</td>
+      <td width="65" contenteditable="true">BLT-A68</td>
+      <td width="175" contenteditable="true">Industrial Drive Belt A68 V-Belt</td>
+      <td width="60" style="text-align:center;" contenteditable="true">12</td>
+      <td width="60" style="text-align:center;" contenteditable="true">12</td>
+      <td width="60" style="text-align:center;" class="accept-cell">12</td>
+      <td width="60" style="text-align:center;">0</td>
+      <td width="240" contenteditable="true" style="font-size:8pt;">Visual check passed, correct size and spec</td>
+    </tr>
+  </table>
+
+  <table cellpadding="0" cellspacing="0" class="paper_width prowitem">
+    <tr>
+      <td width="30" style="text-align:center;">3</td>
+      <td width="65" contenteditable="true">SNR-PX02</td>
+      <td width="175" contenteditable="true">Proximity Sensor PNP NO M12 10mm</td>
+      <td width="60" style="text-align:center;" contenteditable="true">8</td>
+      <td width="60" style="text-align:center;" contenteditable="true">8</td>
+      <td width="60" style="text-align:center;" class="accept-cell">5</td>
+      <td width="60" style="text-align:center;" class="reject-cell">3</td>
+      <td width="240" contenteditable="true" style="font-size:8pt;color:#c62828;font-weight:bold;">Scratched surface &mdash; visible defect on housing</td>
+    </tr>
+  </table>
+
+  <table cellpadding="0" cellspacing="0" class="paper_width prowitem">
+    <tr>
+      <td width="30" style="text-align:center;">4</td>
+      <td width="65" contenteditable="true">LUB-G220</td>
+      <td width="175" contenteditable="true">Synthetic Grease EP2 Lithium 15kg</td>
+      <td width="60" style="text-align:center;" contenteditable="true">2</td>
+      <td width="60" style="text-align:center;" contenteditable="true">2</td>
+      <td width="60" style="text-align:center;" class="accept-cell">2</td>
+      <td width="60" style="text-align:center;">0</td>
+      <td width="240" contenteditable="true" style="font-size:8pt;">Sealed pails, expiry date verified (Dec 2028)</td>
+    </tr>
+  </table>
+
+  <table cellpadding="0" cellspacing="0" class="paper_width prowitem">
+    <tr>
+      <td width="30" style="text-align:center;">5</td>
+      <td width="65" contenteditable="true">MTR-075</td>
+      <td width="175" contenteditable="true">AC Motor 0.75kW 3-Phase 1400RPM</td>
+      <td width="60" style="text-align:center;" contenteditable="true">1</td>
+      <td width="60" style="text-align:center;" contenteditable="true">1</td>
+      <td width="60" style="text-align:center;" class="accept-cell">1</td>
+      <td width="60" style="text-align:center;">0</td>
+      <td width="240" contenteditable="true" style="font-size:8pt;">S/N: MTR-2026-44891 recorded in asset register</td>
+    </tr>
+  </table>
+
+  <!-- ========== PTAC ========== -->
+  <table cellpadding="0" cellspacing="0" class="paper_width ptac">
+    <tr><td colspan="2" style="height:6px;"></td></tr>
+    <tr>
+      <td width="420" style="vertical-align:middle;">
+        <b>Inspection Result:</b> &nbsp;
+        <span class="result-badge-amber">PARTIAL ACCEPTANCE</span>
+      </td>
+      <td width="330" style="vertical-align:middle;text-align:right;font-size:8pt;">
+        Total Ordered: <b>47</b> &nbsp;|&nbsp; Received: <b>47</b> &nbsp;|&nbsp; Accepted: <b style="color:#2e7d32;">44</b> &nbsp;|&nbsp; Rejected: <b style="color:#c62828;">3</b>
+      </td>
+    </tr>
+    <tr><td colspan="2" style="height:6px;"></td></tr>
+    <tr>
+      <td colspan="2" class="disc-note">
+        <span style="font-weight:bold;color:#e65100;font-size:9pt;">DISCREPANCY NOTES</span><br>
+        <span contenteditable="true" style="font-size:8pt;line-height:1.6;">
+        1. Item 3 (SNR-PX02): 3 units rejected &mdash; sensor housing shows visible scratches and M12 connectors are bent. Suspected transit damage due to inadequate inner packaging.<br>
+        2. Supplier has been notified via email on 02 Apr 2026. Replacement delivery expected within 5 working days. Return Note RN-2026-0029 to be raised.<br>
+        3. Photographic evidence of damaged items has been captured and filed under reference GRN-2026-0134-PHOTOS.</span>
+      </td>
+    </tr>
+    <tr><td colspan="2" style="height:6px;"></td></tr>
+    <tr>
+      <td colspan="2" style="font-weight:bold;color:var(--accent);padding-bottom:3px;font-size:9pt;">STORAGE LOCATION</td>
+    </tr>
+  </table>
+  <table cellpadding="0" cellspacing="0" class="paper_width ptac">
+    <tr>
+      <td width="187" class="storage-cell">Warehouse</td>
+      <td width="188" class="storage-cell">Zone</td>
+      <td width="187" class="storage-cell">Aisle</td>
+      <td width="188" class="storage-cell">Bin</td>
+    </tr>
+    <tr>
+      <td width="187" class="storage-value" contenteditable="true">Main WH-01</td>
+      <td width="188" class="storage-value" contenteditable="true">Zone B - MRO</td>
+      <td width="187" class="storage-value" contenteditable="true">Aisle 7</td>
+      <td width="188" class="storage-value" contenteditable="true">Bin 7-C-04</td>
+    </tr>
+    <tr><td colspan="4" style="height:10px;"></td></tr>
+    <tr>
+      <td width="250" style="text-align:center;vertical-align:bottom;padding:0 8px;">
+        <div style="border-top:2px solid var(--accent);margin-top:40px;padding-top:3px;font-weight:bold;font-size:8pt;color:var(--accent);">Received By</div>
+        <div style="font-size:7pt;color:#666;">Name: ___________<br>Date: ___________</div>
+      </td>
+      <td width="250" style="text-align:center;vertical-align:bottom;padding:0 8px;">
+        <div style="border-top:2px solid var(--accent);margin-top:40px;padding-top:3px;font-weight:bold;font-size:8pt;color:var(--accent);">Quality Inspector</div>
+        <div style="font-size:7pt;color:#666;">Name: ___________<br>Date: ___________</div>
+      </td>
+      <td width="250" colspan="2" style="text-align:center;vertical-align:bottom;padding:0 8px;">
+        <div style="border-top:2px solid var(--accent);margin-top:40px;padding-top:3px;font-weight:bold;font-size:8pt;color:var(--accent);">Warehouse Manager</div>
+        <div style="font-size:7pt;color:#666;">Name: ___________<br>Date: ___________</div>
+      </td>
+    </tr>
+  </table>
+
+  <!-- ========== FOOTER ========== -->
+  <table cellpadding="0" cellspacing="0" class="paper_width pfooter">
+    <tr><td style="height:6px;"></td></tr>
+  </table>
+
+  <table cellpadding="0" cellspacing="0" class="paper_width pfooter_logo">
+    <tr>
+      <td style="text-align:center;font-size:8pt;color:#666;border-top:1px solid var(--accent);padding-top:4px;">
+        GRN-2026-0134 &nbsp;|&nbsp; ACME Corporation Pte Ltd &mdash; Warehouse Operations
+      </td>
+    </tr>
+  </table>
+
+  <table cellpadding="0" cellspacing="0" class="paper_width pfooter_pagenum">
+    <tr>
+      <td style="text-align:center;font-size:8pt;color:#999;padding-top:2px;"></td>
+    </tr>
+  </table>
+
+</div>
+
+<script src="../dist/printform.js"></script>
+<script src="../dist/html_to_vector_pdf.js"></script>
+<script src="../template-base.js"></script>
+</body>
+</html>

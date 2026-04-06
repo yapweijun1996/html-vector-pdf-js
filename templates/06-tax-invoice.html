@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tax Invoice - PINNACLE TECH SOLUTIONS PTE LTD</title>
+<link rel="stylesheet" href="../template-base.css">
+<style>
+  body { font-family: Arial, sans-serif; font-size: 9pt; color: #333; background: #f5f5f5; }
+  .printform { width: 750px; }
+  .paper_width { width: 750px; }
+</style>
+</head>
+<body>
+<div class="controls">
+  <a href="../index.html">&larr; Back to Gallery</a>
+  <button class="btn-pdf" onclick="downloadPdf('06-tax-invoice.pdf')">Download PDF</button>
+</div>
+
+<div class="printform paper_width"
+     data-papersize-width="750"
+     data-papersize-height="1050"
+     data-repeat-header="y"
+     data-repeat-docinfo="y"
+     data-repeat-rowheader="y"
+     data-repeat-footer-logo="y"
+     data-repeat-footer-pagenum="y"
+     data-insert-dummy-row-item-while-format-table="y">
+
+  <!-- ================================================================ -->
+  <!-- PAGE HEADER (repeats each page)                                  -->
+  <!-- ================================================================ -->
+  <div class="pheader">
+    <table width="100%" cellspacing="0" cellpadding="0" style="border:none;">
+      <tr>
+        <td style="text-align:center; padding-bottom:2px; border:none;">
+          <span style="font-size:15pt; font-weight:bold; color:#b71c1c;" contenteditable="true">PINNACLE TECH SOLUTIONS PTE LTD</span>
+        </td>
+      </tr>
+      <tr>
+        <td style="text-align:center; font-size:8pt; padding-bottom:1px; border:none;">
+          <span contenteditable="true">1 Harbourfront Walk, #09-12 VivoCity Tower, Singapore 098585</span>
+        </td>
+      </tr>
+      <tr>
+        <td style="text-align:center; font-size:8pt; padding-bottom:1px; border:none;">
+          Tel: <span contenteditable="true">+65 6771 3200</span> | Fax: <span contenteditable="true">+65 6771 3201</span> | Email: <span contenteditable="true">billing@pinnacletech.com.sg</span>
+        </td>
+      </tr>
+      <tr>
+        <td style="text-align:center; font-size:8pt; padding-bottom:1px; border:none;">
+          Co. Reg. No.: <span contenteditable="true">201908765W</span>
+        </td>
+      </tr>
+      <tr>
+        <td style="text-align:center; padding:4px 0 6px; border:none;">
+          <span style="background:#b71c1c; color:#fff; font-weight:bold; font-size:9pt; padding:4px 10px;">GST REG NO: <span contenteditable="true">M90312456B</span></span>
+        </td>
+      </tr>
+    </table>
+    <!-- Title with double lines -->
+    <table width="100%" cellspacing="0" cellpadding="0" style="border:none;">
+      <tr>
+        <td style="text-align:center; padding:6px 0; border-top:3px double #b71c1c; border-bottom:3px double #b71c1c; border-left:none; border-right:none;">
+          <span style="font-size:16pt; font-weight:bold; color:#b71c1c;">TAX INVOICE</span>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- DOCUMENT INFO                                                    -->
+  <!-- ================================================================ -->
+  <div class="pdocinfo">
+    <table width="100%" cellspacing="0" cellpadding="0" style="border:none;">
+      <tr>
+        <!-- Bill To -->
+        <td width="48%" valign="top" style="padding:8px 5px 0; border:none;">
+          <b style="font-size:9pt; color:#b71c1c;">BILL TO:</b><br>
+          <span style="font-weight:bold;" contenteditable="true">ORION DIGITAL PTE LTD</span><br>
+          <span contenteditable="true">80 Robinson Road, #17-02</span><br>
+          <span contenteditable="true">Singapore 068898</span><br>
+          <span style="font-size:8pt;">Attn: <span contenteditable="true">Ms. Rachel Ng</span></span><br>
+          <span style="font-size:8pt;">Tel: <span contenteditable="true">+65 6320 8800</span></span>
+        </td>
+        <!-- Invoice Details -->
+        <td width="48%" valign="top" style="padding:8px 0 0; border:none;">
+          <table width="100%" cellspacing="0" cellpadding="0" style="border:1px solid #ccc;">
+            <tr>
+              <td width="35%" style="padding:3px 5px; background:#f5f5f5; border-bottom:1px solid #ddd; font-weight:bold; font-size:8pt; border-right:1px solid #ddd;">INV No</td>
+              <td style="padding:3px 5px; border-bottom:1px solid #ddd;" contenteditable="true">INV-2026-04217</td>
+            </tr>
+            <tr>
+              <td style="padding:3px 5px; background:#f5f5f5; border-bottom:1px solid #ddd; font-weight:bold; font-size:8pt; border-right:1px solid #ddd;">Date</td>
+              <td style="padding:3px 5px; border-bottom:1px solid #ddd;" contenteditable="true">02 April 2026</td>
+            </tr>
+            <tr>
+              <td style="padding:3px 5px; background:#f5f5f5; border-bottom:1px solid #ddd; font-weight:bold; font-size:8pt; border-right:1px solid #ddd;">Due Date</td>
+              <td style="padding:3px 5px; border-bottom:1px solid #ddd;" contenteditable="true">02 May 2026</td>
+            </tr>
+            <tr>
+              <td style="padding:3px 5px; background:#f5f5f5; border-bottom:1px solid #ddd; font-weight:bold; font-size:8pt; border-right:1px solid #ddd;">Terms</td>
+              <td style="padding:3px 5px; border-bottom:1px solid #ddd;" contenteditable="true">Net 30</td>
+            </tr>
+            <tr>
+              <td style="padding:3px 5px; background:#f5f5f5; font-weight:bold; font-size:8pt; border-right:1px solid #ddd;">Currency</td>
+              <td style="padding:3px 5px;" contenteditable="true">SGD</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- ROW HEADER (repeats each page)                                   -->
+  <!-- ================================================================ -->
+  <div class="prowheader">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr style="height:30px;">
+        <td width="4%"  style="background:#b71c1c; color:#ffffff; font-weight:bold; text-align:center; padding:6px 2px; font-size:8pt; border:1px solid #b71c1c;">S/N</td>
+        <td width="48%" style="background:#b71c1c; color:#ffffff; font-weight:bold; text-align:center; padding:6px 2px; font-size:8pt; border:1px solid #b71c1c;">Description</td>
+        <td width="8%"  style="background:#b71c1c; color:#ffffff; font-weight:bold; text-align:center; padding:6px 2px; font-size:8pt; border:1px solid #b71c1c;">QTY</td>
+        <td width="19%" style="background:#b71c1c; color:#ffffff; font-weight:bold; text-align:center; padding:6px 2px; font-size:8pt; border:1px solid #b71c1c;">Unit Price (SGD)</td>
+        <td width="21%" style="background:#b71c1c; color:#ffffff; font-weight:bold; text-align:center; padding:6px 2px; font-size:8pt; border:1px solid #b71c1c;">Amount (SGD)</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- ROW ITEMS                                                        -->
+  <!-- ================================================================ -->
+
+  <!-- Item 1 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; border-left:1px solid #ddd; border-bottom:1px solid #e0e0e0;">1</td>
+        <td width="48%" style="padding:5px 4px; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">HP ProBook 450 G10 Laptop i5/16GB/512GB SSD</span></td>
+        <td width="8%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">8</span></td>
+        <td width="19%" style="text-align:right; padding:5px 6px; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">1,620.00</span></td>
+        <td width="21%" style="text-align:right; padding:5px 6px; border-right:1px solid #ddd; border-bottom:1px solid #e0e0e0;">12,960.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 2 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-left:1px solid #ddd; border-bottom:1px solid #e0e0e0;">2</td>
+        <td width="48%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">Cisco Meraki MR46 Wireless Access Point</span></td>
+        <td width="8%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">4</span></td>
+        <td width="19%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">1,350.00</span></td>
+        <td width="21%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-right:1px solid #ddd; border-bottom:1px solid #e0e0e0;">5,400.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 3 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; border-left:1px solid #ddd; border-bottom:1px solid #e0e0e0;">3</td>
+        <td width="48%" style="padding:5px 4px; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">APC Smart-UPS 1500VA LCD Rack-Mount 2U</span></td>
+        <td width="8%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">2</span></td>
+        <td width="19%" style="text-align:right; padding:5px 6px; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">1,180.00</span></td>
+        <td width="21%" style="text-align:right; padding:5px 6px; border-right:1px solid #ddd; border-bottom:1px solid #e0e0e0;">2,360.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 4 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-left:1px solid #ddd; border-bottom:1px solid #e0e0e0;">4</td>
+        <td width="48%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">Synology DS1621+ NAS 6-Bay (Diskless)</span></td>
+        <td width="8%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">1</span></td>
+        <td width="19%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">1,490.00</span></td>
+        <td width="21%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-right:1px solid #ddd; border-bottom:1px solid #e0e0e0;">1,490.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 5 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; border-left:1px solid #ddd; border-bottom:1px solid #e0e0e0;">5</td>
+        <td width="48%" style="padding:5px 4px; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">On-Site Network Setup and Configuration Service (per day)</span></td>
+        <td width="8%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">3</span></td>
+        <td width="19%" style="text-align:right; padding:5px 6px; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">650.00</span></td>
+        <td width="21%" style="text-align:right; padding:5px 6px; border-right:1px solid #ddd; border-bottom:1px solid #e0e0e0;">1,950.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 6 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-left:1px solid #ddd; border-bottom:1px solid #e0e0e0;">6</td>
+        <td width="48%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">Kaspersky Endpoint Security, 3-year license (per seat)</span></td>
+        <td width="8%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">25</span></td>
+        <td width="19%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">85.00</span></td>
+        <td width="21%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-right:1px solid #ddd; border-bottom:1px solid #e0e0e0;">2,125.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 7 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; border-left:1px solid #ddd; border-bottom:1px solid #e0e0e0;">7</td>
+        <td width="48%" style="padding:5px 4px; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">Acronis Cloud Backup, 1TB annual subscription</span></td>
+        <td width="8%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">1</span></td>
+        <td width="19%" style="text-align:right; padding:5px 6px; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">1,200.00</span></td>
+        <td width="21%" style="text-align:right; padding:5px 6px; border-right:1px solid #ddd; border-bottom:1px solid #e0e0e0;">1,200.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 8 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-left:1px solid #ddd; border-bottom:1px solid #e0e0e0;">8</td>
+        <td width="48%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">Microsoft 365 Business Standard, annual license (per user)</span></td>
+        <td width="8%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">25</span></td>
+        <td width="19%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">198.00</span></td>
+        <td width="21%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-right:1px solid #ddd; border-bottom:1px solid #e0e0e0;">4,950.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 9 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; border-left:1px solid #ddd; border-bottom:1px solid #e0e0e0;">9</td>
+        <td width="48%" style="padding:5px 4px; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">Domain name renewal (.com.sg), 2-year term</span></td>
+        <td width="8%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">3</span></td>
+        <td width="19%" style="text-align:right; padding:5px 6px; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">80.00</span></td>
+        <td width="21%" style="text-align:right; padding:5px 6px; border-right:1px solid #ddd; border-bottom:1px solid #e0e0e0;">240.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 10 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-left:1px solid #ddd; border-bottom:1px solid #e0e0e0;">10</td>
+        <td width="48%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">SSL certificate, wildcard 2-year (*.oriondigital.com.sg)</span></td>
+        <td width="8%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">1</span></td>
+        <td width="19%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">350.00</span></td>
+        <td width="21%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-right:1px solid #ddd; border-bottom:1px solid #e0e0e0;">350.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 11 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; border-left:1px solid #ddd; border-bottom:1px solid #e0e0e0;">11</td>
+        <td width="48%" style="padding:5px 4px; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">FortiClient VPN license, annual (per user)</span></td>
+        <td width="8%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">15</span></td>
+        <td width="19%" style="text-align:right; padding:5px 6px; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">65.00</span></td>
+        <td width="21%" style="text-align:right; padding:5px 6px; border-right:1px solid #ddd; border-bottom:1px solid #e0e0e0;">975.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 12 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-left:1px solid #ddd; border-bottom:1px solid #e0e0e0;">12</td>
+        <td width="48%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">FortiGate 60F Next-Gen Firewall Appliance</span></td>
+        <td width="8%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">1</span></td>
+        <td width="19%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">2,480.00</span></td>
+        <td width="21%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-right:1px solid #ddd; border-bottom:1px solid #e0e0e0;">2,480.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 13 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; border-left:1px solid #ddd; border-bottom:1px solid #e0e0e0;">13</td>
+        <td width="48%" style="padding:5px 4px; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">Cisco SG350-28 28-Port Managed Gigabit Switch</span></td>
+        <td width="8%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">2</span></td>
+        <td width="19%" style="text-align:right; padding:5px 6px; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">680.00</span></td>
+        <td width="21%" style="text-align:right; padding:5px 6px; border-right:1px solid #ddd; border-bottom:1px solid #e0e0e0;">1,360.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 14 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-left:1px solid #ddd; border-bottom:1px solid #e0e0e0;">14</td>
+        <td width="48%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">Cat6A patch cable, 2m blue (Pack of 24)</span></td>
+        <td width="8%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">5</span></td>
+        <td width="19%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">48.00</span></td>
+        <td width="21%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-right:1px solid #ddd; border-bottom:1px solid #e0e0e0;">240.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 15 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; border-left:1px solid #ddd; border-bottom:1px solid #e0e0e0;">15</td>
+        <td width="48%" style="padding:5px 4px; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">APC RBC replacement battery cartridge for UPS</span></td>
+        <td width="8%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">2</span></td>
+        <td width="19%" style="text-align:right; padding:5px 6px; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">320.00</span></td>
+        <td width="21%" style="text-align:right; padding:5px 6px; border-right:1px solid #ddd; border-bottom:1px solid #e0e0e0;">640.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 16 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-left:1px solid #ddd; border-bottom:1px solid #e0e0e0;">16</td>
+        <td width="48%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">42U server rack cabinet, 600mm x 1000mm with fans</span></td>
+        <td width="8%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">1</span></td>
+        <td width="19%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">1,850.00</span></td>
+        <td width="21%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-right:1px solid #ddd; border-bottom:1px solid #e0e0e0;">1,850.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 17 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; border-left:1px solid #ddd; border-bottom:1px solid #e0e0e0;">17</td>
+        <td width="48%" style="padding:5px 4px; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">Aten 8-Port KVM switch with cables</span></td>
+        <td width="8%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">1</span></td>
+        <td width="19%" style="text-align:right; padding:5px 6px; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">890.00</span></td>
+        <td width="21%" style="text-align:right; padding:5px 6px; border-right:1px solid #ddd; border-bottom:1px solid #e0e0e0;">890.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 18 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-left:1px solid #ddd; border-bottom:1px solid #e0e0e0;">18</td>
+        <td width="48%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">Synology 8TB NAS HDD (HAT5300-8T) for DS1621+</span></td>
+        <td width="8%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">6</span></td>
+        <td width="19%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">380.00</span></td>
+        <td width="21%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-right:1px solid #ddd; border-bottom:1px solid #e0e0e0;">2,280.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 19 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; border-left:1px solid #ddd; border-bottom:1px solid #e0e0e0;">19</td>
+        <td width="48%" style="padding:5px 4px; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">HP LaserJet Pro M428fdw toner cartridge (Black)</span></td>
+        <td width="8%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">8</span></td>
+        <td width="19%" style="text-align:right; padding:5px 6px; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">125.00</span></td>
+        <td width="21%" style="text-align:right; padding:5px 6px; border-right:1px solid #ddd; border-bottom:1px solid #e0e0e0;">1,000.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 20 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-left:1px solid #ddd; border-bottom:1px solid #e0e0e0;">20</td>
+        <td width="48%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">Fujitsu fi-7160 document scanner, 60ppm duplex</span></td>
+        <td width="8%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">2</span></td>
+        <td width="19%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">980.00</span></td>
+        <td width="21%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-right:1px solid #ddd; border-bottom:1px solid #e0e0e0;">1,960.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 21 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; border-left:1px solid #ddd; border-bottom:1px solid #e0e0e0;">21</td>
+        <td width="48%" style="padding:5px 4px; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">Zebra DS2208 handheld barcode reader, USB</span></td>
+        <td width="8%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">4</span></td>
+        <td width="19%" style="text-align:right; padding:5px 6px; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">165.00</span></td>
+        <td width="21%" style="text-align:right; padding:5px 6px; border-right:1px solid #ddd; border-bottom:1px solid #e0e0e0;">660.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 22 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-left:1px solid #ddd; border-bottom:1px solid #e0e0e0;">22</td>
+        <td width="48%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">Brother QL-820NWB label printer, Wi-Fi/Bluetooth</span></td>
+        <td width="8%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">2</span></td>
+        <td width="19%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-bottom:1px solid #e0e0e0;"><span contenteditable="true">420.00</span></td>
+        <td width="21%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-right:1px solid #ddd; border-bottom:1px solid #e0e0e0;">840.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 23 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; border-left:1px solid #ddd; border-bottom:2px solid #b71c1c;">23</td>
+        <td width="48%" style="padding:5px 4px; border-bottom:2px solid #b71c1c;"><span contenteditable="true">Samsung Galaxy Tab A9 tablet, 64GB Wi-Fi</span></td>
+        <td width="8%"  style="text-align:center; padding:5px 4px; border-bottom:2px solid #b71c1c;"><span contenteditable="true">4</span></td>
+        <td width="19%" style="text-align:right; padding:5px 6px; border-bottom:2px solid #b71c1c;"><span contenteditable="true">298.00</span></td>
+        <td width="21%" style="text-align:right; padding:5px 6px; border-right:1px solid #ddd; border-bottom:2px solid #b71c1c;">1,192.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- TOTALS                                                           -->
+  <!-- ================================================================ -->
+  <div class="prowitem">
+    <table width="100%" cellspacing="0" cellpadding="0" style="border:none;">
+      <tr>
+        <td width="60%" style="border:none;"></td>
+        <td width="19%" style="text-align:right; padding:5px 5px 3px; font-weight:bold; font-size:8pt; border:none;">Subtotal:</td>
+        <td width="21%" style="text-align:right; padding:5px 5px 3px; border-top:1px solid #333; border-left:none; border-right:none; border-bottom:none;"><span contenteditable="true">24,160.00</span></td>
+      </tr>
+      <tr>
+        <td style="border:none;"></td>
+        <td style="text-align:right; padding:3px 5px; font-weight:bold; font-size:8pt; background:#fff9c4; border:none;">GST 9%:</td>
+        <td style="text-align:right; padding:3px 5px; background:#fff9c4; border:none;"><span contenteditable="true">2,174.40</span></td>
+      </tr>
+      <tr>
+        <td style="border:none;"></td>
+        <td style="text-align:right; padding:5px; background:#b71c1c; color:#fff; font-weight:bold; font-size:11pt; border:none;">TOTAL SGD:</td>
+        <td style="text-align:right; padding:5px; background:#b71c1c; color:#fff; font-weight:bold; font-size:11pt; border:none;"><span contenteditable="true">26,334.40</span></td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- AMOUNT IN WORDS + BANK DETAILS + PAYMENT TERMS                   -->
+  <!-- ================================================================ -->
+  <div class="prowitem">
+    <table width="100%" cellspacing="0" cellpadding="0" style="border:none; margin-top:8px;">
+      <tr>
+        <td style="padding:4px 5px; font-style:italic; font-size:8pt; border:none;">
+          <b>Amount in Words:</b> <span contenteditable="true">Singapore Dollars Twenty-Six Thousand Three Hundred and Thirty-Four and Cents Forty Only</span>
+        </td>
+      </tr>
+    </table>
+    <!-- Bank Details -->
+    <table width="100%" cellspacing="0" cellpadding="0" style="border:none; margin-top:8px;">
+      <tr>
+        <td style="padding:3px 5px; font-weight:bold; font-size:9pt; color:#b71c1c; border:none;">BANK DETAILS FOR PAYMENT</td>
+      </tr>
+    </table>
+    <table width="100%" cellspacing="0" cellpadding="0" style="border:1px dashed #999; border-collapse:collapse;">
+      <tr>
+        <td width="50%" valign="top" style="padding:3px 5px; font-size:8pt; border:1px dashed #999;">
+          <b>Bank Name:</b> <span contenteditable="true">OCBC Bank</span><br>
+          <b>Branch:</b> <span contenteditable="true">Orchard Branch, Singapore</span>
+        </td>
+        <td width="50%" valign="top" style="padding:3px 5px; font-size:8pt; border:1px dashed #999;">
+          <b>Account No:</b> <span contenteditable="true">601-238-901-001</span><br>
+          <b>SWIFT Code:</b> <span contenteditable="true">OCBCSGSG</span><br>
+          <b>PayNow UEN:</b> <span contenteditable="true">201908765W</span>
+        </td>
+      </tr>
+    </table>
+    <!-- Payment Terms -->
+    <table width="100%" cellspacing="0" cellpadding="0" style="border:none; margin-top:8px;">
+      <tr>
+        <td style="padding:4px 5px; font-size:8pt; border:none;">
+          <span style="font-weight:bold; color:#b71c1c;">Payment Terms:</span> <span style="color:#333;">Net 30 days. Late payment interest: 1.5% per month on outstanding balance.</span>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- SIGNATURES                                                       -->
+  <!-- ================================================================ -->
+  <div class="pfooter">
+    <table width="100%" cellspacing="0" cellpadding="0" style="border:none; margin-top:10px;">
+      <tr>
+        <td style="text-align:center; font-size:8pt; color:#888; border:none;">
+          This is a computer-generated invoice. No signature is required.
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- FOOTER                                                           -->
+  <!-- ================================================================ -->
+  <div class="pfooter_logo" style="font-size:8pt; text-align:center; color:#888; border-top:1px solid #b71c1c; padding-top:4px;">Pinnacle Tech Solutions Pte Ltd &nbsp;|&nbsp; INV-2026-04217</div>
+  <div class="pfooter_pagenum" style="font-size:8pt; text-align:center; color:#999;">Page <span data-page-number></span> of <span data-page-total></span></div>
+
+</div>
+
+<script src="../dist/printform.js"></script>
+<script src="../dist/html_to_vector_pdf.js"></script>
+<script src="../template-base.js"></script>
+</body>
+</html>

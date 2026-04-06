@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Purchase Order - PO-2026-0042</title>
+<link rel="stylesheet" href="../template-base.css">
+<style>
+  body { font-family: Arial, sans-serif; font-size: 9pt; color: #333; background: #f5f5f5; }
+  .printform { width: 750px; }
+  .paper_width { width: 750px; }
+</style>
+</head>
+<body>
+<div class="controls">
+  <a href="../index.html">&larr; Back to Gallery</a>
+  <button class="btn-pdf" onclick="downloadPdf('purchase-order.pdf')">Download PDF</button>
+</div>
+
+<div class="printform paper_width"
+     data-papersize-width="750"
+     data-papersize-height="1050"
+     data-repeat-header="y"
+     data-repeat-docinfo="n"
+     data-repeat-rowheader="y"
+     data-repeat-footer-logo="y"
+     data-repeat-footer-pagenum="y"
+     data-insert-dummy-row-item-while-format-table="y">
+
+  <!-- ================================================================ -->
+  <!-- PAGE HEADER (repeats each page)                                  -->
+  <!-- ================================================================ -->
+  <div class="pheader">
+    <table width="100%" cellspacing="0" cellpadding="0" style="border:none;">
+      <tr>
+        <td width="70" style="background:#1a3a5c; color:#ffffff; text-align:center; font-size:22pt; font-weight:bold; padding:12px 10px; border:none;" valign="middle">AC</td>
+        <td style="padding:8px 14px; border:none;" valign="middle">
+          <span style="font-size:13pt; font-weight:bold; color:#1a3a5c;">ACME CORPORATION PTE LTD</span><br>
+          <span style="font-size:8pt; color:#666;">Co. Reg. No. 200312345K &nbsp;|&nbsp; GST Reg. No. M2-0012345-6</span><br>
+          <span style="font-size:8pt; color:#666;">10 Anson Road, #20-05 International Plaza, Singapore 079903</span><br>
+          <span style="font-size:8pt; color:#666;">Tel: +65 6223 4567 &nbsp;|&nbsp; Fax: +65 6223 4568 &nbsp;|&nbsp; procurement@acmecorp.com.sg</span>
+        </td>
+      </tr>
+    </table>
+    <!-- Accent line -->
+    <table width="100%" cellspacing="0" cellpadding="0" style="border:none;">
+      <tr>
+        <td style="border:none; border-bottom:3px solid #c0392b; padding:0; height:1px; font-size:0; line-height:0;">&nbsp;</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- DOCUMENT INFO                                                    -->
+  <!-- ================================================================ -->
+  <div class="pdocinfo">
+    <!-- Title -->
+    <table width="100%" cellspacing="0" cellpadding="0" style="border:none;">
+      <tr>
+        <td style="text-align:center; padding:10px 0 4px; border:none;">
+          <span style="font-size:14pt; font-weight:bold; color:#c0392b; letter-spacing:2px;">PURCHASE ORDER</span>
+        </td>
+      </tr>
+      <tr>
+        <td style="text-align:center; padding:0 0 8px; border:none; font-size:9pt; color:#555;">
+          PO No: <b contenteditable="true">PO-2026-0042</b> &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; Date: <b contenteditable="true">02 April 2026</b>
+        </td>
+      </tr>
+    </table>
+
+    <!-- Vendor + Ship To side by side -->
+    <table width="100%" cellspacing="0" cellpadding="0" style="border:none;">
+      <tr>
+        <!-- VENDOR -->
+        <td width="50%" valign="top" style="padding:0 8px 8px 0; border:none;">
+          <table width="100%" cellspacing="0" cellpadding="0" style="border:none;">
+            <tr>
+              <td style="background:#1a3a5c; color:#ffffff; font-size:8pt; font-weight:bold; padding:4px 8px; letter-spacing:1px; border:none;">VENDOR</td>
+            </tr>
+            <tr>
+              <td style="padding:8px; background:#f4f6f8; border:1px solid #e0e4e8; border-top:none;">
+                <span style="font-weight:bold;" contenteditable="true">OMEGA SUPPLIES PTE LTD</span><br>
+                <span style="font-size:8pt;" contenteditable="true">51 Ubi Avenue 1, #03-12</span><br>
+                <span style="font-size:8pt;" contenteditable="true">Paya Ubi Industrial Park</span><br>
+                <span style="font-size:8pt;" contenteditable="true">Singapore 408933</span><br>
+                <span style="font-size:8pt;">Tel: <span contenteditable="true">+65 6745 8901</span></span><br>
+                <span style="font-size:8pt;">Attn: <span contenteditable="true">Mr. Kevin Loh</span></span>
+              </td>
+            </tr>
+          </table>
+        </td>
+        <!-- SHIP TO + PO DETAILS -->
+        <td width="50%" valign="top" style="padding:0 0 8px 8px; border:none;">
+          <table width="100%" cellspacing="0" cellpadding="0" style="border:none;">
+            <tr>
+              <td colspan="2" style="background:#1a3a5c; color:#ffffff; font-size:8pt; font-weight:bold; padding:4px 8px; letter-spacing:1px; border:none;">ORDER DETAILS</td>
+            </tr>
+          </table>
+          <table width="100%" cellspacing="0" cellpadding="0" style="border:1px solid #e0e4e8; border-top:none;">
+            <tr>
+              <td width="110" style="padding:3px 8px; background:#f4f6f8; font-weight:bold; font-size:8pt; border-bottom:1px solid #e0e4e8; border-right:1px solid #e0e4e8;">Payment Terms</td>
+              <td style="padding:3px 8px; border-bottom:1px solid #e0e4e8;" contenteditable="true">Net 30</td>
+            </tr>
+            <tr>
+              <td style="padding:3px 8px; background:#f4f6f8; font-weight:bold; font-size:8pt; border-bottom:1px solid #e0e4e8; border-right:1px solid #e0e4e8;">Required By</td>
+              <td style="padding:3px 8px; border-bottom:1px solid #e0e4e8;" contenteditable="true">30 April 2026</td>
+            </tr>
+            <tr>
+              <td style="padding:3px 8px; background:#f4f6f8; font-weight:bold; font-size:8pt; border-bottom:1px solid #e0e4e8; border-right:1px solid #e0e4e8;">Buyer</td>
+              <td style="padding:3px 8px; border-bottom:1px solid #e0e4e8;" contenteditable="true">Sarah Tan</td>
+            </tr>
+            <tr>
+              <td style="padding:3px 8px; background:#f4f6f8; font-weight:bold; font-size:8pt; border-bottom:1px solid #e0e4e8; border-right:1px solid #e0e4e8;">Currency</td>
+              <td style="padding:3px 8px; border-bottom:1px solid #e0e4e8;" contenteditable="true">SGD</td>
+            </tr>
+            <tr>
+              <td style="padding:3px 8px; background:#f4f6f8; font-weight:bold; font-size:8pt; border-right:1px solid #e0e4e8;">Ship To</td>
+              <td style="padding:3px 8px;" contenteditable="true">Warehouse B, 15 Tuas South Ave 3, S637083</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- ROW HEADER (repeats each page)                                   -->
+  <!-- ================================================================ -->
+  <div class="prowheader">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr style="height:30px;">
+        <td width="4%"  style="background:#2c3e50; color:#ffffff; font-weight:bold; text-align:center; padding:6px 2px; font-size:8pt; border:1px solid #2c3e50;">S/N</td>
+        <td width="12%" style="background:#2c3e50; color:#ffffff; font-weight:bold; text-align:center; padding:6px 2px; font-size:8pt; border:1px solid #2c3e50;">ITEM</td>
+        <td width="38%" style="background:#2c3e50; color:#ffffff; font-weight:bold; text-align:center; padding:6px 2px; font-size:8pt; border:1px solid #2c3e50;">DESCRIPTION</td>
+        <td width="8%"  style="background:#2c3e50; color:#ffffff; font-weight:bold; text-align:center; padding:6px 2px; font-size:8pt; border:1px solid #2c3e50;">QTY</td>
+        <td width="6%"  style="background:#2c3e50; color:#ffffff; font-weight:bold; text-align:center; padding:6px 2px; font-size:8pt; border:1px solid #2c3e50;">UOM</td>
+        <td width="14%" style="background:#2c3e50; color:#ffffff; font-weight:bold; text-align:center; padding:6px 2px; font-size:8pt; border:1px solid #2c3e50;">UNIT PRICE</td>
+        <td width="18%" style="background:#2c3e50; color:#ffffff; font-weight:bold; text-align:center; padding:6px 2px; font-size:8pt; border:1px solid #2c3e50;">AMOUNT (SGD)</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- ROW ITEMS                                                        -->
+  <!-- ================================================================ -->
+
+  <!-- Item 1 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">1</td>
+        <td width="12%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">IND-4401</span></td>
+        <td width="38%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">Heavy-duty nitrile gloves, Size L (Box of 100)</span></td>
+        <td width="8%"  style="text-align:right; padding:5px 6px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">50</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 2px; border-bottom:1px solid #e8e8e8;">Box</td>
+        <td width="14%" style="text-align:right; padding:5px 6px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">18.50</span></td>
+        <td width="18%" style="text-align:right; padding:5px 6px; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">925.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 2 (alternate row) -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">2</td>
+        <td width="12%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">IND-4502</span></td>
+        <td width="38%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">3M N95 respirator mask, model 8210 (Box of 20)</span></td>
+        <td width="8%"  style="text-align:right; padding:5px 6px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">30</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;">Box</td>
+        <td width="14%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">45.00</span></td>
+        <td width="18%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">1,350.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 3 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">3</td>
+        <td width="12%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">IND-5010</span></td>
+        <td width="38%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">Stainless steel cable ties 300mm (Pack of 100)</span></td>
+        <td width="8%"  style="text-align:right; padding:5px 6px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">20</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 2px; border-bottom:1px solid #e8e8e8;">Pack</td>
+        <td width="14%" style="text-align:right; padding:5px 6px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">32.00</span></td>
+        <td width="18%" style="text-align:right; padding:5px 6px; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">640.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 4 (alternate row) -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">4</td>
+        <td width="12%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">IND-6200</span></td>
+        <td width="38%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">Industrial degreaser, 5-litre drum</span></td>
+        <td width="8%"  style="text-align:right; padding:5px 6px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">15</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;">Drum</td>
+        <td width="14%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">56.00</span></td>
+        <td width="18%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">840.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 5 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">5</td>
+        <td width="12%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">IND-7300</span></td>
+        <td width="38%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">Safety goggles, anti-fog polycarbonate lens</span></td>
+        <td width="8%"  style="text-align:right; padding:5px 6px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">40</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 2px; border-bottom:1px solid #e8e8e8;">Pc</td>
+        <td width="14%" style="text-align:right; padding:5px 6px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">12.80</span></td>
+        <td width="18%" style="text-align:right; padding:5px 6px; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">512.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 6 (alternate row) -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">6</td>
+        <td width="12%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">IND-8100</span></td>
+        <td width="38%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">Multi-purpose lubricant spray WD-40, 400ml</span></td>
+        <td width="8%"  style="text-align:right; padding:5px 6px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">60</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;">Can</td>
+        <td width="14%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">8.90</span></td>
+        <td width="18%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">534.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 7 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; border-left:1px solid #ddd; border-bottom:2px solid #2c3e50;">7</td>
+        <td width="12%" style="padding:5px 4px; border-bottom:2px solid #2c3e50;"><span contenteditable="true">IND-9010</span></td>
+        <td width="38%" style="padding:5px 4px; border-bottom:2px solid #2c3e50;"><span contenteditable="true">PVC electrical tape, 19mm x 20m (Pack of 10)</span></td>
+        <td width="8%"  style="text-align:right; padding:5px 6px; border-bottom:2px solid #2c3e50;"><span contenteditable="true">25</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 2px; border-bottom:2px solid #2c3e50;">Pack</td>
+        <td width="14%" style="text-align:right; padding:5px 6px; border-bottom:2px solid #2c3e50;"><span contenteditable="true">15.60</span></td>
+        <td width="18%" style="text-align:right; padding:5px 6px; border-right:1px solid #ddd; border-bottom:2px solid #2c3e50;">390.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- TOTALS                                                           -->
+  <!-- ================================================================ -->
+  <div class="prowitem">
+    <table width="100%" cellspacing="0" cellpadding="0" style="border:none;">
+      <tr>
+        <td width="62%" style="border:none;"></td>
+        <td width="20%" style="text-align:right; font-weight:bold; padding:6px 8px; font-size:9pt; border:none;">Subtotal:</td>
+        <td width="18%" style="text-align:right; padding:6px 8px; font-size:9pt; border:none;">5,191.00</td>
+      </tr>
+      <tr>
+        <td style="border:none;"></td>
+        <td style="text-align:right; font-weight:bold; padding:3px 8px; font-size:9pt; border:none;">Discount (5%):</td>
+        <td style="text-align:right; padding:3px 8px; font-size:9pt; border:none; color:#c0392b;">(259.55)</td>
+      </tr>
+      <tr>
+        <td style="border:none;"></td>
+        <td style="text-align:right; font-weight:bold; padding:3px 8px; font-size:9pt; border:none;">GST (9%):</td>
+        <td style="text-align:right; padding:3px 8px; font-size:9pt; border:none;">443.83</td>
+      </tr>
+      <tr>
+        <td style="border:none;"></td>
+        <td style="text-align:right; font-weight:bold; padding:8px 8px 6px; font-size:10pt; border-top:2px solid #1a3a5c; background:#1a3a5c; color:#ffffff;">TOTAL SGD:</td>
+        <td style="text-align:right; font-weight:bold; padding:8px 8px 6px; font-size:10pt; border-top:2px solid #1a3a5c; background:#1a3a5c; color:#ffffff;">5,375.28</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- TERMS & CONDITIONS                                               -->
+  <!-- ================================================================ -->
+  <div class="prowitem">
+    <table width="100%" cellspacing="0" cellpadding="0" style="border:none; margin-top:12px;">
+      <tr>
+        <td style="border:none; padding:0 0 4px;">
+          <span style="font-size:9pt; font-weight:bold; color:#1a3a5c;">Terms &amp; Conditions:</span>
+        </td>
+      </tr>
+      <tr>
+        <td style="border:none; padding:2px 0 0 10px; font-size:8pt; color:#555; line-height:1.7;">
+          1. Delivery must be made to the specified Ship To address during business hours (Mon-Fri, 8:00 AM - 5:00 PM).<br>
+          2. All goods must conform to the specifications stated. Defective goods will be returned at vendor's expense.<br>
+          3. Payment will be processed within 30 days from receipt of goods and a valid tax invoice.<br>
+          4. Vendor shall provide a delivery order and packing list with each shipment.
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- SIGNATURES                                                       -->
+  <!-- ================================================================ -->
+  <div class="pfooter">
+    <table width="100%" cellspacing="0" cellpadding="0" style="border:none; margin-top:20px;">
+      <tr>
+        <td width="50%" style="text-align:center; vertical-align:top; padding:0 20px; border:none;">
+          <table width="100%" cellspacing="0" cellpadding="0" style="border:none;">
+            <tr><td style="border:none; height:50px;"></td></tr>
+            <tr><td style="border:none; border-top:1px solid #333; padding-top:6px; text-align:center;">
+              <span style="font-weight:bold;">Prepared By</span><br>
+              <span contenteditable="true">Sarah Tan</span><br>
+              <span style="font-size:8pt; color:#888;">Procurement Executive</span>
+            </td></tr>
+          </table>
+        </td>
+        <td width="50%" style="text-align:center; vertical-align:top; padding:0 20px; border:none;">
+          <table width="100%" cellspacing="0" cellpadding="0" style="border:none;">
+            <tr><td style="border:none; height:50px;"></td></tr>
+            <tr><td style="border:none; border-top:1px solid #333; padding-top:6px; text-align:center;">
+              <span style="font-weight:bold;">Approved By</span><br>
+              <span contenteditable="true">James Wong</span><br>
+              <span style="font-size:8pt; color:#888;">Procurement Manager</span>
+            </td></tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- FOOTER                                                           -->
+  <!-- ================================================================ -->
+  <div class="pfooter_logo" style="font-size:8pt; text-align:center; color:#888; border-top:1px solid #c0392b; padding-top:4px;">ACME CORPORATION PTE LTD &nbsp;|&nbsp; This is a computer-generated document. No signature is required.</div>
+  <div class="pfooter_pagenum" style="font-size:8pt; text-align:center; color:#999;">Page <span data-page-number></span> of <span data-page-total></span></div>
+
+</div>
+
+<script src="../dist/printform.js"></script>
+<script src="../dist/html_to_vector_pdf.js"></script>
+<script src="../template-base.js"></script>
+</body>
+</html>

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Purchase Requisition - PR-2026-0067</title>
+<link rel="stylesheet" href="../template-base.css">
+<style>
+  :root { --accent: #00695c; --accent-light: #00897b; --accent-bg: #e0f2f1; --accent-border: #b2dfdb; --accent-mid: #4db6ac; --accent-dark: #004d40; }
+  .prowheader th, .prowheader_processed th { background: var(--accent); color: white; font-size: 8pt; text-transform: uppercase; letter-spacing: .04em; padding: 5px 6px; border: 1px solid var(--accent); }
+  .prowitem td, .prowitem_processed td { border: 1px solid #e5e7eb; padding: 4px 6px; }
+  .stamp-badge { display: inline-block; border: 3px solid var(--accent-light); color: var(--accent); font-weight: bold; font-size: 8pt; padding: 3px 10px; transform: rotate(-3deg); letter-spacing: 1px; background: var(--accent-bg); }
+  .form-label { font-size: 7pt; color: var(--accent); font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
+  .form-value { font-size: 9pt; font-weight: bold; padding: 3px 0; border-bottom: 1px solid var(--accent-border); }
+  .pending-badge { display: inline-block; background: #fff3e0; border: 2px solid #ff9800; color: #e65100; font-weight: bold; font-size: 9pt; padding: 4px 12px; }
+  .justify-box { border: 2px solid var(--accent-light); background: var(--accent-bg); padding: 8px; }
+  .flow-step { text-align: center; padding: 4px 2px; vertical-align: top; }
+  .flow-label { font-weight: bold; font-size: 8pt; color: white; background: var(--accent); padding: 3px 6px; display: inline-block; margin-bottom: 4px; }
+  .flow-arrow { font-size: 14pt; color: var(--accent-light); font-weight: bold; vertical-align: middle; }
+  .chk { display: inline-block; width: 11px; height: 11px; border: 1px solid var(--accent); margin-right: 3px; vertical-align: middle; text-align: center; font-size: 7pt; line-height: 11px; }
+  .supplier-box { border: 1px solid var(--accent-light); padding: 6px; background: var(--accent-bg); }
+</style>
+</head>
+<body>
+<div class="controls">
+  <a href="../index.html">&larr; Back to Gallery</a>
+  <button class="btn-pdf" onclick="downloadPdf('purchase-requisition.pdf')">Download PDF</button>
+</div>
+
+<div class="printform paper_width" data-papersize-width="750" data-papersize-height="1050" data-repeat-header="y" data-repeat-rowheader="y" data-repeat-footer-logo="y" data-repeat-footer-pagenum="y" data-insert-dummy-row-item-while-format-table="y">
+
+  <!-- ========== PAGE HEADER ========== -->
+  <table cellpadding="0" cellspacing="0" class="paper_width pheader">
+    <tr>
+      <td width="400" style="vertical-align:middle;">
+        <span style="color:var(--accent);font-size:16pt;font-weight:bold;">PURCHASE REQUISITION</span><br>
+        <span style="font-size:8pt;color:#666;">ACME CORPORATION PTE LTD</span>
+      </td>
+      <td width="160" style="vertical-align:middle;text-align:center;">
+        <span class="stamp-badge">INTERNAL USE ONLY</span>
+      </td>
+      <td width="190" style="vertical-align:top;text-align:right;">
+        <span style="font-weight:bold;font-size:11pt;color:var(--accent);" contenteditable="true">PR-2026-0067</span><br>
+        <span style="font-size:8pt;">Status:<br><span class="pending-badge">PENDING APPROVAL</span></span>
+      </td>
+    </tr>
+    <tr><td colspan="3" style="border-top:3px solid var(--accent);height:4px;"></td></tr>
+  </table>
+
+  <!-- ========== DOC INFO ========== -->
+  <table cellpadding="0" cellspacing="0" class="paper_width pdocinfo">
+    <tr>
+      <td width="375" style="padding:4px 8px;border:1px solid var(--accent-border);border-right:1px solid var(--accent-border);border-bottom:1px solid var(--accent-border);vertical-align:top;">
+        <span class="form-label">Requested By</span><br>
+        <span class="form-value" contenteditable="true">John Lee</span>
+      </td>
+      <td width="375" style="padding:4px 8px;border:1px solid var(--accent-border);border-bottom:1px solid var(--accent-border);vertical-align:top;">
+        <span class="form-label">Department</span><br>
+        <span class="form-value" contenteditable="true">Engineering</span>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:4px 8px;border:1px solid var(--accent-border);border-right:1px solid var(--accent-border);border-bottom:1px solid var(--accent-border);vertical-align:top;">
+        <span class="form-label">Date</span><br>
+        <span class="form-value" contenteditable="true">02 Apr 2026</span>
+      </td>
+      <td style="padding:4px 8px;border:1px solid var(--accent-border);border-bottom:1px solid var(--accent-border);vertical-align:top;">
+        <span class="form-label">Required By</span><br>
+        <span class="form-value" contenteditable="true">15 Apr 2026</span>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:4px 8px;border:1px solid var(--accent-border);border-right:1px solid var(--accent-border);vertical-align:top;">
+        <span class="form-label">Budget Code</span><br>
+        <span class="form-value" contenteditable="true">ENG-CAPEX-2026-Q2</span>
+      </td>
+      <td style="padding:4px 8px;border:1px solid var(--accent-border);vertical-align:top;">
+        <span class="form-label">Priority</span><br>
+        <span class="form-value" contenteditable="true">Normal</span>
+      </td>
+    </tr>
+    <tr><td colspan="2" style="height:6px;"></td></tr>
+    <tr>
+      <td colspan="2">
+        <div class="justify-box">
+          <span class="form-label" style="font-size:8pt;">JUSTIFICATION / PURPOSE</span><br>
+          <span contenteditable="true" style="font-size:9pt;line-height:1.6;">Required for the upgrade of Assembly Line 3 conveyor system. Current bearings and drive belts have exceeded their service life of 18,000 hours. Replacement parts are critical to avoid unplanned production downtime estimated at SGD 12,000 per day. New proximity sensors are needed for the upgraded PLC control system currently being installed by the automation team.</span>
+        </div>
+      </td>
+    </tr>
+    <tr><td colspan="2" style="height:6px;"></td></tr>
+  </table>
+
+  <!-- ========== ROW HEADER (table column headers) ========== -->
+  <table cellpadding="0" cellspacing="0" class="paper_width prowheader">
+    <tr>
+      <th width="35" style="text-align:center;">No</th>
+      <th width="80">Item Code</th>
+      <th width="265">Description</th>
+      <th width="45" style="text-align:center;">Qty</th>
+      <th width="50" style="text-align:center;">UOM</th>
+      <th width="120" style="text-align:right;">Est. Unit Price</th>
+      <th width="155" style="text-align:right;">Est. Total (SGD)</th>
+    </tr>
+  </table>
+
+  <!-- ========== ROW ITEMS (one per table) ========== -->
+  <table cellpadding="0" cellspacing="0" class="paper_width prowitem">
+    <tr>
+      <td width="35" style="text-align:center;">1</td>
+      <td width="80" contenteditable="true">BRG-6205</td>
+      <td width="265" contenteditable="true">Deep Groove Ball Bearing 6205-2RS</td>
+      <td width="45" style="text-align:center;" contenteditable="true">24</td>
+      <td width="50" style="text-align:center;">pcs</td>
+      <td width="120" style="text-align:right;" contenteditable="true">18.50</td>
+      <td width="155" style="text-align:right;">444.00</td>
+    </tr>
+  </table>
+
+  <table cellpadding="0" cellspacing="0" class="paper_width prowitem">
+    <tr>
+      <td width="35" style="text-align:center;">2</td>
+      <td width="80" contenteditable="true">BLT-A68</td>
+      <td width="265" contenteditable="true">Industrial Drive Belt A68 V-Belt</td>
+      <td width="45" style="text-align:center;" contenteditable="true">12</td>
+      <td width="50" style="text-align:center;">pcs</td>
+      <td width="120" style="text-align:right;" contenteditable="true">32.00</td>
+      <td width="155" style="text-align:right;">384.00</td>
+    </tr>
+  </table>
+
+  <table cellpadding="0" cellspacing="0" class="paper_width prowitem">
+    <tr>
+      <td width="35" style="text-align:center;">3</td>
+      <td width="80" contenteditable="true">SNR-PX02</td>
+      <td width="265" contenteditable="true">Proximity Sensor PNP NO M12 10mm range</td>
+      <td width="45" style="text-align:center;" contenteditable="true">8</td>
+      <td width="50" style="text-align:center;">pcs</td>
+      <td width="120" style="text-align:right;" contenteditable="true">65.00</td>
+      <td width="155" style="text-align:right;">520.00</td>
+    </tr>
+  </table>
+
+  <table cellpadding="0" cellspacing="0" class="paper_width prowitem">
+    <tr>
+      <td width="35" style="text-align:center;">4</td>
+      <td width="80" contenteditable="true">LUB-G220</td>
+      <td width="265" contenteditable="true">Synthetic Grease EP2 Lithium Complex 15kg</td>
+      <td width="45" style="text-align:center;" contenteditable="true">2</td>
+      <td width="50" style="text-align:center;">pail</td>
+      <td width="120" style="text-align:right;" contenteditable="true">185.00</td>
+      <td width="155" style="text-align:right;">370.00</td>
+    </tr>
+  </table>
+
+  <table cellpadding="0" cellspacing="0" class="paper_width prowitem">
+    <tr>
+      <td width="35" style="text-align:center;">5</td>
+      <td width="80" contenteditable="true">MTR-075</td>
+      <td width="265" contenteditable="true">AC Motor 0.75kW 3-Phase 1400RPM B5 Flange</td>
+      <td width="45" style="text-align:center;" contenteditable="true">1</td>
+      <td width="50" style="text-align:center;">unit</td>
+      <td width="120" style="text-align:right;" contenteditable="true">480.00</td>
+      <td width="155" style="text-align:right;">480.00</td>
+    </tr>
+  </table>
+
+  <!-- ========== PTAC (Terms / Additional Content) ========== -->
+  <table cellpadding="0" cellspacing="0" class="paper_width ptac">
+    <tr>
+      <td width="480"></td>
+      <td width="140" style="text-align:right;border-top:2px solid var(--accent);padding-top:4px;font-weight:bold;color:var(--accent);">Total Estimated:</td>
+      <td width="130" style="text-align:right;border-top:2px solid var(--accent);padding-top:4px;font-weight:bold;color:var(--accent);" contenteditable="true">SGD 2,198.00</td>
+    </tr>
+    <tr><td colspan="3" style="height:6px;"></td></tr>
+    <tr>
+      <td colspan="3">
+        <div class="supplier-box">
+          <span style="font-weight:bold;color:var(--accent);">PREFERRED SUPPLIER</span><br>
+          <b>Company:</b> <span contenteditable="true">OMEGA SUPPLIES PTE LTD</span> &nbsp;&nbsp;
+          <b>Contact:</b> <span contenteditable="true">Mr. Kevin Loh, +65 6745 8901</span><br>
+          <b>Reason:</b> <span contenteditable="true">Existing approved vendor with competitive pricing and 2-day delivery for stock items.</span>
+        </div>
+      </td>
+    </tr>
+    <tr><td colspan="3" style="height:8px;"></td></tr>
+    <tr>
+      <td colspan="3" style="font-weight:bold;color:var(--accent);padding-bottom:4px;font-size:9pt;">APPROVAL WORKFLOW</td>
+    </tr>
+  </table>
+  <table cellpadding="0" cellspacing="0" class="paper_width ptac">
+    <tr>
+      <td width="170" class="flow-step" style="background:var(--accent-bg);border:1px solid var(--accent-border);padding:6px;">
+        <span class="flow-label">1. REQUESTOR</span><br>
+        <span style="font-size:8pt;">John Lee</span><br>
+        <span class="chk">&check;</span><span style="font-size:7pt;"> Submitted</span><br>
+        <div style="border-top:1px solid var(--accent-border);margin-top:6px;padding-top:3px;font-size:7pt;">Sign: ___________<br>Date: ___________</div>
+      </td>
+      <td width="25" style="text-align:center;"><span class="flow-arrow">&rarr;</span></td>
+      <td width="170" class="flow-step" style="background:var(--accent-border);border:1px solid var(--accent-mid);padding:6px;">
+        <span class="flow-label">2. DEPT HEAD</span><br>
+        <span style="font-size:8pt;">Pending</span><br>
+        <span class="chk"></span><span style="font-size:7pt;"> Approved</span><br>
+        <span class="chk"></span><span style="font-size:7pt;"> Rejected</span><br>
+        <div style="border-top:1px solid var(--accent-mid);margin-top:6px;padding-top:3px;font-size:7pt;">Sign: ___________<br>Date: ___________</div>
+      </td>
+      <td width="25" style="text-align:center;"><span class="flow-arrow">&rarr;</span></td>
+      <td width="170" class="flow-step" style="background:var(--accent-mid);border:1px solid var(--accent-mid);padding:6px;">
+        <span class="flow-label">3. FINANCE</span><br>
+        <span style="font-size:8pt;">Pending</span><br>
+        <span class="chk"></span><span style="font-size:7pt;"> Approved</span><br>
+        <span class="chk"></span><span style="font-size:7pt;"> Rejected</span><br>
+        <div style="border-top:1px solid var(--accent-mid);margin-top:6px;padding-top:3px;font-size:7pt;">Sign: ___________<br>Date: ___________</div>
+      </td>
+      <td width="25" style="text-align:center;"><span class="flow-arrow">&rarr;</span></td>
+      <td width="165" class="flow-step" style="background:var(--accent-mid);border:1px solid var(--accent-light);padding:6px;">
+        <span class="flow-label">4. PROCUREMENT</span><br>
+        <span style="font-size:8pt;">Pending</span><br>
+        <span class="chk"></span><span style="font-size:7pt;"> Approved</span><br>
+        <span class="chk"></span><span style="font-size:7pt;"> Rejected</span><br>
+        <div style="border-top:1px solid var(--accent-light);margin-top:6px;padding-top:3px;font-size:7pt;">Sign: ___________<br>Date: ___________</div>
+      </td>
+    </tr>
+  </table>
+
+  <!-- ========== FOOTER ========== -->
+  <table cellpadding="0" cellspacing="0" class="paper_width pfooter">
+    <tr><td style="height:6px;"></td></tr>
+  </table>
+
+  <table cellpadding="0" cellspacing="0" class="paper_width pfooter_logo">
+    <tr>
+      <td style="text-align:center;font-size:8pt;color:#666;border-top:1px solid var(--accent);padding-top:4px;">
+        PR-2026-0067 &nbsp;|&nbsp; INTERNAL USE ONLY &nbsp;|&nbsp; ACME Corporation Pte Ltd
+      </td>
+    </tr>
+  </table>
+
+  <table cellpadding="0" cellspacing="0" class="paper_width pfooter_pagenum">
+    <tr>
+      <td style="text-align:center;font-size:8pt;color:#999;padding-top:2px;"></td>
+    </tr>
+  </table>
+
+</div>
+
+<script src="../dist/printform.js"></script>
+<script src="../dist/html_to_vector_pdf.js"></script>
+<script src="../template-base.js"></script>
+</body>
+</html>

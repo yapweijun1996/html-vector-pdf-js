@@ -4,6 +4,8 @@ import { defineConfig, Plugin } from 'vite';
 
 const ROOT_DIR = __dirname;
 const ROOT_DIST_DIR = path.resolve(ROOT_DIR, 'dist');
+const TEMPLATES_SRC_DIR = path.resolve(ROOT_DIR, 'templates');
+const TEMPLATES_DIST_DIR = path.resolve(ROOT_DIST_DIR, 'templates');
 const SAMPLE_PRINTFORM_DIST_PATH = path.resolve(
   ROOT_DIR,
   'sample-project/printform-js/dist/printform.js'
@@ -112,6 +114,24 @@ function copyAssetsToDist(): Plugin {
             }
           })
         );
+
+        // Copy templates/ directory to dist/templates/
+        try {
+          const templateFiles = await fs.readdir(TEMPLATES_SRC_DIR, { withFileTypes: true });
+          await fs.mkdir(TEMPLATES_DIST_DIR, { recursive: true });
+          await Promise.all(
+            templateFiles
+              .filter((entry) => entry.isFile())
+              .map((entry) =>
+                fs.copyFile(
+                  path.resolve(TEMPLATES_SRC_DIR, entry.name),
+                  path.resolve(TEMPLATES_DIST_DIR, entry.name)
+                )
+              )
+          );
+        } catch (err: any) {
+          console.warn('[copy-assets-to-dist] Failed to copy templates:', err);
+        }
 
         try {
           await fs.copyFile(

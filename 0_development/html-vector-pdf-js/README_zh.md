@@ -341,4 +341,5 @@ npm run build:with-fonts
 在 `npm run build` 之后，HTML 演示文件会被复制到 `dist/` 中，脚本路径被重写为 `./html_to_vector_pdf.js`，因此您可以直接打开它们。
 
 ## 📄 许可证
-Private
+
+MIT License — 个人及商业用途均可免费使用。详见 [LICENSE](./LICENSE)。

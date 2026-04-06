@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quotation - QT-2026-0034</title>
+<link rel="stylesheet" href="../template-base.css">
+<style>
+  body { font-family: Arial, sans-serif; font-size: 9pt; color: #333; background: #f5f5f5; }
+  .printform { width: 750px; }
+  .paper_width { width: 750px; }
+</style>
+</head>
+<body>
+<div class="controls">
+  <a href="../index.html">&larr; Back to Gallery</a>
+  <button class="btn-pdf" onclick="downloadPdf('quotation.pdf')">Download PDF</button>
+</div>
+
+<div class="printform paper_width"
+     data-papersize-width="750"
+     data-papersize-height="1050"
+     data-repeat-header="y"
+     data-repeat-docinfo="y"
+     data-repeat-rowheader="y"
+     data-repeat-footer-logo="y"
+     data-repeat-footer-pagenum="y"
+     data-insert-dummy-row-item-while-format-table="y">
+
+  <!-- ================================================================ -->
+  <!-- PAGE HEADER (repeats each page)                                  -->
+  <!-- ================================================================ -->
+  <div class="pheader">
+    <table width="100%" cellspacing="0" cellpadding="0" style="border:none;">
+      <tr>
+        <td width="440" style="vertical-align:top; padding:8px 0; border:none;">
+          <span style="font-size:13pt; font-weight:bold; color:#00695c;">ACME CORPORATION PTE LTD</span><br>
+          <span style="font-size:8pt; color:#666;">Co. Reg. No. 200312345K &nbsp;|&nbsp; GST Reg. No. M2-0012345-6</span><br>
+          <span style="font-size:8pt;">10 Anson Road, #20-05 International Plaza, Singapore 079903</span><br>
+          <span style="font-size:8pt;">Tel: +65 6223 4567 &nbsp;|&nbsp; sales@acmecorp.com.sg</span>
+        </td>
+        <td width="280" style="vertical-align:top; text-align:right; padding:8px 0; border:none;">
+          <span style="background:#00695c; color:#fff; font-size:13pt; font-weight:bold; padding:6px 18px; letter-spacing:1px;">QUOTATION</span><br>
+          <span style="font-size:10pt; font-weight:bold; color:#00695c;">QT-2026-0034</span><br>
+          <span style="font-size:8pt;">Date: 02 April 2026</span>
+        </td>
+      </tr>
+    </table>
+    <!-- Validity Bar -->
+    <table width="100%" cellspacing="0" cellpadding="0" style="border:none;">
+      <tr>
+        <td style="background:#e0f2f1; padding:6px 12px; font-size:8pt; color:#00695c; font-weight:bold; text-align:center; border-left:3px solid #00695c; border-right:3px solid #00695c; border-top:none; border-bottom:none;">
+          This quotation is valid until: <span contenteditable="true">02 May 2026</span> &nbsp;|&nbsp; Ref: <span contenteditable="true">GI-ENQ-2026-0088</span>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- DOCUMENT INFO                                                    -->
+  <!-- ================================================================ -->
+  <div class="pdocinfo">
+    <table width="100%" cellspacing="0" cellpadding="0" style="border:none;">
+      <tr>
+        <td style="background:#e0f2f1; border-left:4px solid #00695c; padding:6px 10px; border-top:none; border-right:none; border-bottom:none;">
+          <b style="color:#00695c;">Attention To:</b><br>
+          <span contenteditable="true"><b>Mr. David Ong</b>, Engineering Manager</span><br>
+          <span contenteditable="true">GAMMA INDUSTRIES PTE LTD</span><br>
+          <span contenteditable="true">12 Science Park Drive, #04-08, The Gemini, Singapore Science Park II, Singapore 118229</span><br>
+          <span contenteditable="true">Tel: +65 6778 3200</span> &nbsp;|&nbsp; <b style="color:#00695c;">Project:</b> <span contenteditable="true">Factory Line 3 Automation Upgrade</span>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- ROW HEADER (repeats each page)                                   -->
+  <!-- ================================================================ -->
+  <div class="prowheader">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr style="height:30px;">
+        <td width="4%"  style="background:#00897b; color:#ffffff; font-weight:bold; text-align:center; padding:6px 2px; font-size:8pt; border:1px solid #00897b;">S/N</td>
+        <td width="11%" style="background:#00897b; color:#ffffff; font-weight:bold; text-align:center; padding:6px 2px; font-size:8pt; border:1px solid #00897b;">Item Code</td>
+        <td width="37%" style="background:#00897b; color:#ffffff; font-weight:bold; text-align:center; padding:6px 2px; font-size:8pt; border:1px solid #00897b;">Description</td>
+        <td width="6%"  style="background:#00897b; color:#ffffff; font-weight:bold; text-align:center; padding:6px 2px; font-size:8pt; border:1px solid #00897b;">QTY</td>
+        <td width="6%"  style="background:#00897b; color:#ffffff; font-weight:bold; text-align:center; padding:6px 2px; font-size:8pt; border:1px solid #00897b;">UOM</td>
+        <td width="17%" style="background:#00897b; color:#ffffff; font-weight:bold; text-align:center; padding:6px 2px; font-size:8pt; border:1px solid #00897b;">Unit Price (SGD)</td>
+        <td width="19%" style="background:#00897b; color:#ffffff; font-weight:bold; text-align:center; padding:6px 2px; font-size:8pt; border:1px solid #00897b;">Amount (SGD)</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- ROW ITEMS                                                        -->
+  <!-- ================================================================ -->
+
+  <!-- Item 1 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">1</td>
+        <td width="11%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">AUT-3001</span></td>
+        <td width="37%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">Siemens S7-1500 PLC CPU 1516-3 PN/DP</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">2</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 2px; border-bottom:1px solid #e8e8e8;">Set</td>
+        <td width="17%" style="text-align:right; padding:5px 6px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">8,500.00</span></td>
+        <td width="19%" style="text-align:right; padding:5px 6px; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">17,000.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 2 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">2</td>
+        <td width="11%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">AUT-3050</span></td>
+        <td width="37%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">Omron E5CC temperature controller, digital</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">6</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;">Pc</td>
+        <td width="17%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">385.00</span></td>
+        <td width="19%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">2,310.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 3 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">3</td>
+        <td width="11%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">AUT-4010</span></td>
+        <td width="37%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">ABB IRB 1200 industrial robot arm, 5kg payload</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">1</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 2px; border-bottom:1px solid #e8e8e8;">Unit</td>
+        <td width="17%" style="text-align:right; padding:5px 6px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">32,000.00</span></td>
+        <td width="19%" style="text-align:right; padding:5px 6px; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">32,000.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 4 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">4</td>
+        <td width="11%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">AUT-5020</span></td>
+        <td width="37%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">Keyence LR-ZB250AN laser sensor, 250mm</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">8</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;">Pc</td>
+        <td width="17%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">620.00</span></td>
+        <td width="19%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">4,960.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 5 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">5</td>
+        <td width="11%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">AUT-6005</span></td>
+        <td width="37%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">SMC pneumatic cylinder, 50mm x 200mm stroke</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">10</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 2px; border-bottom:1px solid #e8e8e8;">Pc</td>
+        <td width="17%" style="text-align:right; padding:5px 6px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">245.00</span></td>
+        <td width="19%" style="text-align:right; padding:5px 6px; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">2,450.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 6 (Service) -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">6</td>
+        <td width="11%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">SVC-7001</span></td>
+        <td width="37%" style="padding:5px 4px; background:#f8f9fa; font-style:italic; color:#555; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">Installation, commissioning &amp; programming</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">1</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;">Lot</td>
+        <td width="17%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">6,800.00</span></td>
+        <td width="19%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">6,800.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 7 (Service) -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">7</td>
+        <td width="11%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">SVC-7010</span></td>
+        <td width="37%" style="padding:5px 4px; font-style:italic; color:#555; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">On-site training (2 days, up to 6 pax)</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">1</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 2px; border-bottom:1px solid #e8e8e8;">Lot</td>
+        <td width="17%" style="text-align:right; padding:5px 6px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">2,400.00</span></td>
+        <td width="19%" style="text-align:right; padding:5px 6px; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">2,400.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 8 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">8</td>
+        <td width="11%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">AUT-5030</span></td>
+        <td width="37%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">PT100 temperature sensor, 3-wire 200mm probe</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">12</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;">Pc</td>
+        <td width="17%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">145.00</span></td>
+        <td width="19%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">1,740.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 9 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">9</td>
+        <td width="11%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">AUT-5040</span></td>
+        <td width="37%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">Digital pressure gauge, 0-10bar 4-20mA output</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">6</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 2px; border-bottom:1px solid #e8e8e8;">Pc</td>
+        <td width="17%" style="text-align:right; padding:5px 6px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">280.00</span></td>
+        <td width="19%" style="text-align:right; padding:5px 6px; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">1,680.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 10 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">10</td>
+        <td width="11%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">AUT-5050</span></td>
+        <td width="37%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">Electromagnetic flow meter, DN50 flanged</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">3</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;">Set</td>
+        <td width="17%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">1,850.00</span></td>
+        <td width="19%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">5,550.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 11 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">11</td>
+        <td width="11%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">AUT-5060</span></td>
+        <td width="37%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">Float level switch, stainless steel side-mount</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">8</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 2px; border-bottom:1px solid #e8e8e8;">Pc</td>
+        <td width="17%" style="text-align:right; padding:5px 6px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">95.00</span></td>
+        <td width="19%" style="text-align:right; padding:5px 6px; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">760.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 12 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">12</td>
+        <td width="11%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">AUT-6010</span></td>
+        <td width="37%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">Relay module, 8-channel 24VDC with DIN mount</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">6</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;">Pc</td>
+        <td width="17%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">110.00</span></td>
+        <td width="19%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">660.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 13 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">13</td>
+        <td width="11%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">AUT-6020</span></td>
+        <td width="37%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">Terminal block, 3-level spring-cage 2.5mm2 (Pack of 50)</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">4</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 2px; border-bottom:1px solid #e8e8e8;">Pack</td>
+        <td width="17%" style="text-align:right; padding:5px 6px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">185.00</span></td>
+        <td width="19%" style="text-align:right; padding:5px 6px; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">740.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 14 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">14</td>
+        <td width="11%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">AUT-6030</span></td>
+        <td width="37%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">Cable gland, IP68 PG13.5 nickel-plated brass (Pack of 20)</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">5</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;">Pack</td>
+        <td width="17%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">42.00</span></td>
+        <td width="19%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">210.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 15 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; border-left:1px solid #ddd; border-bottom:2px solid #00695c;">15</td>
+        <td width="11%" style="padding:5px 4px; border-bottom:2px solid #00695c;"><span contenteditable="true">AUT-6040</span></td>
+        <td width="37%" style="padding:5px 4px; border-bottom:2px solid #00695c;"><span contenteditable="true">Junction box, stainless steel IP66 200x200x100mm</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; border-bottom:2px solid #00695c;"><span contenteditable="true">10</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 2px; border-bottom:2px solid #00695c;">Pc</td>
+        <td width="17%" style="text-align:right; padding:5px 6px; border-bottom:2px solid #00695c;"><span contenteditable="true">78.00</span></td>
+        <td width="19%" style="text-align:right; padding:5px 6px; border-right:1px solid #ddd; border-bottom:2px solid #00695c;">780.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- DETAILED TERMS & CONDITIONS                                      -->
+  <!-- ================================================================ -->
+  <div class="prowitem">
+    <table width="100%" cellspacing="0" cellpadding="0" style="border:none; margin-top:8px;">
+      <tr>
+        <td style="border:none; padding:0 0 4px;">
+          <span style="font-size:8pt; font-weight:bold; color:#00695c;">Detailed Terms &amp; Conditions:</span>
+        </td>
+      </tr>
+      <tr>
+        <td style="border:none; padding:2px 0 0 10px; font-size:8pt; color:#555; line-height:1.5;">
+          1. All prices are quoted in Singapore Dollars (SGD) and are exclusive of GST unless otherwise stated. GST will be applied at the prevailing statutory rate on the date of invoicing.<br>
+          2. This quotation is valid for 30 calendar days from the date of issue. After expiry, the Seller reserves the right to revise pricing based on current market conditions and supplier costs.<br>
+          3. Warranty covers defects in materials and workmanship only. Damage resulting from misuse, improper installation, unauthorised modification, or normal wear and tear is excluded from warranty coverage.<br>
+          4. Delivery dates are estimates subject to stock availability and confirmed order receipt. The Seller shall notify the Buyer promptly of any anticipated delays and provide revised delivery schedules.<br>
+          5. Cancellation of confirmed orders is subject to a 15% restocking fee. Custom-manufactured or specially ordered items are non-cancellable and non-refundable once production has commenced.<br>
+          6. Payment terms are as specified in this quotation. Failure to make payment by the due date may result in suspension of delivery and accrual of late payment interest at 1.5% per month.<br>
+          7. The Seller reserves the right to make minor technical modifications to product specifications without prior notice, provided such changes do not materially affect performance or functionality.<br>
+          8. Installation and commissioning services are subject to site readiness as defined in the pre-installation checklist. Additional charges may apply if site conditions do not meet the agreed requirements.<br>
+          9. Training services include materials and certification for the specified number of participants. Additional participants may be accommodated at a supplementary fee subject to prior arrangement.<br>
+          10. The Seller's total liability under this quotation shall not exceed the total contract value. The Seller shall not be liable for any indirect, consequential, or incidental damages or loss of profit.<br>
+          11. Force majeure events including but not limited to natural disasters, pandemics, government restrictions, and supply chain disruptions shall excuse delayed performance upon written notification.<br>
+          12. This quotation, together with any purchase order issued and accepted, constitutes the entire agreement. No oral representations or prior correspondence shall modify these terms unless agreed in writing.
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- TOTALS + INFO CARDS + T&C + ACCEPTANCE                           -->
+  <!-- ================================================================ -->
+  <div class="prowitem">
+    <!-- Totals -->
+    <table width="100%" cellspacing="0" cellpadding="0" style="border:none;">
+      <tr>
+        <td width="62%" style="border:none;"></td>
+        <td width="17%" style="text-align:right; font-weight:bold; color:#00695c; padding:6px 8px; font-size:9pt; border-top:1px solid #333; border-bottom:none; border-left:none; border-right:none;">Subtotal:</td>
+        <td width="21%" style="text-align:right; color:#00695c; padding:6px 8px; font-size:9pt; border-top:1px solid #333; border-bottom:none; border-left:none; border-right:none;">67,920.00</td>
+      </tr>
+      <tr>
+        <td style="border:none;"></td>
+        <td style="text-align:right; font-weight:bold; color:#00695c; padding:3px 8px; font-size:9pt; border:none;">Volume Disc (3%):</td>
+        <td style="text-align:right; color:#00695c; padding:3px 8px; font-size:9pt; border:none;">(2,037.60)</td>
+      </tr>
+      <tr>
+        <td style="border:none;"></td>
+        <td style="text-align:right; font-weight:bold; color:#00695c; padding:3px 8px; font-size:9pt; border:none;">GST (9%):</td>
+        <td style="text-align:right; color:#00695c; padding:3px 8px; font-size:9pt; border:none;">5,929.42</td>
+      </tr>
+      <tr>
+        <td style="border:none;"></td>
+        <td style="text-align:right; font-weight:bold; color:#00695c; padding:8px 8px 6px; font-size:10pt; border-top:2px solid #00695c; border-bottom:none; border-left:none; border-right:none;">Grand Total:</td>
+        <td style="text-align:right; font-weight:bold; color:#00695c; padding:8px 8px 6px; font-size:10pt; border-top:2px solid #00695c; border-bottom:none; border-left:none; border-right:none;">SGD 71,811.82</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Info Cards -->
+  <div class="prowitem">
+    <table width="100%" cellspacing="0" cellpadding="0" style="border:none; margin-top:8px;">
+      <tr>
+        <td width="32%" valign="top" style="border:1px solid #b2dfdb; padding:0;">
+          <table width="100%" cellspacing="0" cellpadding="0" style="border:none;">
+            <tr><td style="background:#00695c; color:#fff; font-weight:bold; padding:4px 6px; font-size:8pt; text-transform:uppercase; text-align:center; border:none;">Payment Terms</td></tr>
+            <tr><td style="padding:6px 8px; font-size:8pt; line-height:1.6; text-align:center; border:none;">
+              <span contenteditable="true">50% deposit upon confirmation<br>50% upon delivery &amp; acceptance</span>
+            </td></tr>
+          </table>
+        </td>
+        <td width="2%" style="border:none;"></td>
+        <td width="32%" valign="top" style="border:1px solid #b2dfdb; padding:0;">
+          <table width="100%" cellspacing="0" cellpadding="0" style="border:none;">
+            <tr><td style="background:#00695c; color:#fff; font-weight:bold; padding:4px 6px; font-size:8pt; text-transform:uppercase; text-align:center; border:none;">Delivery</td></tr>
+            <tr><td style="padding:6px 8px; font-size:8pt; line-height:1.6; text-align:center; border:none;">
+              <span contenteditable="true">2 - 3 weeks from order confirmation<br>FOB ex-warehouse Singapore</span>
+            </td></tr>
+          </table>
+        </td>
+        <td width="2%" style="border:none;"></td>
+        <td width="32%" valign="top" style="border:1px solid #b2dfdb; padding:0;">
+          <table width="100%" cellspacing="0" cellpadding="0" style="border:none;">
+            <tr><td style="background:#00695c; color:#fff; font-weight:bold; padding:4px 6px; font-size:8pt; text-transform:uppercase; text-align:center; border:none;">Warranty</td></tr>
+            <tr><td style="padding:6px 8px; font-size:8pt; line-height:1.6; text-align:center; border:none;">
+              <span contenteditable="true">12 months parts &amp; labour<br>from date of delivery</span>
+            </td></tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Short T&C -->
+  <div class="prowitem">
+    <table width="100%" cellspacing="0" cellpadding="0" style="border:none; margin-top:8px;">
+      <tr>
+        <td style="border:none; padding:0 0 4px;">
+          <span style="font-size:8pt; font-weight:bold; color:#00695c;">Terms &amp; Conditions:</span>
+        </td>
+      </tr>
+      <tr>
+        <td style="border:none; padding:2px 0 0 10px; font-size:8pt; color:#555; line-height:1.5;">
+          1. Prices are in SGD and exclude GST unless stated. &nbsp;
+          2. Quotation valid for 30 days; prices may be revised thereafter. &nbsp;
+          3. Warranty covers manufacturing defects only; misuse excluded. &nbsp;
+          4. Delivery dates are estimates subject to stock availability. &nbsp;
+          5. Cancellation after confirmation incurs 15% restocking fee.
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Acceptance Section -->
+  <div class="prowitem">
+    <table width="100%" cellspacing="0" cellpadding="0" style="border:2px solid #00695c; margin-top:8px;">
+      <tr>
+        <td colspan="2" style="padding:4px 12px; font-size:8pt; color:#00695c; font-style:italic; border:none;">To accept this quotation, please sign below and return a copy to us.</td>
+      </tr>
+      <tr>
+        <td width="50%" style="vertical-align:top; font-size:8pt; padding:6px 12px; border:none;">
+          <b style="color:#00695c;">For ACME CORPORATION PTE LTD</b>
+          <table width="220" cellspacing="0" cellpadding="0" style="border:none; margin-top:24px;">
+            <tr><td style="border:none; border-top:1px solid #333; padding-top:3px;">
+              <span contenteditable="true">Alvin Chua</span><br>Sales Manager
+            </td></tr>
+          </table>
+        </td>
+        <td width="50%" style="vertical-align:top; font-size:8pt; padding:6px 12px; border:none;">
+          <b style="color:#00695c;">Customer Acceptance</b>
+          <table width="220" cellspacing="0" cellpadding="0" style="border:none; margin-top:24px;">
+            <tr><td style="border:none; border-top:1px solid #333; padding-top:3px;">
+              Signature: _______________________<br>
+              Date: ___________________________<br>
+              Company Stamp:
+            </td></tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- SIGNATURES                                                       -->
+  <!-- ================================================================ -->
+  <div class="pfooter">
+    <table width="100%" cellspacing="0" cellpadding="0" style="border:none; margin-top:10px;">
+      <tr>
+        <td style="text-align:center; font-size:9pt; font-style:italic; border:none;">Thank you for your business</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- FOOTER                                                           -->
+  <!-- ================================================================ -->
+  <div class="pfooter_logo" style="font-size:8pt; text-align:center; color:#00695c; font-style:italic; padding-top:4px;">ACME CORPORATION PTE LTD</div>
+  <div class="pfooter_pagenum" style="font-size:8pt; text-align:center; color:#999;">Page <span data-page-number></span> of <span data-page-total></span></div>
+
+</div>
+
+<script src="../dist/printform.js"></script>
+<script src="../dist/html_to_vector_pdf.js"></script>
+<script src="../template-base.js"></script>
+</body>
+</html>

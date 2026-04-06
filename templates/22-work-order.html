@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Work Order - WO-2026-0023</title>
+<link rel="stylesheet" href="../template-base.css">
+<style>
+  /* BROWN INDUSTRIAL / MANUFACTURING theme */
+  :root { --accent: #4e342e; --accent-light: #efebe9; --accent-dark: #3e2723; }
+  .pheader .wo-title { font-size: 14pt; font-weight: bold; color: var(--accent); text-transform: uppercase; letter-spacing: 3px; }
+  .pdocinfo td { border: 2px solid var(--accent); padding: 6px 8px; background: var(--accent-light); }
+  .pdocinfo b { color: var(--accent-dark); font-size: 8pt; text-transform: uppercase; }
+  .badge-high { background: #c62828; color: white; padding: 2px 10px; font-weight: bold; font-size: 8pt; display: inline-block; }
+  .badge-progress { background: #f57f17; color: white; padding: 2px 10px; font-weight: bold; font-size: 8pt; display: inline-block; }
+  .prowheader th, .prowheader_processed th { background: var(--accent); color: white; font-weight: bold; padding: 5px 6px; font-size: 8pt; }
+  .prowitem td, .prowitem_processed td { padding: 4px 6px; border-bottom: 1px solid #d7ccc8; }
+  .prowitem_processed:nth-child(even) td { background: var(--accent-light); }
+  .shortage-red { color: #c62828; font-weight: bold; }
+  .col-no { width: 30px; text-align: center; }
+  .col-partno { width: 80px; }
+  .col-partname { width: 220px; }
+  .col-qtyunit { width: 80px; text-align: center; }
+  .col-totalreq { width: 95px; text-align: center; }
+  .col-available { width: 95px; text-align: center; }
+  .col-shortage { width: 100px; text-align: center; }
+  .ptac .section-label { padding: 5px 0 2px; }
+  .ptac .section-label b { color: var(--accent); font-size: 9pt; text-transform: uppercase; letter-spacing: 1px; }
+  .ptac .ops-header td { background: #795548; color: white; font-weight: bold; padding: 5px 6px; font-size: 8pt; }
+  .ptac .ops-row td { padding: 4px 6px; border-bottom: 1px solid #d7ccc8; }
+  .ptac .ops-row-alt td { padding: 4px 6px; border-bottom: 1px solid #d7ccc8; background: var(--accent-light); }
+  .ptac .quality-section td { background: var(--accent-light); border-left: 3px solid var(--accent); padding: 6px 10px; line-height: 1.7; }
+  .pfooter .sig-line { border-top: 1px solid #333; margin: 30px 15px 0; padding-top: 4px; text-align: center; }
+  .pfooter_logo { color: #666; border-top: 1px solid var(--accent); padding-top: 4px; }
+</style>
+</head>
+<body>
+<div class="controls">
+  <a href="../index.html">&larr; Back to Gallery</a>
+  <button class="btn-pdf" onclick="downloadPdf('work-order.pdf')">Download PDF</button>
+</div>
+
+<div class="printform paper_width"
+     data-papersize-width="750"
+     data-papersize-height="1050"
+     data-repeat-header="y"
+     data-repeat-rowheader="y"
+     data-repeat-footer-logo="y"
+     data-repeat-footer-pagenum="y"
+     data-insert-dummy-row-item-while-format-table="y">
+
+  <!-- Page Header -->
+  <div class="pheader block">
+    <table class="paper_width" style="border:none;">
+      <tr>
+        <td width="500" style="border:none;padding:6px 0;">
+          <span class="wo-title">WORK ORDER</span><br>
+          <span style="font-size:8pt;color:#666;">ACME CORPORATION PTE LTD &mdash; Manufacturing Division</span>
+        </td>
+        <td width="250" style="border:none;text-align:right;padding:6px 0;vertical-align:top;">
+          <b style="font-size:10pt;color:var(--accent);">WO-2026-0023</b><br>
+          <span style="font-size:8pt;">Issued: <span contenteditable="true">01 Apr 2026</span></span>
+        </td>
+      </tr>
+    </table>
+    <hr style="border:none;border-top:2px solid var(--accent);margin:4px 0;">
+  </div>
+
+  <!-- Document Info: Product Info Card -->
+  <div class="pdocinfo block">
+    <table class="paper_width" style="border-collapse:collapse;">
+      <tr>
+        <td width="375"><b>Product:</b><br><span contenteditable="true" style="font-size:10pt;font-weight:bold;">Widget Assembly Model X-100</span></td>
+        <td width="187"><b>Work Order:</b><br><span contenteditable="true">WO-2026-0023</span></td>
+        <td width="188"><b>Quantity:</b><br><span contenteditable="true" style="font-weight:bold;">500 units</span></td>
+      </tr>
+      <tr>
+        <td width="375"><b>Priority:</b> <span class="badge-high" contenteditable="true">HIGH</span> &nbsp;&nbsp; <b>Status:</b> <span class="badge-progress" contenteditable="true">IN PROGRESS</span></td>
+        <td width="187"><b>Start Date:</b><br><span contenteditable="true">01 Apr 2026</span></td>
+        <td width="188"><b>Due Date:</b><br><span contenteditable="true">15 Apr 2026</span></td>
+      </tr>
+    </table>
+    <table class="paper_width" style="border:none;">
+      <tr class="section-label">
+        <td style="border:none;padding:8px 0 2px;"><b style="color:var(--accent);font-size:9pt;text-transform:uppercase;letter-spacing:1px;">Bill of Materials (BOM)</b></td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Header: BOM Table -->
+  <div class="prowheader">
+    <table class="paper_width">
+      <tr>
+        <th class="col-no">S/N</th>
+        <th class="col-partno">Part No</th>
+        <th class="col-partname">Part Name</th>
+        <th class="col-qtyunit">QTY/Unit</th>
+        <th class="col-totalreq">Total Required</th>
+        <th class="col-available">Available</th>
+        <th class="col-shortage">Shortage</th>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Item 1 -->
+  <div class="prowitem">
+    <table class="paper_width">
+      <tr>
+        <td class="col-no">1</td>
+        <td class="col-partno"><span contenteditable="true">P-1001</span></td>
+        <td class="col-partname"><span contenteditable="true">Aluminium housing shell</span></td>
+        <td class="col-qtyunit"><span contenteditable="true">1</span></td>
+        <td class="col-totalreq"><span contenteditable="true">500</span></td>
+        <td class="col-available"><span contenteditable="true">480</span></td>
+        <td class="col-shortage"><span class="shortage-red" contenteditable="true">20</span></td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Item 2 -->
+  <div class="prowitem">
+    <table class="paper_width">
+      <tr>
+        <td class="col-no">2</td>
+        <td class="col-partno"><span contenteditable="true">P-1002</span></td>
+        <td class="col-partname"><span contenteditable="true">Stainless steel axle rod 6mm</span></td>
+        <td class="col-qtyunit"><span contenteditable="true">2</span></td>
+        <td class="col-totalreq"><span contenteditable="true">1,000</span></td>
+        <td class="col-available"><span contenteditable="true">1,000</span></td>
+        <td class="col-shortage"><span contenteditable="true">0</span></td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Item 3 -->
+  <div class="prowitem">
+    <table class="paper_width">
+      <tr>
+        <td class="col-no">3</td>
+        <td class="col-partno"><span contenteditable="true">P-2010</span></td>
+        <td class="col-partname"><span contenteditable="true">Nylon bearing bushing</span></td>
+        <td class="col-qtyunit"><span contenteditable="true">4</span></td>
+        <td class="col-totalreq"><span contenteditable="true">2,000</span></td>
+        <td class="col-available"><span contenteditable="true">2,000</span></td>
+        <td class="col-shortage"><span contenteditable="true">0</span></td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Item 4 -->
+  <div class="prowitem">
+    <table class="paper_width">
+      <tr>
+        <td class="col-no">4</td>
+        <td class="col-partno"><span contenteditable="true">P-3005</span></td>
+        <td class="col-partname"><span contenteditable="true">Compression spring 15mm</span></td>
+        <td class="col-qtyunit"><span contenteditable="true">2</span></td>
+        <td class="col-totalreq"><span contenteditable="true">1,000</span></td>
+        <td class="col-available"><span contenteditable="true">850</span></td>
+        <td class="col-shortage"><span class="shortage-red" contenteditable="true">150</span></td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Item 5 -->
+  <div class="prowitem">
+    <table class="paper_width">
+      <tr>
+        <td class="col-no">5</td>
+        <td class="col-partno"><span contenteditable="true">P-4001</span></td>
+        <td class="col-partname"><span contenteditable="true">Rubber O-ring seal 10mm</span></td>
+        <td class="col-qtyunit"><span contenteditable="true">3</span></td>
+        <td class="col-totalreq"><span contenteditable="true">1,500</span></td>
+        <td class="col-available"><span contenteditable="true">1,500</span></td>
+        <td class="col-shortage"><span contenteditable="true">0</span></td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Item 6 -->
+  <div class="prowitem">
+    <table class="paper_width">
+      <tr>
+        <td class="col-no">6</td>
+        <td class="col-partno"><span contenteditable="true">P-5020</span></td>
+        <td class="col-partname"><span contenteditable="true">M4 hex socket cap screw (Pack/50)</span></td>
+        <td class="col-qtyunit"><span contenteditable="true">6</span></td>
+        <td class="col-totalreq"><span contenteditable="true">60</span></td>
+        <td class="col-available"><span contenteditable="true">60</span></td>
+        <td class="col-shortage"><span contenteditable="true">0</span></td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- PTAC: Operations Table + Quality Requirements -->
+  <div class="prowitem"><table class="paper_width" style="border:none;">
+    <tr><td style="border:none;">
+
+      <!-- Operations / Routing -->
+      <table class="paper_width" style="border:none;">
+        <tr class="section-label">
+          <td style="border:none;"><b>Operations / Routing</b></td>
+        </tr>
+      </table>
+      <table class="paper_width" style="border-collapse:collapse;">
+        <tr class="ops-header">
+          <td width="45">Op#</td>
+          <td width="195">Operation</td>
+          <td width="140">Work Center</td>
+          <td width="110" align="center">Setup Time</td>
+          <td width="120" align="center">Run Time/Unit</td>
+          <td width="140" align="center">Total Time</td>
+        </tr>
+        <tr class="ops-row">
+          <td><span contenteditable="true">10</span></td>
+          <td><span contenteditable="true">Cutting</span></td>
+          <td><span contenteditable="true">CNC Shop</span></td>
+          <td align="center"><span contenteditable="true">30 min</span></td>
+          <td align="center"><span contenteditable="true">2.5 min</span></td>
+          <td align="center"><span contenteditable="true">21.3 hrs</span></td>
+        </tr>
+        <tr class="ops-row-alt">
+          <td><span contenteditable="true">20</span></td>
+          <td><span contenteditable="true">Assembly</span></td>
+          <td><span contenteditable="true">Assembly Line 1</span></td>
+          <td align="center"><span contenteditable="true">15 min</span></td>
+          <td align="center"><span contenteditable="true">3.0 min</span></td>
+          <td align="center"><span contenteditable="true">25.3 hrs</span></td>
+        </tr>
+        <tr class="ops-row">
+          <td><span contenteditable="true">30</span></td>
+          <td><span contenteditable="true">Testing</span></td>
+          <td><span contenteditable="true">QC Station</span></td>
+          <td align="center"><span contenteditable="true">10 min</span></td>
+          <td align="center"><span contenteditable="true">1.5 min</span></td>
+          <td align="center"><span contenteditable="true">12.7 hrs</span></td>
+        </tr>
+        <tr class="ops-row-alt">
+          <td><span contenteditable="true">40</span></td>
+          <td><span contenteditable="true">Packaging</span></td>
+          <td><span contenteditable="true">Packing Area</span></td>
+          <td align="center"><span contenteditable="true">5 min</span></td>
+          <td align="center"><span contenteditable="true">1.0 min</span></td>
+          <td align="center"><span contenteditable="true">8.4 hrs</span></td>
+        </tr>
+      </table>
+
+      <br>
+
+      <!-- Quality Requirements -->
+      <table class="paper_width" style="border:none;">
+        <tr class="section-label">
+          <td style="border:none;"><b>Quality Requirements</b></td>
+        </tr>
+      </table>
+      <table class="paper_width" style="border:none;">
+        <tr class="quality-section">
+          <td>
+            <span contenteditable="true">&#9745; Visual inspection per unit</span><br>
+            <span contenteditable="true">&#9745; Dimensional check (sampling 10%)</span><br>
+            <span contenteditable="true">&#9745; Functional test 100%</span><br>
+            <span contenteditable="true">&#9744; Destructive test (not required)</span>
+          </td>
+        </tr>
+      </table>
+
+    </td></tr>
+  </table>
+
+  <!-- Footer: Three Signatures -->
+  <div class="pfooter block">
+    <table class="paper_width" style="border:none;">
+      <tr>
+        <td width="250" style="border:none;text-align:center;">
+          <div class="sig-line">
+            <b>Production Manager</b><br>
+            <span contenteditable="true">Richard Tan</span><br>
+            <span style="font-size:8pt;">Production Dept</span>
+          </div>
+        </td>
+        <td width="250" style="border:none;text-align:center;">
+          <div class="sig-line">
+            <b>Quality Manager</b><br>
+            <span contenteditable="true">Susan Goh</span><br>
+            <span style="font-size:8pt;">Quality Assurance</span>
+          </div>
+        </td>
+        <td width="250" style="border:none;text-align:center;">
+          <div class="sig-line">
+            <b>Plant Manager</b><br>
+            <span contenteditable="true">Daniel Lim</span><br>
+            <span style="font-size:8pt;">Operations</span>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="pfooter_logo">Work order must be closed within 5 days of completion. All shortage items must be resolved before production start.</div>
+  <div class="pfooter_pagenum">Page <span data-page-number></span> of <span data-page-total></span></div>
+</div>
+
+<script src="../dist/printform.js"></script>
+<script src="../dist/html_to_vector_pdf.js"></script>
+<script src="../template-base.js"></script>
+</body>
+</html>

@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sales Order - SO-2026-0089</title>
+<link rel="stylesheet" href="../template-base.css">
+<style>
+  body { font-family: Arial, sans-serif; font-size: 9pt; color: #333; background: #f5f5f5; }
+  .printform { width: 750px; }
+  .paper_width { width: 750px; }
+</style>
+</head>
+<body>
+<div class="controls">
+  <a href="../index.html">&larr; Back to Gallery</a>
+  <button class="btn-pdf" onclick="downloadPdf('sales-order.pdf')">Download PDF</button>
+</div>
+
+<div class="printform paper_width"
+     data-papersize-width="750"
+     data-papersize-height="1050"
+     data-repeat-header="y"
+     data-repeat-docinfo="y"
+     data-repeat-rowheader="y"
+     data-repeat-footer-logo="y"
+     data-repeat-footer-pagenum="y"
+     data-insert-dummy-row-item-while-format-table="y">
+
+  <!-- ================================================================ -->
+  <!-- PAGE HEADER (repeats each page)                                  -->
+  <!-- ================================================================ -->
+  <div class="pheader">
+    <table width="100%" cellspacing="0" cellpadding="0" style="border:none;">
+      <tr>
+        <td width="480" style="background:#1565c0; padding:10px 15px; border:none;">
+          <span style="color:#fff; font-size:13pt; font-weight:bold;">ACME CORPORATION PTE LTD</span><br>
+          <span style="color:rgba(255,255,255,0.75); font-size:7.5pt;">10 Anson Road, #20-05 International Plaza, Singapore 079903 &nbsp;|&nbsp; Tel: +65 6223 4567 &nbsp;|&nbsp; sales@acmecorp.com.sg</span>
+        </td>
+        <td width="240" style="background:#1565c0; color:#fff; font-size:14pt; font-weight:bold; text-align:right; letter-spacing:1px; vertical-align:middle; padding:10px 15px; border:none;">
+          SALES ORDER
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- DOCUMENT INFO                                                    -->
+  <!-- ================================================================ -->
+  <div class="pdocinfo">
+    <table width="100%" cellspacing="0" cellpadding="0" style="border:none;">
+      <tr>
+        <!-- Order Details -->
+        <td width="48%" valign="top" style="padding:0 8px 8px 0; border:none;">
+          <table width="100%" cellspacing="0" cellpadding="0" style="border:none;">
+            <tr>
+              <td style="background:#e3f2fd; color:#1565c0; font-weight:bold; padding:4px 8px; font-size:8pt; text-transform:uppercase; border-bottom:1px solid #e0e0e0; border:1px solid #e0e0e0;">Order Details</td>
+            </tr>
+            <tr>
+              <td style="padding:6px 8px; font-size:8pt; line-height:1.6; border:1px solid #e0e0e0; border-top:none;">
+                <b style="color:#1565c0;">SO No:</b> <span contenteditable="true">SO-2026-0089</span><br>
+                <b style="color:#1565c0;">Date:</b> <span contenteditable="true">02 April 2026</span><br>
+                <b style="color:#1565c0;">Salesperson:</b> <span contenteditable="true">Marcus Lee</span><br>
+                <b style="color:#1565c0;">Payment Terms:</b> <span contenteditable="true">Net 45</span><br>
+                <b style="color:#1565c0;">Customer PO:</b> <span contenteditable="true">KR-PO-2026-0312</span>
+              </td>
+            </tr>
+          </table>
+        </td>
+        <!-- Customer -->
+        <td width="48%" valign="top" style="padding:0 0 8px 8px; border:none;">
+          <table width="100%" cellspacing="0" cellpadding="0" style="border:none;">
+            <tr>
+              <td style="background:#e3f2fd; color:#1565c0; font-weight:bold; padding:4px 8px; font-size:8pt; text-transform:uppercase; border-bottom:1px solid #e0e0e0; border:1px solid #e0e0e0;">Customer</td>
+            </tr>
+            <tr>
+              <td style="padding:6px 8px; font-size:8pt; line-height:1.6; border:1px solid #e0e0e0; border-top:none;">
+                <b style="color:#1565c0;">Company:</b> <span contenteditable="true">KAPPA RETAIL PTE LTD</span><br>
+                <span contenteditable="true">1 Raffles Place, #32-01<br>One Raffles Place Tower 1<br>Singapore 048616</span><br>
+                <b style="color:#1565c0;">Contact:</b> <span contenteditable="true">Ms. Diana Koh</span><br>
+                <b style="color:#1565c0;">Tel:</b> <span contenteditable="true">+65 6532 1100</span>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- ROW HEADER (repeats each page)                                   -->
+  <!-- ================================================================ -->
+  <div class="prowheader">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr style="height:30px;">
+        <td width="4%"  style="background:#1565c0; color:#ffffff; font-weight:bold; text-align:center; padding:6px 2px; font-size:8pt; border:1px solid #1565c0;">S/N</td>
+        <td width="11%" style="background:#1565c0; color:#ffffff; font-weight:bold; text-align:center; padding:6px 2px; font-size:8pt; border:1px solid #1565c0;">Item Code</td>
+        <td width="33%" style="background:#1565c0; color:#ffffff; font-weight:bold; text-align:center; padding:6px 2px; font-size:8pt; border:1px solid #1565c0;">Description</td>
+        <td width="6%"  style="background:#1565c0; color:#ffffff; font-weight:bold; text-align:center; padding:6px 2px; font-size:8pt; border:1px solid #1565c0;">QTY</td>
+        <td width="12%" style="background:#1565c0; color:#ffffff; font-weight:bold; text-align:center; padding:6px 2px; font-size:8pt; border:1px solid #1565c0;">Price (SGD)</td>
+        <td width="7%"  style="background:#1565c0; color:#ffffff; font-weight:bold; text-align:center; padding:6px 2px; font-size:8pt; border:1px solid #1565c0;">Disc %</td>
+        <td width="27%" style="background:#1565c0; color:#ffffff; font-weight:bold; text-align:center; padding:6px 2px; font-size:8pt; border:1px solid #1565c0;">Amount (SGD)</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- ROW ITEMS                                                        -->
+  <!-- ================================================================ -->
+
+  <!-- Item 1 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">1</td>
+        <td width="11%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">OF-1001</span></td>
+        <td width="33%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">Executive ergonomic mesh chair, lumbar support</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">12</span></td>
+        <td width="12%" style="text-align:right; padding:5px 6px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">489.00</span></td>
+        <td width="7%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">-</span></td>
+        <td width="27%" style="text-align:right; padding:5px 6px; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">5,868.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 2 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">2</td>
+        <td width="11%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">OF-1025</span></td>
+        <td width="33%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">Height-adjustable standing desk, 160cm x 80cm</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">8</span></td>
+        <td width="12%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">750.00</span></td>
+        <td width="7%"  style="text-align:center; padding:5px 4px; background:#fff3e0; color:#e65100; font-weight:bold; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">10</span></td>
+        <td width="27%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">5,400.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 3 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">3</td>
+        <td width="11%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">OF-2010</span></td>
+        <td width="33%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">4-drawer steel filing cabinet with lock</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">6</span></td>
+        <td width="12%" style="text-align:right; padding:5px 6px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">320.00</span></td>
+        <td width="7%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">-</span></td>
+        <td width="27%" style="text-align:right; padding:5px 6px; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">1,920.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 4 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">4</td>
+        <td width="11%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">OF-2050</span></td>
+        <td width="33%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">Modular workstation partition panel, 120cm</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">15</span></td>
+        <td width="12%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">185.00</span></td>
+        <td width="7%"  style="text-align:center; padding:5px 4px; background:#fff3e0; color:#e65100; font-weight:bold; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">5</span></td>
+        <td width="27%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">2,636.25</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 5 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">5</td>
+        <td width="11%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">OF-3001</span></td>
+        <td width="33%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">Meeting table, oval top 240cm x 120cm</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">2</span></td>
+        <td width="12%" style="text-align:right; padding:5px 6px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">1,280.00</span></td>
+        <td width="7%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">-</span></td>
+        <td width="27%" style="text-align:right; padding:5px 6px; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">2,560.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 6 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">6</td>
+        <td width="11%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">OF-3020</span></td>
+        <td width="33%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">Visitor chair, stackable with armrest</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">20</span></td>
+        <td width="12%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">95.00</span></td>
+        <td width="7%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">-</span></td>
+        <td width="27%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">1,900.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 7 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">7</td>
+        <td width="11%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">OF-4005</span></td>
+        <td width="33%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">Desktop monitor arm, dual screen mount</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">8</span></td>
+        <td width="12%" style="text-align:right; padding:5px 6px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">78.00</span></td>
+        <td width="7%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">-</span></td>
+        <td width="27%" style="text-align:right; padding:5px 6px; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">624.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 8 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">8</td>
+        <td width="11%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">OF-4010</span></td>
+        <td width="33%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">Cable management tray, under-desk 120cm</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">8</span></td>
+        <td width="12%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">45.00</span></td>
+        <td width="7%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">-</span></td>
+        <td width="27%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">360.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 9 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">9</td>
+        <td width="11%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">OF-4020</span></td>
+        <td width="33%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">LED desk lamp, adjustable arm with USB port</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">12</span></td>
+        <td width="12%" style="text-align:right; padding:5px 6px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">65.00</span></td>
+        <td width="7%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">-</span></td>
+        <td width="27%" style="text-align:right; padding:5px 6px; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">780.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 10 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">10</td>
+        <td width="11%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">OF-4030</span></td>
+        <td width="33%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">Magnetic whiteboard, 120cm x 90cm with markers</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">4</span></td>
+        <td width="12%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">185.00</span></td>
+        <td width="7%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">-</span></td>
+        <td width="27%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">740.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 11 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">11</td>
+        <td width="11%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">OF-4040</span></td>
+        <td width="33%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">Epson EB-U05 LCD projector, 3400 lumens WUXGA</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">2</span></td>
+        <td width="12%" style="text-align:right; padding:5px 6px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">890.00</span></td>
+        <td width="7%"  style="text-align:center; padding:5px 4px; background:#fff3e0; color:#e65100; font-weight:bold; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">5</span></td>
+        <td width="27%" style="text-align:right; padding:5px 6px; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">1,691.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 12 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">12</td>
+        <td width="11%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">OF-4045</span></td>
+        <td width="33%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">Projector screen, motorised 100" 16:9 wall-mount</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">2</span></td>
+        <td width="12%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">320.00</span></td>
+        <td width="7%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">-</span></td>
+        <td width="27%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">640.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 13 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">13</td>
+        <td width="11%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">OF-2060</span></td>
+        <td width="33%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">4-drawer steel filing cabinet with central lock</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">6</span></td>
+        <td width="12%" style="text-align:right; padding:5px 6px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">310.00</span></td>
+        <td width="7%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">-</span></td>
+        <td width="27%" style="text-align:right; padding:5px 6px; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">1,860.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 14 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">14</td>
+        <td width="11%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">OF-3025</span></td>
+        <td width="33%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">Visitor chair, stackable padded seat with armrest</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">15</span></td>
+        <td width="12%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">88.00</span></td>
+        <td width="7%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">-</span></td>
+        <td width="27%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">1,320.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 15 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">15</td>
+        <td width="11%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">OF-3030</span></td>
+        <td width="33%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">Coffee table, tempered glass top 90cm x 45cm</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">3</span></td>
+        <td width="12%" style="text-align:right; padding:5px 6px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">220.00</span></td>
+        <td width="7%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">-</span></td>
+        <td width="27%" style="text-align:right; padding:5px 6px; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">660.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 16 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">16</td>
+        <td width="11%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">OF-3035</span></td>
+        <td width="33%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">Reception desk, L-shaped 180cm with cable mgmt</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">1</span></td>
+        <td width="12%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">1,650.00</span></td>
+        <td width="7%"  style="text-align:center; padding:5px 4px; background:#fff3e0; color:#e65100; font-weight:bold; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">8</span></td>
+        <td width="27%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">1,518.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 17 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">17</td>
+        <td width="11%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">OF-2070</span></td>
+        <td width="33%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">5-shelf open bookshelf, laminated wood 180cm</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">4</span></td>
+        <td width="12%" style="text-align:right; padding:5px 6px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">195.00</span></td>
+        <td width="7%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">-</span></td>
+        <td width="27%" style="text-align:right; padding:5px 6px; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">780.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 18 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">18</td>
+        <td width="11%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">OF-4050</span></td>
+        <td width="33%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">Printer stand with storage shelf, mobile</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">4</span></td>
+        <td width="12%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">75.00</span></td>
+        <td width="7%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">-</span></td>
+        <td width="27%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">300.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 19 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">19</td>
+        <td width="11%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">OF-4055</span></td>
+        <td width="33%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">Under-desk cable management box, 40cm</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">12</span></td>
+        <td width="12%" style="text-align:right; padding:5px 6px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">28.00</span></td>
+        <td width="7%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">-</span></td>
+        <td width="27%" style="text-align:right; padding:5px 6px; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">336.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 20 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">20</td>
+        <td width="11%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">OF-5001</span></td>
+        <td width="33%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">Extended mouse pad, 800mm x 300mm anti-slip</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">12</span></td>
+        <td width="12%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">15.00</span></td>
+        <td width="7%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">-</span></td>
+        <td width="27%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">180.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 21 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">21</td>
+        <td width="11%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">OF-5005</span></td>
+        <td width="33%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">Aluminium laptop stand, adjustable angle</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">8</span></td>
+        <td width="12%" style="text-align:right; padding:5px 6px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">55.00</span></td>
+        <td width="7%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">-</span></td>
+        <td width="27%" style="text-align:right; padding:5px 6px; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">440.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 22 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">22</td>
+        <td width="11%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">OF-5010</span></td>
+        <td width="33%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">USB-C docking station, dual HDMI 100W PD</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">8</span></td>
+        <td width="12%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">128.00</span></td>
+        <td width="7%"  style="text-align:center; padding:5px 4px; background:#fff3e0; color:#e65100; font-weight:bold; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">5</span></td>
+        <td width="27%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">972.80</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 23 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">23</td>
+        <td width="11%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">OF-5015</span></td>
+        <td width="33%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">Full HD webcam, 1080p with privacy cover</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">8</span></td>
+        <td width="12%" style="text-align:right; padding:5px 6px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">68.00</span></td>
+        <td width="7%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">-</span></td>
+        <td width="27%" style="text-align:right; padding:5px 6px; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">544.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 24 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">24</td>
+        <td width="11%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">OF-5020</span></td>
+        <td width="33%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">Wireless headset with noise-cancelling mic</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">8</span></td>
+        <td width="12%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">95.00</span></td>
+        <td width="7%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">-</span></td>
+        <td width="27%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">760.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 25 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">25</td>
+        <td width="11%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">OF-5025</span></td>
+        <td width="33%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">USB 3.0 hub, 7-port with power adapter</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">12</span></td>
+        <td width="12%" style="text-align:right; padding:5px 6px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">32.00</span></td>
+        <td width="7%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">-</span></td>
+        <td width="27%" style="text-align:right; padding:5px 6px; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">384.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 26 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">26</td>
+        <td width="11%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">OF-5030</span></td>
+        <td width="33%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">Power strip, 6-outlet with surge protector 3m</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">15</span></td>
+        <td width="12%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">24.00</span></td>
+        <td width="7%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">-</span></td>
+        <td width="27%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">360.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 27 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">27</td>
+        <td width="11%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">OF-5035</span></td>
+        <td width="33%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">Desk organizer, mesh 5-compartment with drawer</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">12</span></td>
+        <td width="12%" style="text-align:right; padding:5px 6px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">22.00</span></td>
+        <td width="7%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">-</span></td>
+        <td width="27%" style="text-align:right; padding:5px 6px; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">264.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 28 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">28</td>
+        <td width="11%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">OF-5040</span></td>
+        <td width="33%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">Paper shredder, cross-cut 10-sheet P-4 security</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">3</span></td>
+        <td width="12%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">245.00</span></td>
+        <td width="7%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">-</span></td>
+        <td width="27%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">735.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 29 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">29</td>
+        <td width="11%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">OF-6001</span></td>
+        <td width="33%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">Water dispenser, hot &amp; cold floor-standing</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">2</span></td>
+        <td width="12%" style="text-align:right; padding:5px 6px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">380.00</span></td>
+        <td width="7%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">-</span></td>
+        <td width="27%" style="text-align:right; padding:5px 6px; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">760.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 30 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">30</td>
+        <td width="11%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">OF-6005</span></td>
+        <td width="33%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">HEPA air purifier, 40 sqm coverage with filter</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">4</span></td>
+        <td width="12%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">290.00</span></td>
+        <td width="7%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">-</span></td>
+        <td width="27%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">1,160.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 31 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">31</td>
+        <td width="11%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">OF-6010</span></td>
+        <td width="33%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">USB desk fan, 3-speed quiet operation 15cm</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">12</span></td>
+        <td width="12%" style="text-align:right; padding:5px 6px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">18.00</span></td>
+        <td width="7%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">-</span></td>
+        <td width="27%" style="text-align:right; padding:5px 6px; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">216.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 32 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">32</td>
+        <td width="11%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">OF-6015</span></td>
+        <td width="33%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">Ergonomic footrest, adjustable angle anti-slip</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">8</span></td>
+        <td width="12%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">42.00</span></td>
+        <td width="7%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">-</span></td>
+        <td width="27%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">336.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 33 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">33</td>
+        <td width="11%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">OF-6020</span></td>
+        <td width="33%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">Monitor riser, wood 50cm x 20cm with storage</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">8</span></td>
+        <td width="12%" style="text-align:right; padding:5px 6px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">35.00</span></td>
+        <td width="7%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">-</span></td>
+        <td width="27%" style="text-align:right; padding:5px 6px; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">280.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 34 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">34</td>
+        <td width="11%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">OF-6025</span></td>
+        <td width="33%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">Under-desk keyboard tray, sliding with wrist pad</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">8</span></td>
+        <td width="12%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">58.00</span></td>
+        <td width="7%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">-</span></td>
+        <td width="27%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">464.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 35 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">35</td>
+        <td width="11%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">OF-6030</span></td>
+        <td width="33%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">Adjustable phone stand, aluminium desktop</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">12</span></td>
+        <td width="12%" style="text-align:right; padding:5px 6px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">18.00</span></td>
+        <td width="7%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">-</span></td>
+        <td width="27%" style="text-align:right; padding:5px 6px; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">216.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 36 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">36</td>
+        <td width="11%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">OF-6035</span></td>
+        <td width="33%" style="padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">Acrylic pen holder, 4-compartment clear</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">12</span></td>
+        <td width="12%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">8.50</span></td>
+        <td width="7%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">-</span></td>
+        <td width="27%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">102.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 37 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; border-left:1px solid #ddd; border-bottom:1px solid #e8e8e8;">37</td>
+        <td width="11%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">OF-6040</span></td>
+        <td width="33%" style="padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">Waste bin, stainless steel pedal 12L</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">12</span></td>
+        <td width="12%" style="text-align:right; padding:5px 6px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">28.00</span></td>
+        <td width="7%"  style="text-align:center; padding:5px 4px; border-bottom:1px solid #e8e8e8;"><span contenteditable="true">-</span></td>
+        <td width="27%" style="text-align:right; padding:5px 6px; border-right:1px solid #ddd; border-bottom:1px solid #e8e8e8;">336.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Item 38 -->
+  <div class="prowitem">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="4%"  style="text-align:center; padding:5px 2px; background:#f8f9fa; border-left:1px solid #ddd; border-bottom:2px solid #1565c0;">38</td>
+        <td width="11%" style="padding:5px 4px; background:#f8f9fa; border-bottom:2px solid #1565c0;"><span contenteditable="true">OF-6045</span></td>
+        <td width="33%" style="padding:5px 4px; background:#f8f9fa; border-bottom:2px solid #1565c0;"><span contenteditable="true">Coat rack, freestanding 8-hook metal black</span></td>
+        <td width="6%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:2px solid #1565c0;"><span contenteditable="true">4</span></td>
+        <td width="12%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-bottom:2px solid #1565c0;"><span contenteditable="true">65.00</span></td>
+        <td width="7%"  style="text-align:center; padding:5px 4px; background:#f8f9fa; border-bottom:2px solid #1565c0;"><span contenteditable="true">-</span></td>
+        <td width="27%" style="text-align:right; padding:5px 6px; background:#f8f9fa; border-right:1px solid #ddd; border-bottom:2px solid #1565c0;">260.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- TERMS & CONDITIONS                                               -->
+  <!-- ================================================================ -->
+  <div class="prowitem">
+    <table width="100%" cellspacing="0" cellpadding="0" style="border:none; margin-top:12px;">
+      <tr>
+        <td style="border:none; padding:0 0 4px;">
+          <span style="font-size:9pt; font-weight:bold; color:#1565c0;">Terms &amp; Conditions:</span>
+        </td>
+      </tr>
+      <tr>
+        <td style="border:none; padding:2px 0 0 10px; font-size:8pt; color:#555; line-height:1.5;">
+          1. This Sales Order is binding upon written acceptance by the Customer or upon commencement of delivery. Any amendments must be made in writing and agreed by both parties.<br>
+          2. Prices quoted are in Singapore Dollars (SGD) and are exclusive of GST unless otherwise stated. GST will be charged at the prevailing rate on the date of invoice.<br>
+          3. Payment is due within the agreed credit terms from the date of invoice. A late payment surcharge of 1.5% per month may be applied on overdue balances without further notice.<br>
+          4. Delivery dates are estimated and subject to stock availability. The Seller shall not be liable for delays caused by circumstances beyond its reasonable control.<br>
+          5. Risk of loss or damage to goods shall pass to the Customer upon delivery to the specified address. Title to the goods remains with the Seller until full payment is received.<br>
+          6. The Customer must inspect all goods within 3 business days of receipt and report any defects or shortages in writing. Claims made after this period may not be entertained.<br>
+          7. Returns and exchanges are subject to the Seller's return policy. Goods must be unused, in original packaging, and returned within 14 days of delivery with prior authorisation.<br>
+          8. The Seller warrants that goods are free from defects in materials and workmanship for a period of 12 months from delivery, unless a different warranty period is specified for individual items.<br>
+          9. The Seller's total liability under this Sales Order shall not exceed the total value of the order. In no event shall the Seller be liable for indirect, consequential, or incidental damages.<br>
+          10. This Sales Order shall be governed by and construed in accordance with the laws of Singapore. Any disputes shall be subject to the exclusive jurisdiction of the Singapore courts.
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- TOTALS                                                           -->
+  <!-- ================================================================ -->
+  <div class="prowitem">
+    <table width="100%" cellspacing="0" cellpadding="0" style="border:none;">
+      <tr>
+        <td width="60%" style="border:none;"></td>
+        <td width="20%" style="text-align:right; font-weight:bold; padding:6px 8px; font-size:8pt; border-top:1px solid #ccc; border-bottom:none; border-left:none; border-right:none;">Subtotal:</td>
+        <td width="20%" style="text-align:right; padding:6px 8px; font-size:8pt; border-top:1px solid #ccc; border-bottom:none; border-left:none; border-right:none;">21,268.25</td>
+      </tr>
+      <tr>
+        <td style="border:none;"></td>
+        <td style="text-align:right; font-weight:bold; padding:3px 8px; font-size:8pt; border:none;">GST (9%):</td>
+        <td style="text-align:right; padding:3px 8px; font-size:8pt; border:none;">1,914.14</td>
+      </tr>
+    </table>
+    <!-- Grand Total Banner -->
+    <table width="100%" cellspacing="0" cellpadding="0" style="border:none; margin-top:6px;">
+      <tr>
+        <td width="66%" style="background:#1565c0; padding:8px 15px; border:none;">
+          <span style="color:rgba(255,255,255,0.8); font-size:9pt; font-weight:bold;">GRAND TOTAL (SGD)</span>
+        </td>
+        <td width="34%" style="background:#1565c0; color:#fff; font-size:14pt; font-weight:bold; text-align:right; padding:8px 15px; border:none;">SGD 23,182.39</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- DELIVERY SCHEDULE + INSTRUCTIONS                                 -->
+  <!-- ================================================================ -->
+  <div class="prowitem">
+    <table width="100%" cellspacing="0" cellpadding="0" style="border:none; margin-top:10px;">
+      <tr>
+        <td width="48%" valign="top" style="border:1px solid #e0e0e0; padding:6px 8px;">
+          <b style="color:#1565c0; font-size:8pt;">Batch 1 Delivery</b><br>
+          <span style="font-size:8pt;">Items 1 - 4 &nbsp;|&nbsp; <span contenteditable="true">15 April 2026</span></span><br>
+          <span style="font-size:7.5pt; color:#666;">Deliver to: 25 Changi South Ave 2, S486594</span>
+        </td>
+        <td width="4%" style="border:none;"></td>
+        <td width="48%" valign="top" style="border:1px solid #e0e0e0; padding:6px 8px;">
+          <b style="color:#1565c0; font-size:8pt;">Batch 2 Delivery</b><br>
+          <span style="font-size:8pt;">Items 5 - 8 &nbsp;|&nbsp; <span contenteditable="true">22 April 2026</span></span><br>
+          <span style="font-size:7.5pt; color:#666;">Deliver to: 25 Changi South Ave 2, S486594</span>
+        </td>
+      </tr>
+    </table>
+    <table width="100%" cellspacing="0" cellpadding="0" style="border:none; margin-top:8px;">
+      <tr>
+        <td style="border:none; padding:0 0 4px;">
+          <span style="font-size:9pt; font-weight:bold; color:#1565c0;">Special Instructions:</span>
+        </td>
+      </tr>
+      <tr>
+        <td style="border:none; padding:2px 0 0 10px; font-size:8pt; color:#1565c0; line-height:1.6;">
+          <span contenteditable="true">&#9658; Assembly service required for standing desks (Item 2) - schedule with facilities team</span><br>
+          <span contenteditable="true">&#9658; Partition panels must be delivered in protective wrapping to prevent scratches</span><br>
+          <span contenteditable="true">&#9658; Contact Ms. Diana Koh at ext. 4502 for delivery coordination</span>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- SIGNATURES                                                       -->
+  <!-- ================================================================ -->
+  <div class="pfooter">
+    <table width="100%" cellspacing="0" cellpadding="0" style="border:none; margin-top:20px;">
+      <tr>
+        <td width="50%" style="font-size:8pt; vertical-align:bottom; color:#666; border:none; padding:0 20px;">
+          Prepared by: <span contenteditable="true">Marcus Lee</span>, Sales Executive
+        </td>
+        <td width="50%" style="text-align:center; vertical-align:top; padding:0 20px; border:none;">
+          <table width="100%" cellspacing="0" cellpadding="0" style="border:none;">
+            <tr><td style="border:none; height:40px;"></td></tr>
+            <tr><td style="border:none; border-top:1px solid #333; padding-top:4px; text-align:center;">
+              <span style="font-weight:bold;">Customer Acceptance</span><br>
+              <span contenteditable="true">________________</span><br>
+              <span style="font-size:7.5pt; color:#666;">Authorised Signature / Date / Company Stamp</span>
+            </td></tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- FOOTER                                                           -->
+  <!-- ================================================================ -->
+  <div class="pfooter_logo" style="font-size:8pt; text-align:center; color:#1565c0; border-top:1px solid #1565c0; padding-top:4px;">ACME CORPORATION PTE LTD &nbsp;|&nbsp; Co. Reg. 200312345K &nbsp;|&nbsp; Computer-generated document</div>
+  <div class="pfooter_pagenum" style="font-size:8pt; text-align:center; color:#999;">Page <span data-page-number></span> of <span data-page-total></span></div>
+
+</div>
+
+<script src="../dist/printform.js"></script>
+<script src="../dist/html_to_vector_pdf.js"></script>
+<script src="../template-base.js"></script>
+</body>
+</html>

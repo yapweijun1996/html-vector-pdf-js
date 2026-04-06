@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Packing List - ARCADIA EXPORTS PTE LTD</title>
+<link rel="stylesheet" href="../template-base.css">
+<style>
+:root { --accent: #546e7a; }
+/* template overrides */
+.pheader h1 { color: var(--accent); font-size: 16pt; letter-spacing: 3px; text-transform: uppercase; margin: 0; }
+.ref-bar { background: var(--accent); color: white; padding: 6px 8px; font-size: 9pt; font-weight: bold; }
+.ref-bar span { font-weight: normal; }
+.party-box { border: 1px solid var(--accent); padding: 8px; font-size: 8pt; vertical-align: top; }
+.party-box b.label { font-size: 9pt; color: var(--accent); }
+.ship-info { background: #eceff1; border: 1px solid #b0bec5; padding: 4px 6px; font-size: 8pt; }
+.prowheader th { background: var(--accent); color: white; font-weight: bold; font-size: 7pt; padding: 4px 3px; }
+.prowitem td { border-bottom: 1px solid #cfd8dc; padding: 2px 3px; font-size: 8pt; }
+.summary-totals td { font-weight: bold; font-size: 8pt; padding: 4px 3px; border-top: 2px solid var(--accent); border-bottom: 2px solid var(--accent); }
+.summary-card { border: 2px solid var(--accent); text-align: center; padding: 6px 4px; }
+.summary-card .label { font-size: 7pt; color: var(--accent); font-weight: bold; }
+.summary-card .value { font-size: 14pt; font-weight: bold; color: var(--accent); }
+.marks-box { font-family: 'Courier New', monospace; font-size: 7pt; line-height: 1.6; border: 1px dashed #90a4ae; background: #f5f5f5; padding: 6px 10px; }
+.warn-box { background: #ffebee; border: 1px solid #ef5350; color: #c62828; padding: 8px 10px; font-size: 8pt; }
+.sig-block { border-top: 1px solid #333; width: 200px; padding-top: 4px; font-size: 8pt; }
+</style>
+</head>
+<body>
+<div class="controls">
+  <a href="../index.html">&larr; Back to Gallery</a>
+  <button class="btn-pdf" onclick="downloadPdf('10-packing-list.pdf')">Download PDF</button>
+</div>
+<div class="printform paper_width"
+     data-papersize-width="750" data-papersize-height="1050"
+     data-repeat-header="y" data-repeat-docinfo="y" data-repeat-rowheader="y"
+     data-repeat-footer-logo="y" data-repeat-footer-pagenum="y"
+     data-insert-dummy-row-item-while-format-table="y">
+
+  <!-- Page Header -->
+  <div class="pheader block">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="480"><h1>PACKING LIST</h1></td>
+        <td width="270" align="right" style="font-size:8pt;color:#666;">
+          <span contenteditable="true">Arcadia Exports Pte Ltd</span><br>
+          <span contenteditable="true">5 Toh Guan Road East, #04-18, Singapore 608831</span>
+        </td>
+      </tr>
+    </table>
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="250" class="ref-bar">PL No: <span contenteditable="true">PL-2026-0156</span></td>
+        <td width="250" class="ref-bar" style="border-left:1px solid #78909c;">Invoice Ref: <span contenteditable="true">CI-2026-0088</span></td>
+        <td width="250" class="ref-bar" style="border-left:1px solid #78909c;">PO Ref: <span contenteditable="true">PO-JP-2026-4401</span></td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Document Info: Shipper/Consignee + Shipping Info -->
+  <div class="pdocinfo block">
+    <table class="paper_width" cellspacing="0" cellpadding="0" style="margin-bottom:6px;">
+      <tr>
+        <td width="365" class="party-box">
+          <b class="label">SHIPPER</b><br>
+          <span style="font-weight:bold;" contenteditable="true">ARCADIA EXPORTS PTE LTD</span><br>
+          <span contenteditable="true">5 Toh Guan Road East, #04-18, Singapore 608831</span><br>
+          Tel: <span contenteditable="true">+65 6863 7100</span><br>
+          Contact: <span contenteditable="true">Lim Kah Seng</span>
+        </td>
+        <td width="20"></td>
+        <td width="365" class="party-box">
+          <b class="label">CONSIGNEE</b><br>
+          <span style="font-weight:bold;" contenteditable="true">SAKURA TRADING CO., LTD.</span><br>
+          <span contenteditable="true">3-12-8 Minato-ku, Shibaura, Tokyo 108-0023, Japan</span><br>
+          Tel: <span contenteditable="true">+81 3-5440-2100</span><br>
+          Contact: <span contenteditable="true">Mr. Kenji Tanaka</span>
+        </td>
+      </tr>
+    </table>
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="250" class="ship-info"><b>Vessel:</b><br><span contenteditable="true">MV EASTERN HARMONY V.042W</span></td>
+        <td width="250" class="ship-info" style="border-left:none;"><b>Port of Loading:</b><br><span contenteditable="true">Singapore (SGSIN)</span></td>
+        <td width="250" class="ship-info" style="border-left:none;"><b>Port of Discharge:</b><br><span contenteditable="true">Tokyo (JPTYO)</span></td>
+      </tr>
+      <tr>
+        <td class="ship-info" style="border-top:none;"><b>ETD:</b> <span contenteditable="true">08 Apr 2026</span></td>
+        <td class="ship-info" style="border-top:none;border-left:none;"><b>ETA:</b> <span contenteditable="true">14 Apr 2026</span></td>
+        <td class="ship-info" style="border-top:none;border-left:none;"><b>Country of Origin:</b> <span contenteditable="true">Singapore</span></td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Header -->
+  <div class="prowheader">
+    <table class="paper_width">
+      <tr>
+        <th width="40" style="text-align:center;">CTN</th>
+        <th width="65" style="text-align:center;">Item Code</th>
+        <th width="200">Description</th>
+        <th width="40" style="text-align:center;">QTY</th>
+        <th width="80" style="text-align:right;">Net Wt(kg)</th>
+        <th width="85" style="text-align:right;">Gross Wt(kg)</th>
+        <th width="130" style="text-align:center;">Dims (LxWxH cm)</th>
+        <th width="110" style="text-align:center;">Remarks</th>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Item 1 -->
+  <div class="prowitem">
+    <table class="paper_width">
+      <tr>
+        <td width="40" style="text-align:center;">1</td>
+        <td width="65" style="text-align:center;" contenteditable="true">ARC-1010</td>
+        <td width="200" contenteditable="true">Precision Ball Bearings (Set of 50)</td>
+        <td width="40" style="text-align:center;" contenteditable="true">200</td>
+        <td width="80" style="text-align:right;" contenteditable="true">22.00</td>
+        <td width="85" style="text-align:right;" contenteditable="true">25.50</td>
+        <td width="130" style="text-align:center;" contenteditable="true">60 x 45 x 40</td>
+        <td width="110" style="text-align:center;" contenteditable="true">Fragile</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Item 2 -->
+  <div class="prowitem">
+    <table class="paper_width">
+      <tr>
+        <td width="40" style="text-align:center;">1</td>
+        <td width="65" style="text-align:center;" contenteditable="true">ARC-1011</td>
+        <td width="200" contenteditable="true">Bearing Grease Cartridges (100ml)</td>
+        <td width="40" style="text-align:center;" contenteditable="true">100</td>
+        <td width="80" style="text-align:right;" contenteditable="true">8.00</td>
+        <td width="85" style="text-align:right;" contenteditable="true">9.60</td>
+        <td width="130" style="text-align:center;" contenteditable="true">60 x 45 x 40</td>
+        <td width="110" style="text-align:center;" contenteditable="true">-</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Item 3 -->
+  <div class="prowitem">
+    <table class="paper_width">
+      <tr>
+        <td width="40" style="text-align:center;">2</td>
+        <td width="65" style="text-align:center;" contenteditable="true">ARC-2030</td>
+        <td width="200" contenteditable="true">Stainless Steel Shaft Couplings</td>
+        <td width="40" style="text-align:center;" contenteditable="true">80</td>
+        <td width="80" style="text-align:right;" contenteditable="true">32.00</td>
+        <td width="85" style="text-align:right;" contenteditable="true">36.80</td>
+        <td width="130" style="text-align:center;" contenteditable="true">55 x 50 x 45</td>
+        <td width="110" style="text-align:center;" contenteditable="true">-</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Item 4 -->
+  <div class="prowitem">
+    <table class="paper_width">
+      <tr>
+        <td width="40" style="text-align:center;">2</td>
+        <td width="65" style="text-align:center;" contenteditable="true">ARC-2031</td>
+        <td width="200" contenteditable="true">Coupling Gasket Rings (Assorted)</td>
+        <td width="40" style="text-align:center;" contenteditable="true">160</td>
+        <td width="80" style="text-align:right;" contenteditable="true">4.80</td>
+        <td width="85" style="text-align:right;" contenteditable="true">5.90</td>
+        <td width="130" style="text-align:center;" contenteditable="true">55 x 50 x 45</td>
+        <td width="110" style="text-align:center;" contenteditable="true">-</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Item 5 -->
+  <div class="prowitem">
+    <table class="paper_width">
+      <tr>
+        <td width="40" style="text-align:center;">3</td>
+        <td width="65" style="text-align:center;" contenteditable="true">ARC-3050</td>
+        <td width="200" contenteditable="true">Linear Guide Rail Assembly 500mm</td>
+        <td width="40" style="text-align:center;" contenteditable="true">30</td>
+        <td width="80" style="text-align:right;" contenteditable="true">45.00</td>
+        <td width="85" style="text-align:right;" contenteditable="true">52.20</td>
+        <td width="130" style="text-align:center;" contenteditable="true">70 x 40 x 35</td>
+        <td width="110" style="text-align:center;" contenteditable="true">This side up</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Item 6 -->
+  <div class="prowitem">
+    <table class="paper_width">
+      <tr>
+        <td width="40" style="text-align:center;">4</td>
+        <td width="65" style="text-align:center;" contenteditable="true">ARC-4080</td>
+        <td width="200" contenteditable="true">Pneumatic Cylinder Kit (50mm bore)</td>
+        <td width="40" style="text-align:center;" contenteditable="true">24</td>
+        <td width="80" style="text-align:right;" contenteditable="true">28.80</td>
+        <td width="85" style="text-align:right;" contenteditable="true">33.40</td>
+        <td width="130" style="text-align:center;" contenteditable="true">65 x 45 x 40</td>
+        <td width="110" style="text-align:center;" contenteditable="true">Keep dry</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Item 7 -->
+  <div class="prowitem">
+    <table class="paper_width">
+      <tr>
+        <td width="40" style="text-align:center;">5</td>
+        <td width="65" style="text-align:center;" contenteditable="true">ARC-5010</td>
+        <td width="200" contenteditable="true">Timing Belt Pulley Set (Aluminium)</td>
+        <td width="40" style="text-align:center;" contenteditable="true">60</td>
+        <td width="80" style="text-align:right;" contenteditable="true">18.00</td>
+        <td width="85" style="text-align:right;" contenteditable="true">21.50</td>
+        <td width="130" style="text-align:center;" contenteditable="true">50 x 40 x 35</td>
+        <td width="110" style="text-align:center;" contenteditable="true">-</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Item 8 -->
+  <div class="prowitem">
+    <table class="paper_width">
+      <tr>
+        <td width="40" style="text-align:center;">5</td>
+        <td width="65" style="text-align:center;" contenteditable="true">ARC-5011</td>
+        <td width="200" contenteditable="true">Timing Belt 5M-800 (Pack of 10)</td>
+        <td width="40" style="text-align:center;" contenteditable="true">40</td>
+        <td width="80" style="text-align:right;" contenteditable="true">6.40</td>
+        <td width="85" style="text-align:right;" contenteditable="true">7.80</td>
+        <td width="130" style="text-align:center;" contenteditable="true">50 x 40 x 35</td>
+        <td width="110" style="text-align:center;" contenteditable="true">-</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Item 9 -->
+  <div class="prowitem">
+    <table class="paper_width">
+      <tr>
+        <td width="40" style="text-align:center;">6</td>
+        <td width="65" style="text-align:center;" contenteditable="true">ARC-6020</td>
+        <td width="200" contenteditable="true">Stainless Steel Threaded Rod M12x1000mm</td>
+        <td width="40" style="text-align:center;" contenteditable="true">50</td>
+        <td width="80" style="text-align:right;" contenteditable="true">35.00</td>
+        <td width="85" style="text-align:right;" contenteditable="true">40.20</td>
+        <td width="130" style="text-align:center;" contenteditable="true">110 x 30 x 30</td>
+        <td width="110" style="text-align:center;" contenteditable="true">Long cargo</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Item 10 -->
+  <div class="prowitem">
+    <table class="paper_width">
+      <tr>
+        <td width="40" style="text-align:center;">7</td>
+        <td width="65" style="text-align:center;" contenteditable="true">ARC-7005</td>
+        <td width="200" contenteditable="true">Servo Motor Encoder Cable 5m</td>
+        <td width="40" style="text-align:center;" contenteditable="true">30</td>
+        <td width="80" style="text-align:right;" contenteditable="true">9.00</td>
+        <td width="85" style="text-align:right;" contenteditable="true">10.80</td>
+        <td width="130" style="text-align:center;" contenteditable="true">45 x 40 x 30</td>
+        <td width="110" style="text-align:center;" contenteditable="true">-</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Item 11 -->
+  <div class="prowitem">
+    <table class="paper_width">
+      <tr>
+        <td width="40" style="text-align:center;">8</td>
+        <td width="65" style="text-align:center;" contenteditable="true">ARC-8010</td>
+        <td width="200" contenteditable="true">Hydraulic Hose Assembly DN12 2m</td>
+        <td width="40" style="text-align:center;" contenteditable="true">20</td>
+        <td width="80" style="text-align:right;" contenteditable="true">14.00</td>
+        <td width="85" style="text-align:right;" contenteditable="true">16.80</td>
+        <td width="130" style="text-align:center;" contenteditable="true">60 x 45 x 35</td>
+        <td width="110" style="text-align:center;" contenteditable="true">Keep dry</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Row Item 12 -->
+  <div class="prowitem">
+    <table class="paper_width">
+      <tr>
+        <td width="40" style="text-align:center;">8</td>
+        <td width="65" style="text-align:center;" contenteditable="true">ARC-8011</td>
+        <td width="200" contenteditable="true">Hydraulic Quick-Connect Fittings Set</td>
+        <td width="40" style="text-align:center;" contenteditable="true">40</td>
+        <td width="80" style="text-align:right;" contenteditable="true">5.60</td>
+        <td width="85" style="text-align:right;" contenteditable="true">6.80</td>
+        <td width="130" style="text-align:center;" contenteditable="true">60 x 45 x 35</td>
+        <td width="110" style="text-align:center;" contenteditable="true">-</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Terms: Summary Totals, Cards, Marks, Special Handling -->
+  <div class="prowitem"><table class="paper_width" style="border:none;">
+    <tr class="summary-totals">
+      <td width="40" style="text-align:center;">4</td>
+      <td width="65" style="text-align:center;">TOTALS</td>
+      <td width="200">6 line items</td>
+      <td width="40" style="text-align:center;">594</td>
+      <td width="80" style="text-align:right;">140.60</td>
+      <td width="85" style="text-align:right;">163.40</td>
+      <td width="130"></td>
+      <td width="110"></td>
+    </tr>
+    <tr>
+      <td colspan="8" style="padding:6px 0;">
+        <table class="paper_width" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="183" class="summary-card">
+              <span class="label">TOTAL CARTONS</span><br>
+              <span class="value" contenteditable="true">4</span>
+            </td>
+            <td width="6"></td>
+            <td width="183" class="summary-card">
+              <span class="label">NET WEIGHT</span><br>
+              <span class="value" contenteditable="true">140.60 kg</span>
+            </td>
+            <td width="6"></td>
+            <td width="183" class="summary-card">
+              <span class="label">GROSS WEIGHT</span><br>
+              <span class="value" contenteditable="true">163.40 kg</span>
+            </td>
+            <td width="6"></td>
+            <td width="183" class="summary-card">
+              <span class="label">VOLUME CBM</span><br>
+              <span class="value" contenteditable="true">0.512</span>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="8" style="padding:6px 0 2px;font-weight:bold;font-size:8pt;color:var(--accent);">MARKS &amp; NUMBERS:</td>
+    </tr>
+    <tr>
+      <td colspan="8">
+        <div class="marks-box" contenteditable="true">
+          ARCADIA EXPORTS / PL-2026-0156<br>
+          DEST: TOKYO, JAPAN<br>
+          C/NO: ___/4 | MADE IN SINGAPORE<br>
+          N.W.: ___ KG | G.W.: ___ KG
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="8" style="padding-top:6px;">
+        <div class="warn-box">
+          <b>SPECIAL HANDLING INSTRUCTIONS:</b><br>
+          <span contenteditable="true">Handle with care. Cartons 1 and 3 contain precision components — do not drop or stack more than 2 high. Keep all cartons away from moisture. Temperature range: 5-40 deg C. Do not use hooks for lifting.</span>
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <!-- Signature Footer -->
+  <div class="pfooter block">
+    <table class="paper_width" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="500"></td>
+        <td width="250">
+          <div class="sig-block">Packed By</div>
+          <div style="font-size:8pt;" contenteditable="true">Ahmad bin Ismail, Warehouse Lead</div>
+          <div style="font-size:7pt;color:#888;" contenteditable="true">02 April 2026</div>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="pfooter_logo">Arcadia Exports Pte Ltd</div>
+  <div class="pfooter_pagenum">Page <span data-page-number></span> of <span data-page-total></span></div>
+</div>
+<script src="../dist/printform.js"></script>
+<script src="../dist/html_to_vector_pdf.js"></script>
+<script src="../template-base.js"></script>
+</body>
+</html>

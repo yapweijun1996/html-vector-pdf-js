@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Return Note - RN-2026-0029</title>
+<link rel="stylesheet" href="../template-base.css">
+<style>
+  :root { --accent: #e65100; --accent-light: #ff9800; --accent-bg: #fff3e0; --accent-border: #ffccbc; --accent-dark: #bf360c; }
+  .prowheader th, .prowheader_processed th { background: var(--accent); color: white; font-size: 8pt; text-transform: uppercase; letter-spacing: .04em; padding: 5px 6px; border: 1px solid var(--accent); }
+  .prowitem td, .prowitem_processed td { border: 1px solid #e5e7eb; padding: 4px 6px; }
+  .ref-flow-box { background: var(--accent-bg); border: 2px solid var(--accent-light); padding: 4px 8px; display: inline-block; }
+  .ref-flow-label { font-size: 7pt; color: var(--accent); font-weight: bold; }
+  .ref-flow-value { font-size: 9pt; font-weight: bold; color: var(--accent-dark); }
+  .ref-arrow { font-size: 16pt; color: var(--accent-light); font-weight: bold; }
+  .reason-box { border: 2px solid var(--accent-light); background: #fff8e1; padding: 6px 8px; }
+  .badge-def { display: inline-block; background: #ffcdd2; color: #c62828; font-weight: bold; font-size: 8pt; padding: 2px 6px; border: 1px solid #e57373; }
+  .badge-wrg { display: inline-block; background: #fff9c4; color: #f57f17; font-weight: bold; font-size: 8pt; padding: 2px 6px; border: 1px solid #fdd835; }
+  .badge-dmg { display: inline-block; background: #ffe0b2; color: var(--accent); font-weight: bold; font-size: 8pt; padding: 2px 6px; border: 1px solid #ffb74d; }
+  .badge-exp { display: inline-block; background: #e0e0e0; color: #424242; font-weight: bold; font-size: 8pt; padding: 2px 6px; border: 1px solid #9e9e9e; }
+  .action-replace { color: #1565c0; font-weight: bold; }
+  .action-refund { color: #2e7d32; font-weight: bold; }
+  .action-credit { color: #6a1b9a; font-weight: bold; }
+  .pickup-header { background: var(--accent); color: white; font-weight: bold; padding: 4px 8px; font-size: 9pt; }
+  .pickup-cell { padding: 4px 8px; border-bottom: 1px solid var(--accent-border); background: #fbe9e7; }
+  .pickup-label { font-size: 7pt; color: var(--accent); font-weight: bold; }
+</style>
+</head>
+<body>
+<div class="controls">
+  <a href="../index.html">&larr; Back to Gallery</a>
+  <button class="btn-pdf" onclick="downloadPdf('return-note.pdf')">Download PDF</button>
+</div>
+
+<div class="printform paper_width" data-papersize-width="750" data-papersize-height="1050" data-repeat-header="y" data-repeat-rowheader="y" data-repeat-footer-logo="y" data-repeat-footer-pagenum="y" data-insert-dummy-row-item-while-format-table="y">
+
+  <!-- ========== PAGE HEADER ========== -->
+  <table cellpadding="0" cellspacing="0" class="paper_width pheader">
+    <tr>
+      <td width="480" style="vertical-align:middle;">
+        <span style="color:var(--accent-dark);font-size:16pt;font-weight:bold;">RETURN NOTE</span>
+        <span style="color:var(--accent);font-size:14pt;"> &#9888;</span><br>
+        <span style="font-size:8pt;color:#666;">ACME CORPORATION PTE LTD &nbsp;|&nbsp; Co. Reg. 200312345K</span>
+      </td>
+      <td width="270" style="vertical-align:top;text-align:right;">
+        <span style="font-weight:bold;font-size:12pt;color:var(--accent-dark);" contenteditable="true">RN-2026-0029</span><br>
+        <span style="font-size:8pt;">Date: <span contenteditable="true">02 April 2026</span></span>
+      </td>
+    </tr>
+    <tr><td colspan="2" style="border-top:3px solid var(--accent);height:4px;"></td></tr>
+  </table>
+
+  <!-- ========== DOC INFO ========== -->
+  <table cellpadding="0" cellspacing="0" class="paper_width pdocinfo">
+    <tr>
+      <td width="210" style="text-align:center;padding:4px;">
+        <span class="ref-flow-box">
+          <span class="ref-flow-label">PURCHASE ORDER</span><br>
+          <span class="ref-flow-value" contenteditable="true">PO-2026-0038</span>
+        </span>
+      </td>
+      <td width="60" style="text-align:center;"><span class="ref-arrow">&rarr;</span></td>
+      <td width="210" style="text-align:center;padding:4px;">
+        <span class="ref-flow-box">
+          <span class="ref-flow-label">INVOICE</span><br>
+          <span class="ref-flow-value" contenteditable="true">INV-2026-0512</span>
+        </span>
+      </td>
+      <td width="60" style="text-align:center;"><span class="ref-arrow">&rarr;</span></td>
+      <td width="210" style="text-align:center;padding:4px;">
+        <span class="ref-flow-box">
+          <span class="ref-flow-label">GOODS RECEIVED NOTE</span><br>
+          <span class="ref-flow-value" contenteditable="true">GRN-2026-0121</span>
+        </span>
+      </td>
+    </tr>
+    <tr><td colspan="5" style="height:6px;"></td></tr>
+    <tr>
+      <td colspan="2" style="vertical-align:top;padding-right:10px;">
+        <b>Return To (Supplier):</b><br>
+        <span style="font-weight:bold;" contenteditable="true">SIGMA COMPONENTS PTE LTD</span><br>
+        <span contenteditable="true">25 Kallang Avenue, #04-08<br>Kallang Basin Industrial Estate<br>Singapore 339416</span><br>
+        <span contenteditable="true">Attn: Ms. Linda Teo</span>
+      </td>
+      <td colspan="3" style="vertical-align:top;">
+        <div class="reason-box">
+          <span style="font-weight:bold;color:var(--accent);">RETURN REASON SUMMARY</span><br>
+          <span contenteditable="true" style="font-size:9pt;">Multiple items received with defects, damage, wrong specifications, and near-expiry stock. Inspection conducted under GRN-2026-0121 identified quality issues requiring immediate return and replacement action.</span>
+        </div>
+      </td>
+    </tr>
+    <tr><td colspan="5" style="height:6px;"></td></tr>
+  </table>
+
+  <!-- ========== ROW HEADER ========== -->
+  <table cellpadding="0" cellspacing="0" class="paper_width prowheader">
+    <tr>
+      <th width="30" style="text-align:center;">No</th>
+      <th width="65">Item Code</th>
+      <th width="190">Description</th>
+      <th width="40" style="text-align:center;">Qty</th>
+      <th width="65" style="text-align:center;">Reason</th>
+      <th width="105">Condition</th>
+      <th width="120">Action Required</th>
+      <th width="135" style="text-align:right;">Value (SGD)</th>
+    </tr>
+  </table>
+
+  <!-- ========== ROW ITEMS ========== -->
+  <table cellpadding="0" cellspacing="0" class="paper_width prowitem">
+    <tr>
+      <td width="30" style="text-align:center;">1</td>
+      <td width="65" contenteditable="true">PCB-4L01</td>
+      <td width="190" contenteditable="true">4-Layer PCB Main Controller Board Rev.C</td>
+      <td width="40" style="text-align:center;" contenteditable="true">5</td>
+      <td width="65" style="text-align:center;"><span class="badge-def">DEF</span></td>
+      <td width="105" contenteditable="true">Non-functional</td>
+      <td width="120" class="action-replace" contenteditable="true">Replace</td>
+      <td width="135" style="text-align:right;" contenteditable="true">1,250.00</td>
+    </tr>
+  </table>
+
+  <table cellpadding="0" cellspacing="0" class="paper_width prowitem">
+    <tr>
+      <td width="30" style="text-align:center;">2</td>
+      <td width="65" contenteditable="true">CON-DB25</td>
+      <td width="190" contenteditable="true">DB25 Connector Male PCB Mount Gold-plated</td>
+      <td width="40" style="text-align:center;" contenteditable="true">20</td>
+      <td width="65" style="text-align:center;"><span class="badge-dmg">DMG</span></td>
+      <td width="105" contenteditable="true">Bent pins</td>
+      <td width="120" class="action-replace" contenteditable="true">Replace</td>
+      <td width="135" style="text-align:right;" contenteditable="true">340.00</td>
+    </tr>
+  </table>
+
+  <table cellpadding="0" cellspacing="0" class="paper_width prowitem">
+    <tr>
+      <td width="30" style="text-align:center;">3</td>
+      <td width="65" contenteditable="true">IC-STM32</td>
+      <td width="190" contenteditable="true">STM32F407 Microcontroller LQFP-100</td>
+      <td width="40" style="text-align:center;" contenteditable="true">10</td>
+      <td width="65" style="text-align:center;"><span class="badge-wrg">WRG</span></td>
+      <td width="105" contenteditable="true">Wrong revision</td>
+      <td width="120" class="action-refund" contenteditable="true">Refund</td>
+      <td width="135" style="text-align:right;" contenteditable="true">890.00</td>
+    </tr>
+  </table>
+
+  <table cellpadding="0" cellspacing="0" class="paper_width prowitem">
+    <tr>
+      <td width="30" style="text-align:center;">4</td>
+      <td width="65" contenteditable="true">CAP-100U</td>
+      <td width="190" contenteditable="true">Electrolytic Capacitor 100uF 50V Radial</td>
+      <td width="40" style="text-align:center;" contenteditable="true">50</td>
+      <td width="65" style="text-align:center;"><span class="badge-exp">EXP</span></td>
+      <td width="105" contenteditable="true">Near expiry</td>
+      <td width="120" class="action-credit" contenteditable="true">Credit</td>
+      <td width="135" style="text-align:right;" contenteditable="true">175.00</td>
+    </tr>
+  </table>
+
+  <!-- ========== PTAC ========== -->
+  <table cellpadding="0" cellspacing="0" class="paper_width ptac">
+    <tr><td colspan="4" style="height:6px;"></td></tr>
+    <tr>
+      <td colspan="4" style="font-weight:bold;font-size:8pt;color:var(--accent);padding-bottom:2px;">REASON CODE LEGEND</td>
+    </tr>
+  </table>
+  <table cellpadding="0" cellspacing="0" class="paper_width ptac">
+    <tr>
+      <td width="187" style="padding:3px 4px;border:1px solid var(--accent-border);"><span class="badge-def">DEF</span> <span style="font-size:8pt;">Defective</span></td>
+      <td width="188" style="padding:3px 4px;border:1px solid var(--accent-border);"><span class="badge-wrg">WRG</span> <span style="font-size:8pt;">Wrong Item / Spec</span></td>
+      <td width="187" style="padding:3px 4px;border:1px solid var(--accent-border);"><span class="badge-dmg">DMG</span> <span style="font-size:8pt;">Damaged in Transit</span></td>
+      <td width="188" style="padding:3px 4px;border:1px solid var(--accent-border);"><span class="badge-exp">EXP</span> <span style="font-size:8pt;">Expired / Near Expiry</span></td>
+    </tr>
+    <tr><td colspan="4" style="height:6px;"></td></tr>
+  </table>
+  <table cellpadding="0" cellspacing="0" class="paper_width ptac">
+    <tr>
+      <td colspan="4" class="pickup-header">PICKUP ARRANGEMENT</td>
+    </tr>
+    <tr>
+      <td width="187" class="pickup-cell">
+        <span class="pickup-label">Pickup Date</span><br>
+        <span contenteditable="true" style="font-weight:bold;">07 April 2026</span>
+      </td>
+      <td width="188" class="pickup-cell">
+        <span class="pickup-label">Time Window</span><br>
+        <span contenteditable="true" style="font-weight:bold;">09:00 - 12:00</span>
+      </td>
+      <td width="187" class="pickup-cell">
+        <span class="pickup-label">Location</span><br>
+        <span contenteditable="true" style="font-weight:bold;">Main WH, Dock 3</span>
+      </td>
+      <td width="188" class="pickup-cell">
+        <span class="pickup-label">Contact Person</span><br>
+        <span contenteditable="true" style="font-weight:bold;">Mr. Tan, ext. 3312</span>
+      </td>
+    </tr>
+    <tr><td colspan="4" style="height:4px;"></td></tr>
+    <tr>
+      <td colspan="4" style="font-size:8pt;font-style:italic;color:var(--accent-dark);padding:4px 0;border-top:1px dashed var(--accent-light);border-bottom:1px dashed var(--accent-light);">
+        Goods must be returned in original packaging. Total items returned: 85 units across 4 line items. Total return value: SGD 2,655.00.
+      </td>
+    </tr>
+    <tr><td colspan="4" style="height:8px;"></td></tr>
+    <tr>
+      <td width="250" style="text-align:center;vertical-align:bottom;padding:0 8px;">
+        <div style="border-top:2px solid var(--accent);margin-top:40px;padding-top:3px;font-weight:bold;font-size:8pt;color:var(--accent-dark);">Initiated By</div>
+        <div style="font-size:7pt;color:#666;">Name: ___________<br>Date: ___________</div>
+      </td>
+      <td width="250" style="text-align:center;vertical-align:bottom;padding:0 8px;">
+        <div style="border-top:2px solid var(--accent);margin-top:40px;padding-top:3px;font-weight:bold;font-size:8pt;color:var(--accent-dark);">Approved By</div>
+        <div style="font-size:7pt;color:#666;">Name: ___________<br>Date: ___________</div>
+      </td>
+      <td width="250" colspan="2" style="text-align:center;vertical-align:bottom;padding:0 8px;">
+        <div style="border-top:2px solid var(--accent);margin-top:40px;padding-top:3px;font-weight:bold;font-size:8pt;color:var(--accent-dark);">Supplier Acknowledged</div>
+        <div style="font-size:7pt;color:#666;">Name: ___________<br>Date: ___________</div>
+      </td>
+    </tr>
+  </table>
+
+  <!-- ========== FOOTER ========== -->
+  <table cellpadding="0" cellspacing="0" class="paper_width pfooter">
+    <tr><td style="height:6px;"></td></tr>
+  </table>
+
+  <table cellpadding="0" cellspacing="0" class="paper_width pfooter_logo">
+    <tr>
+      <td style="text-align:center;font-size:8pt;color:#666;border-top:1px solid var(--accent);padding-top:4px;">
+        RN-2026-0029 &nbsp;|&nbsp; ACME Corporation Pte Ltd
+      </td>
+    </tr>
+  </table>
+
+  <table cellpadding="0" cellspacing="0" class="paper_width pfooter_pagenum">
+    <tr>
+      <td style="text-align:center;font-size:8pt;color:#999;padding-top:2px;"></td>
+    </tr>
+  </table>
+
+</div>
+
+<script src="../dist/printform.js"></script>
+<script src="../dist/html_to_vector_pdf.js"></script>
+<script src="../template-base.js"></script>
+</body>
+</html>
