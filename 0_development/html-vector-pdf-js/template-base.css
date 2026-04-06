@@ -42,12 +42,13 @@ body {
 .grid b { color: #1f2937; }
 
 /* ── Page Header (repeats each page) ── */
-.pheader, .pheader_processed { margin-bottom: 6px; }
+/* padding:0 + border:none overrides .block so inner paper_width (750px) never overflows */
+.pheader, .pheader_processed { margin-bottom: 6px; padding: 0; border: none; }
 .pheader h1, .pheader_processed h1 { margin: 0 0 2px 0; font-size: 13pt; }
 .pheader small, .pheader_processed small { color: #6b7280; font-size: 8pt; }
 
 /* ── Doc Info ── */
-.pdocinfo, .pdocinfo_processed { margin-bottom: 6px; }
+.pdocinfo, .pdocinfo_processed { margin-bottom: 6px; padding: 0; border: none; }
 
 /* ── Row Header (table header, can repeat) ── */
 .prowheader table, .prowheader_processed table,
@@ -81,7 +82,7 @@ th, td { border: 1px solid #e5e7eb; padding: 4px 6px; vertical-align: top; font-
 .ptac h3, .paddt h3 { margin: 0 0 4px 0; font-size: 9pt; }
 
 /* ── Page Footer ── */
-.pfooter, .pfooter_processed { font-size: 8pt; color: #6b7280; margin-top: 6px; }
+.pfooter, .pfooter_processed { font-size: 8pt; color: #6b7280; margin-top: 6px; padding: 0; border: none; }
 .pfooter_logo, .pfooter_logo_processed {
   font-size: 8pt; line-height: 12px; font-weight: bold;
   text-align: center; margin: 0; padding: 0;
