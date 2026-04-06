@@ -4,7 +4,10 @@ import { DomParseContext } from './context';
 
 export const processWhitespace = (txt: Text): string | null => {
     const rawText = txt.textContent || '';
-    if (!/\S/.test(rawText)) return null;
+    // \u00a0 (non-breaking space from &nbsp;) is treated as \s by JS regex,
+    // so !\S alone would drop text nodes that contain only &nbsp; characters.
+    // Keep any text node that has real content (\S) OR non-breaking spaces (\u00a0).
+    if (!/[\S\u00a0]/.test(rawText)) return null;
 
     if (txt.parentElement && txt.parentElement.closest('canvas')) return null;
 
@@ -107,6 +110,16 @@ export const canAggregateText = (
     if (hasFloatingChildren) return false;
     if (hasLayoutImpact) return false;
     if (ctx.cellHasMixedTextStyles(layoutEl)) return false;
+
+    // Don't aggregate when the cell contains inline-block children mixed in text flow.
+    // Inline-block elements occupy space in the text run; merging all text into one
+    // chunk causes jsPDF to re-lay it out without knowing where the boxes break the flow,
+    // resulting in text and boxes rendered at wrong x positions.
+    const hasInlineBlockChild = Array.from(layoutEl.childNodes).some(node => {
+        if (node.nodeType !== Node.ELEMENT_NODE) return false;
+        return window.getComputedStyle(node as HTMLElement).display === 'inline-block';
+    });
+    if (hasInlineBlockChild) return false;
 
     return true;
 };

@@ -34,15 +34,24 @@ export const detectRequiredFont = (text: string): string | null => {
         return 'NotoSansKR';
     }
 
-    /****
-    // OLD: Returned 'NotoSans' for "other" characters, but this was never reached
-    // because the Latin-1 check above would return null first
-    return 'NotoSans';
-    ****/
-    // NEW: For any non-Latin-1 character that's not CJK/Japanese/Korean,
-    // use NotoSans which has broader Unicode coverage (symbols, arrows, etc.)
-    // This fixes rendering of ●, →, ©, ™, etc.
-    return 'NotoSans';
+    // Dingbats (U+2700-U+27BF) — includes ✓ ✔ ✗ ✘ ✦ ✧ ❄ ❤ etc.
+    // These are NOT in standard text fonts (NotoSans, Helvetica, Arial).
+    // They require NotoSansSymbols2 which covers Dingbats + misc symbols.
+    if (/[\u2700-\u27BF]/.test(text)) {
+        if (!isPlaceholder(EMBEDDED_FONT_DATA_NOTOSANSSYMBOLS2_NORMAL)) {
+            return 'NotoSansSymbols2';
+        }
+    }
+
+    // For other non-Latin-1, non-CJK characters (●, →, ©, ™, etc.):
+    // Fallback chain: NotoSans → NotoSansSC → LiberationSans
+    if (!isPlaceholder(EMBEDDED_FONT_DATA_NOTOSANS_NORMAL)) {
+        return 'NotoSans';
+    }
+    if (!isPlaceholder(EMBEDDED_FONT_DATA_NOTOSANSSC_NORMAL)) {
+        return 'NotoSansSC';
+    }
+    return 'LiberationSans';
 };
 
 interface FontDefinition {
@@ -85,6 +94,11 @@ const FONT_CDN_URLS: Record<string, FontDefinition> = {
         name: 'LiberationSans',
         url: 'EMBEDDED',
         format: 'truetype'
+    },
+    NotoSansSymbols2: {
+        name: 'NotoSansSymbols2',
+        url: 'EMBEDDED',
+        format: 'truetype'
     }
     /**** AMENDMENT [end] "Add Carlito font definition" ****/
 };
@@ -100,6 +114,7 @@ const EMBEDDED_FONT_DATA_CARLITO_NORMAL = "EMBEDDED_FONT_DATA_CARLITO_NORMAL_PLA
 const EMBEDDED_FONT_DATA_CARLITO_BOLD = "EMBEDDED_FONT_DATA_CARLITO_BOLD_PLACEHOLDER";
 const EMBEDDED_FONT_DATA_LIBERATIONSANS_NORMAL = "EMBEDDED_FONT_DATA_LIBERATIONSANS_NORMAL_PLACEHOLDER";
 const EMBEDDED_FONT_DATA_LIBERATIONSANS_BOLD = "EMBEDDED_FONT_DATA_LIBERATIONSANS_BOLD_PLACEHOLDER";
+const EMBEDDED_FONT_DATA_NOTOSANSSYMBOLS2_NORMAL = "EMBEDDED_FONT_DATA_NOTOSANSSYMBOLS2_NORMAL_PLACEHOLDER";
 /**** AMENDMENT [end] "Add Carlito placeholders" ****/
 
 type FontStyle = 'normal' | 'bold';
@@ -117,6 +132,9 @@ const getEmbeddedFontData = (fontName: string, style: FontStyle): string | null 
     }
     if (fontName === 'LiberationSans') {
         return style === 'bold' ? EMBEDDED_FONT_DATA_LIBERATIONSANS_BOLD : EMBEDDED_FONT_DATA_LIBERATIONSANS_NORMAL;
+    }
+    if (fontName === 'NotoSansSymbols2') {
+        return EMBEDDED_FONT_DATA_NOTOSANSSYMBOLS2_NORMAL; // symbols font, no bold variant
     }
     /**** AMENDMENT [end] "Add Carlito case to font data resolver" ****/
     // Not embedded yet (JP/KR). Keep behavior explicit.

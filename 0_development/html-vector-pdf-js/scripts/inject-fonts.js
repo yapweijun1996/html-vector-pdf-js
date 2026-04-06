@@ -57,6 +57,11 @@ const INJECT_TARGETS = [
     constName: 'EMBEDDED_FONT_DATA_LIBERATIONSANS_BOLD',
     placeholder: 'EMBEDDED_FONT_DATA_LIBERATIONSANS_BOLD_PLACEHOLDER',
     base64Path: join(PROJECT_ROOT, 'fonts', 'LiberationSans-Bold.base64.txt')
+  },
+  {
+    constName: 'EMBEDDED_FONT_DATA_NOTOSANSSYMBOLS2_NORMAL',
+    placeholder: 'EMBEDDED_FONT_DATA_NOTOSANSSYMBOLS2_NORMAL_PLACEHOLDER',
+    base64Path: join(PROJECT_ROOT, 'fonts', 'NotoSansSymbols2-Regular.base64.txt')
   }
 ];
 

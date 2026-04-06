@@ -4,7 +4,55 @@ import { wrapTextToWidth } from '../textLayout';
 import { RenderItem } from '../renderItems';
 import { PdfConfig } from '../pdfConfig';
 import { applyTextStyle } from './fonts';
+import { detectRequiredFont } from '../fontLoader';
 import { DebugTextRow, TextAlign } from './types';
+
+// ============================================================================
+// Per-character font splitting
+// ============================================================================
+
+interface FontSegment {
+    text: string;
+    font: string | null; // null = use the item's default font
+}
+
+/**
+ * Split a text string into segments that each need the same font.
+ * This enables mixed-font rendering (e.g. "RECEIPT ✓" where ✓ needs a symbol font).
+ * Returns a single segment when no splitting is needed (fast path).
+ */
+const splitTextByFont = (text: string): FontSegment[] | null => {
+    // Quick check: if all chars are Latin-1, no splitting needed
+    if (/^[\x00-\xFF]*$/.test(text)) return null;
+
+    const segments: FontSegment[] = [];
+    let currentFont: string | null = null;
+    let currentText = '';
+    let needsSplit = false;
+
+    for (const char of text) {
+        const font = detectRequiredFont(char);
+        if (segments.length === 0 && currentText === '') {
+            // First character
+            currentFont = font;
+            currentText = char;
+        } else if (font === currentFont) {
+            currentText += char;
+        } else {
+            // Font changed — we need splitting
+            needsSplit = true;
+            segments.push({ text: currentText, font: currentFont });
+            currentFont = font;
+            currentText = char;
+        }
+    }
+
+    if (currentText) {
+        segments.push({ text: currentText, font: currentFont });
+    }
+
+    return needsSplit ? segments : null;
+};
 
 const getRenderedLineWidthMm = (
     doc: jsPDF,
@@ -154,7 +202,47 @@ export const renderText = (
     // Render each line
     for (let i = 0; i < lines.length; i++) {
         const lineText = lines[i];
-        doc.text(lineText, x, baseY + i * lineHeightMm, { baseline: 'alphabetic', align });
+        const fontSegments = splitTextByFont(lineText);
+
+        if (!fontSegments) {
+            // Fast path: single font — render normally
+            doc.text(lineText, x, baseY + i * lineHeightMm, { baseline: 'alphabetic', align });
+        } else {
+            // Multi-font: render each segment with its own font, advancing x
+            const lineY = baseY + i * lineHeightMm;
+            let segX = x;
+
+            // For center/right align, compute total width first to find the starting x
+            if (align === 'center' || align === 'right') {
+                let totalWidth = 0;
+                for (const seg of fontSegments) {
+                    if (seg.font) {
+                        try { doc.setFont(seg.font, 'normal'); } catch { /* keep current */ }
+                    } else {
+                        applyTextStyle(doc, item.style, cfg.text.scale, undefined, false);
+                    }
+                    totalWidth += doc.getTextWidth(seg.text.replaceAll('\u00A0', ' '));
+                }
+                if (align === 'center') segX = x - totalWidth / 2;
+                else if (align === 'right') segX = x - totalWidth;
+            }
+
+            for (const seg of fontSegments) {
+                if (seg.font) {
+                    const pdfFontStyle = (item.style.fontWeight === 'bold' || parseInt(item.style.fontWeight || '400') >= 700) ? 'bold' : 'normal';
+                    try { doc.setFont(seg.font, pdfFontStyle); } catch {
+                        try { doc.setFont(seg.font, 'normal'); } catch { /* font not available */ }
+                    }
+                } else {
+                    applyTextStyle(doc, item.style, cfg.text.scale, undefined, false);
+                }
+                const segText = seg.text.replaceAll('\u00A0', ' ');
+                doc.text(segText, segX, lineY, { baseline: 'alphabetic', align: 'left' });
+                segX += doc.getTextWidth(segText);
+            }
+            // Restore the item's default font for subsequent lines/decorations
+            applyTextStyle(doc, item.style, cfg.text.scale, undefined, false);
+        }
 
         // Draw decorations if needed
         if (hasUnderline || hasLineThrough) {
