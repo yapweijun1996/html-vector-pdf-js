@@ -407,4 +407,5 @@ Both commands output to `dist/html_to_vector_pdf.js`.
 After `npm run build`, HTML demo files are copied into `dist/` with the script path rewritten to `./html_to_vector_pdf.js` so you can open them directly.
 
 ## 📄 License
-Private
+
+MIT License — free for personal and commercial use. See [LICENSE](./LICENSE) for details.
