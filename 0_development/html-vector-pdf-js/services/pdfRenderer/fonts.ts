@@ -79,9 +79,19 @@ export const applyTextStyle = (
 
     try {
         doc.setFont(fontName, pdfFontStyle);
-    } catch (e) {
-        // Fallback if font/style combo not found
-        doc.setFont(fontName, 'normal');
+    } catch {
+        try {
+            // Fallback 1: try same font with 'normal' style
+            doc.setFont(fontName, 'normal');
+        } catch {
+            // Fallback 2: font not registered at all, use jsPDF built-in helvetica
+            // (closest to Arial/LiberationSans among built-in fonts)
+            try {
+                doc.setFont('helvetica', pdfFontStyle);
+            } catch {
+                doc.setFont('helvetica', 'normal');
+            }
+        }
     }
 
     const fontSizePx = parseFloat(style.fontSize);

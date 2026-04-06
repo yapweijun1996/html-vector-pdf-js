@@ -117,10 +117,21 @@ const pushCandidate = (
         ? Math.abs(coordPx - tableRect.left) <= COLLAPSE_TOLERANCE_PX
         : Math.abs(coordPx - tableRect.right) <= COLLAPSE_TOLERANCE_PX;
 
+  // For outer borders, snap to the table edge. getBoundingClientRect() for a td
+  // in a collapsed-border table is inset by borderWidth/2, so the raw coordPx
+  // is 0.5px inside the table edge. Using the table edge ensures the border is
+  // drawn flush with the table boundary, eliminating gaps between adjacent tables.
+  const snappedCoordPx = isOuterBorder
+    ? (side === 't' ? tableRect.top
+      : side === 'b' ? tableRect.bottom
+      : side === 'l' ? tableRect.left
+      : tableRect.right)
+    : coordPx;
+
   ctx.collapsedBorderCandidates.push({
     tableId: info.tableId,
     orientation: isHorizontal ? 'h' : 'v',
-    coordPx: normalizePx(coordPx),
+    coordPx: normalizePx(snappedCoordPx),
     startPx: normalizePx(Math.min(startPx, endPx)),
     endPx: normalizePx(Math.max(startPx, endPx)),
     widthPx,

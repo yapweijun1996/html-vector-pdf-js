@@ -17,12 +17,11 @@ function clampMargin(mm) {
 
 function buildCenteredMargins(pageWidthMm, pageHeightMm, contentWidthMm, contentHeightMm) {
   const horizontalMargin = clampMargin((pageWidthMm - contentWidthMm) / 2);
-  const verticalMargin = clampMargin((pageHeightMm - contentHeightMm) / 2);
 
   return {
-    top: verticalMargin,
+    top: 5,
     right: horizontalMargin,
-    bottom: verticalMargin,
+    bottom: 5,
     left: horizontalMargin
   };
 }

@@ -1,520 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HTML → Vector PDF - Test Invoice</title>
-  <style>
-    /* Reset and Base Styles */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: Arial, sans-serif;
-      font-size: 9pt;
-      color: #333;
-      background: #f5f5f5;
-      padding: 0;
-    }
-
-    /* Print Form Container */
-    .html_to_vector_pdf {
-      width: 750px;
-      margin: 20px auto;
-      background: transparent;
-    }
-
-    @media (max-width: 820px) {
-      .html_to_vector_pdf {
-        width: 100%;
-        margin: 0;
-      }
-    }
-
-    .pdf-page {
-      width: 750px;
-      /* Keep A4 aspect ratio: 297/210 * 750 ≈ 1060.7px */
-      height: 1061px;
-      margin: 0 auto 20px;
-      background: white;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      overflow: hidden;
-    }
-
-    /* Force page break markers */
-    .pagebreak_bf_processed {
-      page-break-before: always;
-      break-before: page;
-      height: 0;
-      line-height: 0;
-    }
-
-    /* Table classes */
-    .fontblack9a {
-      font-family: Arial, sans-serif;
-      font-size: 9pt;
-      color: #333;
-      border-collapse: collapse;
-    }
-
-    .fontblack13a {
-      font-family: Arial, sans-serif;
-      font-size: 13pt;
-      color: #333;
-    }
-
-    .fontblack14a {
-      font-family: Arial, sans-serif;
-      font-size: 14pt;
-      color: #333;
-    }
-
-    /* Border utility classes */
-    .border-all {
-      border: 1px solid black;
-    }
-
-    .border-top {
-      border-top: 1px solid black;
-    }
-
-    .border-bottom {
-      border-bottom: 1px solid black;
-    }
-
-    .border-left {
-      border-left: 1px solid black;
-    }
-
-    .border-right {
-      border-right: 1px solid black;
-    }
-
-    /* Table cell padding */
-    td {
-      padding: 2px 5px;
-    }
-
-    /* Header section */
-    .company-header {
-      margin-bottom: 10px;
-    }
-
-    .company-name {
-      font-size: 13pt;
-      font-weight: bold;
-    }
-
-    /* Document title */
-    .doc-title {
-      text-align: center;
-      font-size: 14pt;
-      font-weight: bold;
-      margin: 15px 0;
-    }
-
-    /* Row header (column titles) */
-    .row-header td {
-      background: #f0f0f0;
-      font-weight: bold;
-      text-align: center;
-      padding: 5px;
-      border: 1px solid black;
-    }
-
-    /* Row items */
-    .row-item td {
-      border-left: 1px solid black;
-      border-right: 1px solid black;
-      padding: 3px 5px;
-      vertical-align: top;
-    }
-
-    .row-item:last-child td {
-      border-bottom: 1px solid black;
-    }
-
-    /* Totals section */
-    .totals-section td {
-      padding: 3px 5px;
-    }
-
-    .totals-label {
-      text-align: right;
-      font-weight: bold;
-    }
-
-    .totals-value {
-      text-align: right;
-    }
-
-    /* Footer */
-    .page-footer {
-      margin-top: 20px;
-      text-align: center;
-      font-size: 9pt;
-      color: #666;
-    }
-
-    /* Download button */
-    #pdf-download-btn {
-      z-index: 9999;
-      padding: 12px 24px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-family: Arial, sans-serif;
-      font-size: 14px;
-      font-weight: bold;
-      cursor: pointer;
-      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-      transition: all 0.3s ease;
-    }
-
-    #pdf-download-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
-    }
-
-    #pdf-download-btn:disabled {
-      background: #ccc;
-      cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
-    }
-
-    /* Top-right controls */
-    .pdf-controls {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      z-index: 9999;
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-
-    .pdf-controls #pdf-download-btn {
-      position: static;
-    }
-
-    #demo-selector {
-      padding: 12px 16px;
-      background: white;
-      color: #1f2937;
-      border: 1px solid rgba(0, 0, 0, 0.12);
-      border-radius: 8px;
-      font-family: Arial, sans-serif;
-      font-size: 14px;
-      font-weight: bold;
-      cursor: pointer;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    #demo-selector:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
-    }
-
-    @media print {
-      .pdf-controls {
-        display: none;
-      }
-
-      body {
-        background: white;
-        padding: 0;
-      }
-
-      .html_to_vector_pdf {
-        margin: 0;
-      }
-
-      .pdf-page {
-        box-shadow: none;
-        margin: 0;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HTML-to-Vector-PDF | Template Gallery</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f6fa; color: #2c3e50; }
+.header { background: linear-gradient(135deg, #2c3e50, #3498db); color: white; padding: 30px 40px; }
+.header h1 { font-size: 28px; margin-bottom: 6px; }
+.header p { font-size: 14px; opacity: 0.85; }
+.header .stats { margin-top: 12px; display: flex; gap: 20px; }
+.header .stat { background: rgba(255,255,255,0.15); padding: 6px 14px; border-radius: 20px; font-size: 12px; }
+.controls { background: white; padding: 15px 40px; border-bottom: 1px solid #e0e0e0; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.controls input { padding: 8px 14px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; width: 250px; }
+.controls .filter-btn { padding: 6px 14px; border: 1px solid #ddd; border-radius: 20px; background: white; cursor: pointer; font-size: 12px; transition: all 0.2s; }
+.controls .filter-btn:hover, .controls .filter-btn.active { background: #3498db; color: white; border-color: #3498db; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding: 30px 40px; }
+.card { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; text-decoration: none; color: inherit; }
+.card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,0.12); }
+.card-preview { height: 160px; background: #f8f9fa; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid #eee; padding: 15px; }
+.card-preview .doc-icon { font-size: 48px; opacity: 0.3; }
+.card-preview .mini-doc { width: 100%; height: 100%; border: 1px solid #ddd; background: white; border-radius: 4px; padding: 8px; font-size: 6px; line-height: 1.3; color: #666; overflow: hidden; }
+.card-body { padding: 14px 16px; }
+.card-body h3 { font-size: 14px; margin-bottom: 4px; }
+.card-body p { font-size: 11px; color: #888; margin-bottom: 8px; }
+.card-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.tag { padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 500; }
+.tag-procurement { background: #e8f5e9; color: #2e7d32; }
+.tag-sales { background: #e3f2fd; color: #1565c0; }
+.tag-logistics { background: #fff3e0; color: #e65100; }
+.tag-finance { background: #fce4ec; color: #c62828; }
+.tag-hr { background: #f3e5f5; color: #7b1fa2; }
+.tag-warehouse { background: #e0f2f1; color: #00695c; }
+.tag-production { background: #efebe9; color: #4e342e; }
+.tag-high { background: #ffebee; color: #b71c1c; }
+.tag-medium { background: #fff8e1; color: #f57f17; }
+.tag-low { background: #e8f5e9; color: #2e7d32; }
+.footer { text-align: center; padding: 30px; font-size: 12px; color: #aaa; }
+</style>
 </head>
-
 <body>
 
-  <!-- Top-right controls -->
-  <div class="pdf-controls">
-    <button id="pdf-download-btn" onclick="download_vector_pdf()">Download PDF</button>
-    <select id="demo-selector" onchange="switchDemo(this.value)">
-      <option value="index.html" selected>Wrapper: Single Page</option>
-      <option value="index_multi.html">Wrapper: Multi Page</option>
-      <option value="index_html.html">Body: Single Page</option>
-      <option value="index_html_multi.html">Body: Multi Page</option>
-    </select>
+<div class="header">
+  <h1>HTML-to-Vector-PDF Template Gallery</h1>
+  <p>22 business print form templates with real sample data. Click any card to preview and download PDF.</p>
+  <div class="stats">
+    <span class="stat">22 Templates</span>
+    <span class="stat">7 Categories</span>
+    <span class="stat">All Editable</span>
+    <span class="stat">Instant PDF Download</span>
   </div>
+</div>
 
-  <!-- Print Form Content -->
-  <div class="html_to_vector_pdf">
-    <div class="pdf-page">
+<div class="controls">
+  <input type="text" id="search" placeholder="Search templates..." oninput="filterCards()">
+  <button class="filter-btn active" onclick="setFilter('all', this)">All</button>
+  <button class="filter-btn" onclick="setFilter('procurement', this)">Procurement</button>
+  <button class="filter-btn" onclick="setFilter('sales', this)">Sales</button>
+  <button class="filter-btn" onclick="setFilter('logistics', this)">Logistics</button>
+  <button class="filter-btn" onclick="setFilter('finance', this)">Finance</button>
+  <button class="filter-btn" onclick="setFilter('hr', this)">HR</button>
+  <button class="filter-btn" onclick="setFilter('warehouse', this)">Warehouse</button>
+  <button class="filter-btn" onclick="setFilter('production', this)">Production</button>
+</div>
 
-      <!-- Company Header -->
-      <table class="fontblack9a company-header" width="100%" cellspacing="0" cellpadding="0">
-        <tr>
-          <td width="70%">
-            <div class="company-name">EXAMPL CORP PTE LTD</div>
-            <div>123 EXAMPLE STREET</div>
-            <div>SINGAPORE 123456</div>
-            <div>Tel: +65 6000 0000 &nbsp; Fax No.: +65 6000 0001</div>
-          </td>
-          <td width="30%" align="right" valign="top">
-            <img
-              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Crect fill='%23eee' width='80' height='80'/%3E%3Ctext x='40' y='45' text-anchor='middle' fill='%23999' font-size='12'%3ELOGO%3C/text%3E%3C/svg%3E"
-              alt="Company Logo" width="80" height="80">
-          </td>
-        </tr>
-      </table>
+<div class="grid" id="grid"></div>
 
-      <!-- Document Title -->
-      <div class="doc-title">TAX INVOICE</div>
+<div class="footer">
+  HTML-to-Vector-PDF Template Gallery | All templates use sample data for demonstration purposes
+</div>
 
-      <!-- Bill To / Invoice Info -->
-      <table class="fontblack9a" width="100%" cellspacing="0" cellpadding="0">
-        <tr>
-          <td width="50%" valign="top">
-            <table class="fontblack9a" cellspacing="0" cellpadding="0">
-              <tr>
-                <td colspan="2"><b>BILL TO:</b></td>
-              </tr>
-              <tr>
-                <td width="30"></td>
-                <td><b>CLIENT SOLUTIONS PTE LTD</b></td>
-              </tr>
-              <tr>
-                <td></td>
-                <td>456 SOLUTIONS DRIVE</td>
-              </tr>
-              <tr>
-                <td></td>
-                <td>SINGAPORE 654321</td>
-              </tr>
+<script>
+const templates = [
+  { id: '01', name: 'Purchase Order', file: '01-purchase-order.html', category: 'procurement', complexity: 'high', desc: 'Multi-line items, terms & conditions, approval signatures' },
+  { id: '02', name: 'Delivery Order', file: '02-delivery-order.html', category: 'logistics', complexity: 'medium', desc: 'Delivery details, receiver signature, driver info' },
+  { id: '03', name: 'Sales Order', file: '03-sales-order.html', category: 'sales', complexity: 'high', desc: 'Customer order with discounts, tax, multi-page' },
+  { id: '04', name: 'Quotation', file: '04-quotation.html', category: 'sales', complexity: 'high', desc: 'Price quote with validity, terms, payment schedule' },
+  { id: '05', name: 'Commercial Invoice', file: '05-commercial-invoice.html', category: 'finance', complexity: 'high', desc: 'International trade invoice with bank details' },
+  { id: '06', name: 'Tax Invoice (GST)', file: '06-tax-invoice.html', category: 'finance', complexity: 'high', desc: 'GST-compliant invoice with tax breakdown' },
+  { id: '07', name: 'Credit Note', file: '07-credit-note.html', category: 'finance', complexity: 'medium', desc: 'Refund/credit against original invoice' },
+  { id: '08', name: 'Debit Note', file: '08-debit-note.html', category: 'finance', complexity: 'medium', desc: 'Additional charges against original invoice' },
+  { id: '09', name: 'Receipt', file: '09-receipt.html', category: 'finance', complexity: 'low', desc: 'Payment acknowledgment with method details' },
+  { id: '10', name: 'Packing List', file: '10-packing-list.html', category: 'logistics', complexity: 'medium', desc: 'Shipment contents with weights and dimensions' },
+  { id: '11', name: 'Bill of Lading', file: '11-bill-of-lading.html', category: 'logistics', complexity: 'high', desc: 'Shipping document with port and vessel details' },
+  { id: '12', name: 'Proforma Invoice', file: '12-proforma-invoice.html', category: 'sales', complexity: 'medium', desc: 'Preliminary invoice for customs/prepayment' },
+  { id: '13', name: 'Purchase Requisition', file: '13-purchase-requisition.html', category: 'procurement', complexity: 'medium', desc: 'Internal purchase request with approvals' },
+  { id: '14', name: 'Goods Received Note', file: '14-goods-received-note.html', category: 'warehouse', complexity: 'medium', desc: 'Inspection results and quantity verification' },
+  { id: '15', name: 'Return Note', file: '15-return-note.html', category: 'warehouse', complexity: 'medium', desc: 'Goods return with reason codes' },
+  { id: '16', name: 'Payment Voucher', file: '16-payment-voucher.html', category: 'finance', complexity: 'medium', desc: 'Payment authorization with multiple lines' },
+  { id: '17', name: 'Journal Voucher', file: '17-journal-voucher.html', category: 'finance', complexity: 'medium', desc: 'Accounting entries with debit/credit' },
+  { id: '18', name: 'Payroll Slip', file: '18-payroll-slip.html', category: 'hr', complexity: 'high', desc: 'Salary breakdown with CPF, allowances, deductions' },
+  { id: '19', name: 'Leave Application', file: '19-leave-application.html', category: 'hr', complexity: 'low', desc: 'Leave request form with approval workflow' },
+  { id: '20', name: 'Expense Claim', file: '20-expense-claim.html', category: 'hr', complexity: 'medium', desc: 'Expense reimbursement with receipts list' },
+  { id: '21', name: 'Stock Transfer', file: '21-stock-transfer.html', category: 'warehouse', complexity: 'medium', desc: 'Inter-warehouse transfer with batch tracking' },
+  { id: '22', name: 'Work Order', file: '22-work-order.html', category: 'production', complexity: 'high', desc: 'Production order with BOM and operations' }
+];
+
+let activeFilter = 'all';
+
+function renderCards() {
+  const search = document.getElementById('search').value.toLowerCase();
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  templates
+    .filter(t => activeFilter === 'all' || t.category === activeFilter)
+    .filter(t => !search || t.name.toLowerCase().includes(search) || t.desc.toLowerCase().includes(search) || t.category.includes(search))
+    .forEach(t => {
+      const card = document.createElement('a');
+      card.className = 'card';
+      card.href = 'templates/' + t.file;
+      card.target = '_blank';
+      card.dataset.category = t.category;
+      card.innerHTML = `
+        <div class="card-preview">
+          <div class="mini-doc">
+            <div style="font-size:8px;font-weight:bold;margin-bottom:3px;">ACME CORP PTE LTD</div>
+            <div style="font-size:6px;color:#999;margin-bottom:6px;">123 Example Street, Singapore</div>
+            <div style="font-size:9px;font-weight:bold;color:#c0392b;text-align:center;margin-bottom:4px;">${t.name.toUpperCase()}</div>
+            <div style="display:flex;justify-content:space-between;font-size:5px;margin-bottom:4px;">
+              <span>Doc No: ACME-${t.id}-0001</span><span>Date: 02 Apr 2026</span>
+            </div>
+            <table style="width:100%;border-collapse:collapse;font-size:5px;">
+              <tr style="background:#2c3e50;color:white;"><td style="padding:1px 2px;">Item</td><td>Description</td><td style="text-align:right;">Amount</td></tr>
+              <tr><td style="padding:1px 2px;border-bottom:1px solid #eee;">1</td><td style="border-bottom:1px solid #eee;">Sample Item</td><td style="text-align:right;border-bottom:1px solid #eee;">1,000.00</td></tr>
+              <tr><td style="padding:1px 2px;border-bottom:1px solid #eee;">2</td><td style="border-bottom:1px solid #eee;">Another Item</td><td style="text-align:right;border-bottom:1px solid #eee;">2,500.00</td></tr>
             </table>
-          </td>
-          <td width="50%" valign="top">
-            <table class="fontblack9a" cellspacing="0" cellpadding="0">
-              <tr>
-                <td width="110"><b>INV NO.</b></td>
-                <td width="10"><b>:</b></td>
-                <td>PCI-2601-10002</td>
-              </tr>
-              <tr>
-                <td><b>INV DATE</b></td>
-                <td><b>:</b></td>
-                <td>31 JAN 2026</td>
-              </tr>
-              <tr>
-                <td><b>REFERENCE NO.</b></td>
-                <td><b>:</b></td>
-                <td>PO-2026-0042</td>
-              </tr>
-              <tr>
-                <td><b>PAGE</b></td>
-                <td><b>:</b></td>
-                <td><span id="page-num">1</span> OF <span id="total-pages">1</span></td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-      </table>
+          </div>
+        </div>
+        <div class="card-body">
+          <h3>${t.id}. ${t.name}</h3>
+          <p>${t.desc}</p>
+          <div class="card-tags">
+            <span class="tag tag-${t.category}">${t.category}</span>
+            <span class="tag tag-${t.complexity}">${t.complexity}</span>
+          </div>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+}
 
-      <br>
+function setFilter(cat, btn) {
+  activeFilter = cat;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderCards();
+}
 
-      <!-- Row Header -->
-      <table class="fontblack9a" width="720" cellspacing="0" cellpadding="0" style="margin: 0 auto;">
-        <tr class="row-header" style="height: 40px;">
-          <td width="30" align="center">S/N</td>
-          <td width="91" align="center">ITEM</td>
-          <td width="289" align="center">DESCRIPTION</td>
-          <td width="70" align="center">QTY</td>
-          <td width="40" align="center">U/M</td>
-          <td width="100" align="center">UNIT PRICE</td>
-          <td width="100" align="center">AMOUNT</td>
-        </tr>
-      </table>
+function filterCards() { renderCards(); }
 
-      <!-- Row Items -->
-      <table class="fontblack9a" width="720" cellspacing="0" cellpadding="0" style="margin: 0 auto;">
-        <tr class="row-item">
-          <td width="30" align="center" style="border-left: 1px solid black;">1</td>
-          <td width="91">APP-IPH-15PM</td>
-          <td width="289">iPhone 15 Pro Max - Titanium (256GB, Natural Titanium)</td>
-          <td width="70" align="right">2.00</td>
-          <td width="40" align="center">UNIT</td>
-          <td width="100" align="right">1,999.00</td>
-          <td width="100" align="right" style="border-right: 1px solid black;">3,998.00</td>
-        </tr>
-        <tr class="row-item">
-          <td width="30" align="center" style="border-left: 1px solid black;">2</td>
-          <td width="91">APP-MBP-14M3</td>
-          <td width="289">MacBook Pro 14-inch (M3 Pro Chip, 18GB RAM, 512GB SSD)</td>
-          <td width="70" align="right">1.00</td>
-          <td width="40" align="center">UNIT</td>
-          <td width="100" align="right">2,899.00</td>
-          <td width="100" align="right" style="border-right: 1px solid black;">2,899.00</td>
-        </tr>
-        <tr class="row-item">
-          <td width="30" align="center" style="border-left: 1px solid black;">3</td>
-          <td width="91">APP-IPD-P129</td>
-          <td width="289">iPad Pro 12.9-inch (Wi-Fi, 512GB, Space Gray)</td>
-          <td width="70" align="right">2.00</td>
-          <td width="40" align="center">UNIT</td>
-          <td width="100" align="right">1,799.00</td>
-          <td width="100" align="right" style="border-right: 1px solid black;">3,598.00</td>
-        </tr>
-        <tr class="row-item">
-          <td width="30" align="center" style="border-left: 1px solid black;">4</td>
-          <td width="91">APP-ATV-4K</td>
-          <td width="289">Apple TV 4K (Wi-Fi + Ethernet, 128GB Storage)</td>
-          <td width="70" align="right">5.00</td>
-          <td width="40" align="center">UNIT</td>
-          <td width="100" align="right">199.00</td>
-          <td width="100" align="right" style="border-right: 1px solid black;">995.00</td>
-        </tr>
-        <tr class="row-item">
-          <td width="30" align="center" style="border-left: 1px solid black; border-bottom: 1px solid black;">5</td>
-          <td width="91" style="border-bottom: 1px solid black;">APP-ACS-MKB</td>
-          <td width="289" style="border-bottom: 1px solid black;">Magic Keyboard for iPad Pro 12.9-inch (White)</td>
-          <td width="70" align="right" style="border-bottom: 1px solid black;">2.00</td>
-          <td width="40" align="center" style="border-bottom: 1px solid black;">UNIT</td>
-          <td width="100" align="right" style="border-bottom: 1px solid black;">449.00</td>
-          <td width="100" align="right" style="border-right: 1px solid black; border-bottom: 1px solid black;">898.00
-          </td>
-        </tr>
-      </table>
-
-      <br>
-
-      <!-- Totals Section -->
-      <table class="fontblack9a" width="720" cellspacing="0" cellpadding="0" style="margin: 0 auto;">
-        <tr class="totals-section">
-          <td width="520"></td>
-          <td width="100" class="totals-label">SUB TOTAL:</td>
-          <td width="100" class="totals-value">12,388.00</td>
-        </tr>
-        <tr class="totals-section">
-          <td></td>
-          <td class="totals-label">GST (9%):</td>
-          <td class="totals-value">1,114.92</td>
-        </tr>
-        <tr class="totals-section">
-          <td></td>
-          <td class="totals-label" style="border-top: 1px solid black;"><b>TOTAL SGD:</b></td>
-          <td class="totals-value" style="border-top: 1px solid black;"><b>13,502.92</b></td>
-        </tr>
-      </table>
-
-      <br><br>
-
-      <!-- Terms -->
-      <table class="fontblack9a" width="720" cellspacing="0" cellpadding="0" style="margin: 0 auto;">
-        <tr>
-          <td>
-            <b>Terms & Conditions:</b><br>
-            1. Payment is due within 30 days from invoice date.<br>
-            2. Please make payment to: EXAMPL CORP PTE LTD, BANK NAME A/C: 000-000000-0<br>
-            3. Goods remain the property of EXAMPL CORP PTE LTD until payment is received in full.
-          </td>
-        </tr>
-      </table>
-
-      <!-- Page Footer -->
-      <div class="page-footer">
-        <span id="footer-page-num">1</span> of <span id="footer-total-pages">1</span>
-      </div>
-
-    </div>
-
-    <div class="pagebreak_bf_processed" style="font-size:0pt;">&nbsp;</div>
-
-    <div class="pdf-page">
-      <div class="doc-title" style="margin-top: 40px;">PAGE 2 (TEST)</div>
-      <table class="fontblack9a" width="720" cellspacing="0" cellpadding="0" style="margin: 0 auto;">
-        <tr class="row-header">
-          <td width="30" align="center">S/N</td>
-          <td width="91" align="center">ITEM</td>
-          <td width="289" align="center">DESCRIPTION</td>
-          <td width="70" align="center">QTY</td>
-          <td width="40" align="center">U/M</td>
-          <td width="100" align="center">UNIT PRICE</td>
-          <td width="100" align="center">AMOUNT</td>
-        </tr>
-        <tr class="row-item">
-          <td width="30" align="center" style="border-left: 1px solid black; border-bottom: 1px solid black;">1</td>
-          <td width="91" style="border-bottom: 1px solid black;">TEST-ITEM-2</td>
-          <td width="289" style="border-bottom: 1px solid black;">Second page content to validate forced page break.
-          </td>
-          <td width="70" align="right" style="border-bottom: 1px solid black;">1.00</td>
-          <td width="40" align="center" style="border-bottom: 1px solid black;">PCS</td>
-          <td width="100" align="right" style="border-bottom: 1px solid black;">0.00</td>
-          <td width="100" align="right" style="border-right: 1px solid black; border-bottom: 1px solid black;">0.00</td>
-        </tr>
-      </table>
-
-      <div class="page-footer" style="margin-top: 40px;">
-        2 of 2
-      </div>
-    </div>
-  </div>
-
-  <!-- Production build (single JS) -->
-  <script src="./html_to_vector_pdf.js"></script>
-
-  <!-- Download PDF function -->
-  <script>
-    function isDebugOverlayEnabled() {
-      const params = new URLSearchParams(window.location.search);
-      const byQuery = params.get('debugOverlay');
-      if (byQuery === '1' || byQuery === 'true') return true;
-      if (byQuery === '0' || byQuery === 'false') return false;
-
-      // Optional: set in DevTools console: window.HTML_TO_VECTOR_PDF_DEBUG_OVERLAY = true
-      return (window.HTML_TO_VECTOR_PDF_DEBUG_OVERLAY === true);
-    }
-
-    async function download_vector_pdf() {
-      try {
-        const debugOverlayEnabled = isDebugOverlayEnabled();
-        const margins = { top: 6.35, right: 6.35, bottom: 6.35, left: 6.35 };
-        const pageWidthMm = 210; // A4 portrait width
-        const baseWidthPx = document.querySelector('.pdf-page')?.getBoundingClientRect().width || 750;
-        const pxToMm = (pageWidthMm - margins.left - margins.right) / baseWidthPx;
-        await html_to_vector_pdf.generatePdf('.html_to_vector_pdf', {
-          filename: 'PCI-2601-10002.pdf',
-          pageSize: 'a4',
-          orientation: 'portrait',
-          margins,
-          // Map content width (after margins) to page width to avoid overflow.
-          render: { pxToMm },
-          text: { scale: 1 },
-          debugOverlay: { enabled: debugOverlayEnabled },
-          debug: debugOverlayEnabled
-        });
-      } catch (err) {
-        console.error('PDF generation error:', err);
-        alert('Error generating PDF: ' + err.message);
-      }
-    }
-
-    function switchDemo(target) {
-      if (target) {
-        window.location.href = target + window.location.search;
-      }
-    }
-  </script>
-
+renderCards();
+</script>
 </body>
-
 </html>

@@ -101,10 +101,17 @@ export const parseTextNode = (ctx: DomParseContext, txt: Text, shouldExclude: (e
     if (raw === 'bottom' || raw === 'text-bottom') return 'bottom';
     return 'top';
   };
+  // Detect multi-line cells: <br> tags or block-level children create multiple visual lines.
+  // In such cells, each text node must keep its browser-measured Y position, not be re-centered.
+  const cellHasMultipleVisualLines = inTableCell && (
+    layoutEl.querySelector('br') !== null ||
+    layoutEl.querySelector('div, p, h1, h2, h3, h4, h5, h6') !== null
+  );
   const shouldUseTableCellPacking =
     inTableCell &&
     !collapseTableInfo &&
     !browserWrapped &&
+    !cellHasMultipleVisualLines &&
     effectiveLineBoxPx > 0 &&
     contentBox.height > 0;
   const verticalAlign = shouldUseTableCellPacking ? resolveVerticalAlign() : 'top';
