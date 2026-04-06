@@ -49,6 +49,13 @@ function rewriteDistScriptPath(html: string): string {
   );
 }
 
+// Templates live in dist/templates/ — strip the extra /dist/ segment from their asset paths
+function rewriteTemplatePaths(html: string): string {
+  return html
+    .replaceAll('../dist/html_to_vector_pdf.js', '../html_to_vector_pdf.js')
+    .replaceAll('../dist/printform.js', '../printform.js');
+}
+
 function servePrintformFromSampleDist(): Plugin {
   return {
     name: 'serve-printform-from-sample-dist',
@@ -115,19 +122,36 @@ function copyAssetsToDist(): Plugin {
           })
         );
 
-        // Copy templates/ directory to dist/templates/
+        // Copy static assets needed by templates
+        const staticAssets = ['template-base.css', 'template-base.js', 'favicon.svg'];
+        await Promise.all(
+          staticAssets.map(async (fileName) => {
+            const srcPath = path.resolve(ROOT_DIR, fileName);
+            try {
+              await fs.copyFile(srcPath, path.resolve(ROOT_DIST_DIR, fileName));
+            } catch {
+              console.warn(`[copy-assets-to-dist] Skipped missing asset: ${fileName}`);
+            }
+          })
+        );
+
+        // Copy templates/ directory to dist/templates/ with path rewriting
         try {
           const templateFiles = await fs.readdir(TEMPLATES_SRC_DIR, { withFileTypes: true });
           await fs.mkdir(TEMPLATES_DIST_DIR, { recursive: true });
           await Promise.all(
             templateFiles
               .filter((entry) => entry.isFile())
-              .map((entry) =>
-                fs.copyFile(
-                  path.resolve(TEMPLATES_SRC_DIR, entry.name),
-                  path.resolve(TEMPLATES_DIST_DIR, entry.name)
-                )
-              )
+              .map(async (entry) => {
+                const srcPath = path.resolve(TEMPLATES_SRC_DIR, entry.name);
+                const outPath = path.resolve(TEMPLATES_DIST_DIR, entry.name);
+                if (entry.name.toLowerCase().endsWith('.html')) {
+                  const html = await fs.readFile(srcPath, 'utf8');
+                  await fs.writeFile(outPath, rewriteTemplatePaths(html), 'utf8');
+                } else {
+                  await fs.copyFile(srcPath, outPath);
+                }
+              })
           );
         } catch (err: any) {
           console.warn('[copy-assets-to-dist] Failed to copy templates:', err);
